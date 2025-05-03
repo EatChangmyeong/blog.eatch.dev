@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   psl:
-    hash: dk6qwvk55j4pkaoy5mkupc5rfu
+    hash: b42a98bb74a792a3795915dbfe3006d3569d6c618c185bced44c47264415261b
     path: patches/psl.patch
 
 importers:
@@ -36,7 +36,7 @@ importers:
         version: 4.0.0
       psl:
         specifier: ^1.15.0
-        version: 1.15.0(patch_hash=dk6qwvk55j4pkaoy5mkupc5rfu)
+        version: 1.15.0(patch_hash=b42a98bb74a792a3795915dbfe3006d3569d6c618c185bced44c47264415261b)
       reading-time:
         specifier: ^1.5.0
         version: 1.5.0
@@ -4544,7 +4544,7 @@ snapshots:
 
   property-information@7.0.0: {}
 
-  psl@1.15.0(patch_hash=dk6qwvk55j4pkaoy5mkupc5rfu):
+  psl@1.15.0(patch_hash=b42a98bb74a792a3795915dbfe3006d3569d6c618c185bced44c47264415261b):
     dependencies:
       punycode: 2.3.1
 

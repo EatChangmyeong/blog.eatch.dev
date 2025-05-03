@@ -1,0 +1,43 @@
+name: Build and deployment
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web-deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
+        run_install: false
+
+    - name: Setup node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: pnpm
+
+    - name: Install dependencies
+      run: pnpm i
+
+    - name: Build with Astro
+      run: pnpm build
+
+    - name: Upload artifact via SSH
+      uses: SamKirkland/web-deploy@v1
+      with:
+        source-path: ./dist/
+        target-server: eatch.dev
+        remote-user: eatcfqsw
+        ssh-port: 21098
+        destination-path: ~/blog/
+        private-ssh-key: ${{ secrets.SSH_KEY }}
