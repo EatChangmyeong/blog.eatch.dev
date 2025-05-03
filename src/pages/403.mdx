@@ -1,0 +1,19 @@
+import Post404 from '@layouts/Post404.astro';
+import Blockquote from '@components/post/Blockquote.astro';
+
+<Post404
+	title="403 Forbidden"
+	edited={new Date(2025, 1, 16)}
+>
+<Blockquote>
+	혹시라도 웹서핑을 조심히 하지 않다가 엉뚱한 사이트에서 404를 맞닥뜨린다면 당신은 백엔드라는 곳에 도달하게 된다. 오래된 스파게티 코드의 악취, 사람을 미치게 만드는 고정폭 글꼴, 최대한으로 윙윙거리는 서버 소음밖에는 없는, 마구잡이로 분절된 약 천팔백경 바이트짜리 가상 메모리에 갇혀버리는 것이다
+
+	주변에서 뭔가 움직이는 소리를 들었다면 행운을 빈다. 그것도 당신을 진작 눈치챘을 거니까
+
+	<Fragment slot="original" class="test">
+		If you're not careful and you 404 out of the Web in the wrong pages, you'll end up in the Backend, where it's nothing but the stink of old spaghetti code, the madness of monospaced font, the endless background noise of servers at maximum hum-buzz, and approximately eighteen quintillion bytes of randomly segmented virtual memory to be trapped in
+
+		God save you if you hear something wandering around nearby, because it sure as hell has heard you
+	</Fragment>
+</Blockquote>
+</Post404>

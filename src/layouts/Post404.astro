@@ -10,7 +10,7 @@ interface Props extends PostEntry {}
 const { title, published, edited, tags, permalink, cover, minutesRead } = Astro.props;
 ---
 
-<Layout title={title}>
+<Layout title={title} footer={false}>
 	<main>
 		<header class:list={['relative', 'bg-white', '@dark:bg-#202020', cover ? 'z-2' : 'z-0']}>
 			{cover &&

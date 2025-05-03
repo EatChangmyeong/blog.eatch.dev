@@ -3,8 +3,9 @@ import TopBar from '../components/TopBar.astro';
 
 interface Props {
 	title?: string,
+	footer?: boolean,
 }
-const { title } = Astro.props;
+const { title, footer = true } = Astro.props;
 
 import '../styles/global.css';
 ---
@@ -27,8 +28,10 @@ import '../styles/global.css';
 			{title ?? 'Widestring (indev)'}
 		</TopBar>
 		<slot />
-		<footer class="mt-8 mx-auto max-w-45rem text-right text-sm opacity-75">
-			© 2020-2025 <address class="inline not-italic"><a href="https:/eatch.dev">EatChangmyeong</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
-		</footer>
+		{footer &&
+			<footer class="mt-8 mx-auto max-w-45rem text-right text-sm opacity-75">
+				© 2020-2025 <address class="inline not-italic"><a href="https:/eatch.dev">EatChangmyeong</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
+			</footer>
+		}
 	</body>
 </html>
