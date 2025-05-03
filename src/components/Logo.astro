@@ -1,0 +1,21 @@
+---
+import logo_light from '../assets/widestring_light.svg';
+import logo_dark from '../assets/widestring_dark.svg';
+
+interface Props {
+	heading?: boolean,
+	alt?: string,
+};
+const { heading = false, alt } = Astro.props;
+---
+
+<picture>
+	<source srcset={logo_dark.src} media="(prefers-color-scheme: dark)">
+	<img
+		class:list={heading
+			? ['h-24']
+			: ['h-10', 'mb--4', 'drop-shadow-[0_0_2px_white]', '@dark:drop-shadow-[0_0_2px_black]']
+		}
+		src={logo_light.src} alt={alt ?? ''}
+	>
+</picture>

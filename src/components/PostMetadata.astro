@@ -1,0 +1,36 @@
+---
+import MinutesRead from '../components/MinutesRead.astro';
+import Date from '@components/Date.astro';
+import Tag from '@components/Tag.astro';
+
+interface Props {
+	minutesRead?: number,
+	published?: Date,
+	edited?: Date,
+	tags?: string[],
+}
+const { minutesRead, published, edited, tags } = Astro.props;
+---
+
+{(() => {
+	const metadata = [
+		minutesRead
+			? <MinutesRead minutes={minutesRead} />
+			: undefined,
+		published ? <><Date date={published} /> 작성</> : undefined,
+		edited ? <><Date date={edited} /> 수정</> : undefined,
+	]
+		.filter(x => x)
+		.map((x, i) =>
+			<>
+				{!!i && ' · '}{x}
+			</>
+		);
+	return !!metadata.length &&
+		<span class="font-size-3.2">
+			{metadata}
+		</span>;
+})()}{' '}
+{tags?.map(tag =>
+	<Tag>{tag}</Tag>
+)}

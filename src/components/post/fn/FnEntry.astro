@@ -1,0 +1,29 @@
+---
+import type { AstroVNode } from 'astro/jsx-runtime';
+
+interface Props {
+	type: 'fn' | 'tn' | 'ref',
+	id: string,
+	label: string,
+	refs: number,
+	xlinkClass?: string,
+	Content: (() => AstroVNode) | string,
+}
+const { type, id, label, refs, xlinkClass, Content } = Astro.props;
+---
+
+<p>
+	<sup id={`${type}:${id}`}>{label}</sup>
+	{
+		typeof Content == 'string'
+			? Content
+			: <Content />
+	}
+	{
+		[...Array(refs)].map((_, i) =>
+			<>
+				{' '}<a class={`-xfn ${xlinkClass}`} href={`#x${type}:${id}:${i + 1}`}>↑</a>
+			</>
+		)
+	}
+</p>

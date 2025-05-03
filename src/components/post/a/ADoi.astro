@@ -1,0 +1,18 @@
+---
+import AOut from './AOut.astro';
+
+interface Props {
+	doi: string,
+	restricted?: boolean | string,
+}
+const { doi, restricted } = Astro.props;
+---
+
+<AOut
+	href={`https://doi.org/${doi}`}
+	restricted={restricted === true ? '전문 열람에 구독 혹은 유료 구매가 필요합니다.' : restricted}
+>{
+	Astro.slots.has('default')
+		? <slot />
+		: doi
+}</AOut>

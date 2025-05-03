@@ -1,0 +1,16 @@
+---
+interface Props {
+	special?: boolean,
+}
+const { special } = Astro.props;
+---
+
+<span
+	class="mx-0.2 px-0.5 py-0.2 font-size-3.2 break-keep"
+	class:list={{
+		'bg-#f4f480': special,
+		'@dark:bg-#808000': special,
+		'bg-#c0ffff': !special,
+		'@dark:bg-#004040': !special,
+	}}
+>#<slot /></span>

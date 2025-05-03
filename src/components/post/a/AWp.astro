@@ -1,0 +1,22 @@
+---
+import AOut from './AOut.astro';
+
+interface Props {
+	lang?: string,
+	art: string,
+	frag?: string,
+}
+const { lang = 'en', art, frag } = Astro.props;
+
+function compWith(comp: string | undefined, punct: string, url: boolean = false): string {
+	return comp === undefined
+		? ''
+		: `${punct}${url ? comp.replaceAll(' ', '_') : comp}`;
+}
+---
+
+<AOut href={`https://${lang}.wikipedia.org/wiki/${compWith(art, '', true)}${compWith(frag, '#', true)}`}>{
+	Astro.slots.has('default')
+		? <slot />
+		: `${art}${compWith(frag, ' § ')}`
+}</AOut>

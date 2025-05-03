@@ -1,0 +1,98 @@
+---
+import { get } from 'psl';
+
+type Props = {
+	href: string,
+} & (
+	{
+		restricted?: boolean | string,
+		unavailable?: undefined,
+	} | {
+		restricted?: undefined,
+		unavailable: true,
+	}
+);
+const { href } = Astro.props;
+
+// https://url.spec.whatwg.org/#ends-in-a-number-checker
+function isIpv4(hostname: string): boolean {
+	const parts = hostname.split('.');
+	for(let i = parts.length - 1; i >= 0; i--)
+		if(!parts[i])
+			continue;
+		else
+			return /^(?:[1-9]\d*|0x[0-9a-f]*|[0-7]*)?$/i.test(parts[i]);
+	return false;
+}
+function tryHighlight(urlStr: string): string | [string, string, string] {
+	const url = URL.parse(urlStr);
+	if(!url || url.protocol != 'http:' && url.protocol != 'https:')
+		return urlStr;
+	const
+		{ hostname } = url,
+		newHostname = isIpv4(hostname)
+			? hostname
+			: get(hostname) ?? hostname,
+		restHostname = hostname.slice(0, -newHostname.length);
+	// https://url.spec.whatwg.org/#concept-url-serializer
+	return [
+		`${
+			url.protocol
+		}//${
+			url.username
+		}${
+			url.password ? ':' : ''
+		}${
+			url.password
+		}${
+			url.username ? '@' : ''
+		}${
+			restHostname
+		}`,
+		newHostname,
+		`${
+			url.port ? ':' : ''
+		}${
+			url.port
+		}${
+			url.pathname
+		}${
+			url.search
+		}${
+			url.hash
+		}`
+	];
+}
+
+const
+	highlighted = tryHighlight(href),
+	restrictedTitle = Astro.props.unavailable
+		? '더 이상 접속할 수 없는 페이지입니다.'
+	: Astro.props.restricted === true
+		? '열람 제한이 있는 페이지입니다.'
+		: Astro.props.restricted || undefined;
+---
+
+<a
+	href={href} target="_blank"
+	title={restrictedTitle}
+>{
+	Astro.slots.has('default')
+		? <slot />
+		: <span class="font-monospace">{
+			typeof highlighted == 'string'
+				? highlighted
+				: <>
+					{highlighted[0]}{
+					}<span class="font-bold">{highlighted[1]}</span>{
+					}{highlighted[2]}
+				</>
+		}</span>
+}{
+}<span class="i-majesticons-external-link-line v-super text-[length:smaller]" />{
+	Astro.props.unavailable &&
+		<span class="i-majesticons-ban-line v-super text-[length:smaller]" />
+}{
+	Astro.props.restricted &&
+		<span class="i-majesticons-lock-line v-super text-[length:smaller]" />
+}</a>

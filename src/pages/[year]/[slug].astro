@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+export const getStaticPaths = (async () => {
+	return (await getCollection('blog')).map(post => ({
+		params: {
+			year: post.data.published.getFullYear(),
+			slug: post.id,
+		},
+	}));
+}) satisfies GetStaticPaths;
+
+import Post from '../../layouts/Post.astro';
+import { getPost } from '~/src/registry/getPost';
+
+const post = await getPost(Astro.params.slug);
+if(!post)
+	throw new Error(`post ${Astro.params.slug} not available`);
+const { Content } = post;
+---
+
+<Post {...post}>
+	<Content />
+</Post>

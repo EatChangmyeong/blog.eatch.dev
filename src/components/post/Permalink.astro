@@ -1,0 +1,13 @@
+---
+import RemarkSimpleBase from './RemarkSimpleBase.astro';
+import AOut from './a/AOut.astro';
+interface Props {
+	href: string,
+}
+const { href } = Astro.props;
+---
+
+<RemarkSimpleBase colorLight="#f0d0ff" colorDark="#400060">
+	{/* <p><span class="i-majesticons-link-line" /> 이 글에는 <AOut href={href} /> 링크를 통해서도 접속할 수 있습니다.</p> */}
+	<p><span class="i-majesticons-link-line" /> 현재 블로그 이전 작업 중입니다. 이전이 어느 정도 완료되면 <AOut href={href} /> 링크를 통해서도 접속 가능하도록 조치하겠습니다.</p>
+</RemarkSimpleBase>

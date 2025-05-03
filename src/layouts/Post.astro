@@ -1,0 +1,99 @@
+---
+import Layout from './Layout.astro';
+import Logo from '../components/Logo.astro';
+import PostMetadata from '../components/PostMetadata.astro';
+import Permalink from '@components/post/Permalink.astro';
+import FnEntry from '@components/post/fn/FnEntry.astro';
+import type { PostEntry } from '../registry/getPost';
+
+interface Props extends PostEntry {}
+const {
+	title, published, edited, tags, permalink, cover,
+	minutesRead, footnotes, transnotes, references,
+} = Astro.props;
+---
+
+<Layout title={title}>
+	<main>
+		<header class:list={['relative', 'bg-white', '@dark:bg-#202020', cover ? 'z-2' : 'z-0']}>
+			{cover &&
+				<>
+					<img class="absolute left-0 top-0 w-100% h-100% object-cover" src={cover} alt="" />
+					<div class="absolute inset-x-0 top-0 h-100% bg-#ffffff80 @dark:bg-#20202080 backdrop-blur-2 z-1" />
+				</>
+			}
+			<div class="relative pt-32 px-[calc((100%_-_45rem)_/_2)] pb-4 z-2">
+				<a href="/">
+					<Logo alt="블로그 메인으로" />
+				</a>
+				<h1>{title}</h1>
+				<PostMetadata
+					minutesRead={minutesRead}
+					published={published}
+					edited={edited}
+					tags={tags}
+				/>
+			</div>
+		</header>
+		<article>
+			{permalink &&
+				<Permalink href={permalink} />
+			}
+			<slot />
+			{
+				footnotes &&
+					<>
+						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#c60] @dark:text-[#fb6] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">각주</div>
+						{
+							footnotes.order.map(([id, refs], i) =>
+								<FnEntry
+									type="fn"
+									id={id}
+									label={`${i + 1}`}
+									refs={refs}
+									xlinkClass="text-[#c60] @dark:text-[#fb6]"
+									Content={footnotes.content[id]}
+								/>
+							)
+						}
+					</>
+			}
+			{
+				transnotes &&
+					<>
+						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#d22] @dark:text-[#f88] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">역주</div>
+						{
+							transnotes.order.map(([id, refs], i) =>
+								<FnEntry
+									type="tn"
+									id={id}
+									label={`역${i + 1}`}
+									refs={refs}
+									xlinkClass="text-[#d22] @dark:text-[#f88]"
+									Content={transnotes.content[id]}
+								/>
+							)
+						}
+					</>
+			}
+			{
+				references &&
+					<>
+						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#c0c] @dark:text-[#f6f] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">참고 문헌</div>
+						{
+							references.order.map(([id, refs]) =>
+								<FnEntry
+									type="ref"
+									id={id}
+									label={`[${id}]`}
+									refs={refs}
+									xlinkClass="text-[#c0c] @dark:text-[#f6f]"
+									Content={references.content[id]}
+								/>
+							)
+						}
+					</>
+			}
+		</article>
+	</main>
+</Layout>

@@ -1,14 +1,42 @@
 {
-  "name": "widestring-astro",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^5.2.3"
-  }
+	"name": "widestring-astro",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"dependencies": {
+		"@astrojs/mdx": "^4.2.6",
+		"@astrojs/solid-js": "^5.0.10",
+		"@iconify-json/majesticons": "^1.2.2",
+		"@unocss/reset": "^66.0.0",
+		"astro": "^5.7.10",
+		"immutable": "^5.0.3",
+		"mdast-util-to-string": "^4.0.0",
+		"psl": "^1.15.0",
+		"reading-time": "^1.5.0",
+		"rehype-mathjax": "^7.1.0",
+		"remark-custom-header-id": "^1.0.0",
+		"remark-gfm": "^4.0.1",
+		"remark-math": "^6.0.0",
+		"sharp": "^0.34.1",
+		"solid-js": "^1.9.5",
+		"unist-builder": "^4.0.0",
+		"unist-util-filter": "^5.0.1",
+		"unist-util-visit": "^5.0.0",
+		"unocss": "^66.0.0"
+	},
+	"devDependencies": {
+		"@types/mdast": "^4.0.4",
+		"mdast-util-mdx-jsx": "^3.2.0",
+		"vfile": "^6.0.3"
+	},
+	"pnpm": {
+		"patchedDependencies": {
+			"psl": "patches/psl.patch"
+		}
+	}
 }

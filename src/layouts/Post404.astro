@@ -1,0 +1,49 @@
+---
+import Layout from './Layout.astro';
+import Logo from '../components/Logo.astro';
+import PostMetadata from '../components/PostMetadata.astro';
+import Permalink from '@components/post/Permalink.astro';
+import TuringSpacetime from '@components/404/TuringSpacetime.js';
+import type { PostEntry } from '../registry/getPost';
+
+interface Props extends PostEntry {}
+const { title, published, edited, tags, permalink, cover, minutesRead } = Astro.props;
+---
+
+<Layout title={title}>
+	<main>
+		<header class:list={['relative', 'bg-white', '@dark:bg-#202020', cover ? 'z-2' : 'z-0']}>
+			{cover &&
+				<>
+					<img class="absolute left-0 top-0 w-100% h-100% object-cover" src={cover} alt="" />
+					<div class="absolute inset-x-0 top-0 h-100% bg-#ffffff80 @dark:bg-#20202080 backdrop-blur-md z-1" />
+				</>
+			}
+			<div class="relative pt-32 px-[calc((100%_-_45rem)_/_2)] pb-4 z-2">
+				<a href="/">
+					<Logo alt="블로그 메인으로" />
+				</a>
+				<h1>{title}</h1>
+				<PostMetadata
+					minutesRead={minutesRead}
+					published={published}
+					edited={edited}
+					tags={tags}
+				/>
+			</div>
+		</header>
+		<article>
+			{permalink &&
+				<Permalink href={permalink} />
+			}
+			<slot />
+		</article>
+	</main>
+	<div id="turing-machine" class="relative mx--4 mt-100vh w-[calc(100%_+_2rem)] overflow-x-clip bg-white @dark:bg-#202020 z-4">
+		<div
+			class="absolute w-100% h-100% bg-black @dark:bg-white z-1"
+			style="mask: url(/res/404/turing_cell.svg) alpha top / 1rem 1rem;"
+		/>
+		<TuringSpacetime client:only="solid-js" />
+	</div>
+</Layout>

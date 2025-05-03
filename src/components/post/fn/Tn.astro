@@ -1,0 +1,14 @@
+---
+interface Props {
+	id: string,
+	__index__?: number,
+	__xref__?: string,
+}
+const { id, __index__, __xref__ } = Astro.props;
+if(__index__ === undefined)
+	throw new TypeError('Tn: missing __index__');
+if(__xref__ === undefined)
+	throw new TypeError('Tn: missing __xref__');
+---
+
+<sup><a id={`xtn:${id}:${__xref__}`} class="-fn text-[#d22] @dark:text-[#f88]" href={`#tn:${id}`}>역{__index__}</a></sup>

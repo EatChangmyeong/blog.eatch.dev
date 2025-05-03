@@ -1,0 +1,12 @@
+---
+import AOut from './AOut.astro';
+
+type Props = {
+	prob: number,
+};
+const { prob } = Astro.props;
+---
+
+<AOut
+	href={`https://acmicpc.net/problem/${prob}`}
+><slot /></AOut>

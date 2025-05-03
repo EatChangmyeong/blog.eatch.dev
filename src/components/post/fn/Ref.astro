@@ -1,0 +1,16 @@
+---
+interface Props {
+	id: string,
+	sup?: boolean,
+	__xref__?: string,
+}
+const { id, sup = false, __xref__ } = Astro.props;
+if(__xref__ === undefined)
+	throw new TypeError('Ref: missing __xref__');
+---
+
+{
+	sup
+		? <sup><a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`}>[{id}]</a></sup>
+		: <a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`}>[{id}]</a>
+}

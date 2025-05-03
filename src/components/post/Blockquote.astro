@@ -1,0 +1,39 @@
+---
+import AOut from './a/AOut.astro';
+
+type Props = {
+	href: string,
+} & (
+	{
+		restricted?: boolean | string,
+		unavailable: undefined,
+	} | {
+		restricted: undefined,
+		unavailable: true,
+	}
+);
+const { href } = Astro.props;
+---
+
+<blockquote cite={href}>
+	<slot />
+	{Astro.slots.has('original') &&
+		<div class="font-size-[0.8em] opacity-75">
+			<slot name="original" />
+		</div>
+	}
+	{(() => {
+		const
+			author = Astro.slots.has('author') && <slot name="author" />,
+			citeRaw = Astro.slots.has('cite')
+				? <slot name="cite" />
+				: href,
+			cite = href
+				? <AOut {...Astro.props}>{citeRaw}</AOut>
+				: citeRaw;
+		return (author || cite) &&
+			<p class="font-size-[0.8em] text-right">
+				— {author}{author && cite && ', '}{cite}
+			</p>;
+	})()}
+</blockquote>

@@ -1,0 +1,22 @@
+---
+interface Props {
+	date: Date,
+}
+const
+	{ date } = Astro.props,
+	yyyy = date.getFullYear(),
+	mm = date.getMonth() + 1,
+	dd = date.getDate();
+---
+
+<time
+	datetime={`${
+		yyyy.toString().padStart(4, '0')
+	}-${
+		mm.toString().padStart(2, '0')
+	}-${
+		dd.toString().padStart(2, '0')
+	}`}
+>
+	{yyyy}년 {mm}월 {dd}일
+</time>

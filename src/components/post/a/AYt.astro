@@ -1,0 +1,38 @@
+---
+import AOut from './AOut.astro';
+
+type Props = {
+	id: string,
+	t?: number,
+} & (
+	{
+		restricted?: boolean | string,
+		unlisted?: undefined,
+		unavailable?: undefined,
+	} | {
+		restricted?: undefined,
+		unlisted: true,
+		unavailable?: undefined,
+	} | {
+		restricted?: undefined,
+		unlisted?: undefined,
+		unavailable: true,
+	}
+);
+const
+	{ id, t, unlisted, ...unavailable } = Astro.props;
+
+function tWith(punct: string): string {
+	return t === undefined
+		? ''
+		: `${punct}${t}`;
+}
+---
+
+<AOut
+	href={`https://youtu.be/${id}${tWith('?t=')}`}
+	{...(unlisted
+		? { restricted: '일부 공개 동영상입니다.' }
+		: unavailable
+	)}
+><slot /></AOut>

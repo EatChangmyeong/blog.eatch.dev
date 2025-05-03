@@ -1,0 +1,15 @@
+---
+interface Props {
+	colorLight: string,
+	colorDark: string,
+}
+const { colorLight, colorDark } = Astro.props;
+---
+
+<style define:vars={{
+	'remark-color': colorLight,
+	'remark-color-dark': colorDark,
+}} />
+<div class="-block bg-[--remark-color] @dark:bg-[--remark-color-dark]">
+	<slot />
+</div>

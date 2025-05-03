@@ -1,0 +1,272 @@
+/* https://github.com/orioncactus/pretendard/blob/article/dist/web/static/pretendard.css */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
+
+/* https://hangeul.naver.com/font */
+@font-face {
+    font-family: 'D2Coding';
+    src:
+		local('D2Coding'),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2Coding.woff) format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2Coding.ttf) format("truetype");
+	font-weight: normal;
+	font-display: swap;
+}
+@font-face {
+    font-family: 'D2Coding';
+    src:
+		local('D2Coding Bold')
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.eot?#iefix) format("embedded-opentype"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.woff) format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.ttf) format("truetype");
+	font-weight: bold;
+	font-display: swap;
+}
+@font-face {
+    font-family: '나눔스퀘어라운드';
+    src:
+		local('나눔스퀘어라운드 Regular'),
+		local('나눔스퀘어라운드OTF Regular'),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.eot?#iefix) format("embedded-opentype"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.woff2) format("woff2"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.woff) format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.ttf) format("truetype");
+		font-weight: normal;
+		font-display: swap;
+}
+@font-face {
+    font-family: '나눔스퀘어라운드';
+    src:
+		local('나눔스퀘어라운드 Bold'),
+		local('나눔스퀘어라운드OTF Bold'),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.eot?#iefix) format("embedded-opentype"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.woff2) format("woff2"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.woff) format("woff"),
+		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.ttf) format("truetype");
+	font-weight: bold;
+	font-display: swap;
+}
+
+@font-feature-values 'Pretendard' {
+	@styleset {
+		default-styleset: 5 6 8;
+	}
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-padding-top: 6rem;
+}
+body {
+	margin: 1rem;
+	font-family: Pretendard, sans-serif;
+	font-variant: styleset(default-styleset);
+	line-height: 1.5;
+	word-break: keep-all;
+	color: black;
+	background-color: white;
+}
+header {
+	margin: -1rem -1rem 0;
+	padding: 1rem 1rem 0;
+	position: relative;
+	width: calc(100% + 2rem);
+}
+article, nav {
+	margin: auto;
+	max-width: 45rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: '나눔스퀘어라운드', sans-serif;
+	line-height: 1;
+}
+h1 {
+	font-size: 2.5rem;
+	color: #564a7e;
+}
+h1:not(article h1) {
+	margin: 0;
+	line-height: 1.25;
+}
+h2 {
+	font-size: 2.5rem;
+}
+h3 {
+	font-size: 2.1rem;
+}
+h4 {
+	font-size: 1.8rem;
+}
+h5 {
+	font-size: 1.5rem;
+}
+h6 {
+	font-size: 1.2rem;
+}
+a {
+	color: #0036c8;
+}
+a:visited:not(.-fn, .-xfn) {
+	color: #4a587e;
+}
+a:hover {
+	text-decoration-color: transparent;
+}
+a.-fn {
+	text-decoration-color: transparent;
+}
+a.-fn:hover {
+	text-decoration-color: currentcolor;
+}
+article del {
+	opacity: 75%;
+}
+article del:hover {
+	text-decoration-color: transparent;
+}
+
+article :is(blockquote, h1, h2, h3, h4, h5, h6, img, p, .astro-code, .-block) {
+	overflow-x: auto;
+	overflow-y: clip;
+}
+article :is(h1, h2, h3, h4, h5, h6) {
+	margin: 1rem 0;
+}
+article img {
+	margin: 0.5rem auto;
+}
+article :is(blockquote, .-block) {
+	margin: 0.5rem;
+	margin-right: 0;
+	padding: 0.1rem;
+}
+article .astro-code {
+	margin: 0.5rem;
+	margin-right: 0;
+	padding: 0.6rem;
+}
+article :is(ol, ul) {
+	margin: 0.5rem 0;
+	padding-left: 1.75rem;
+}
+article li > p {
+	margin-left: 0;
+}
+article li > :is(ol, ul) {
+	padding-left: 1.25rem;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+article :is(p, summary) {
+	margin: 0.5rem;
+}
+article :is(.astro-code, .-block) {
+	box-shadow: 0 1px 3px 0 #00000040, 0 1px 2px -1px #00000040;
+}
+article blockquote {
+	border-left: 0.25rem solid #564a7e;
+	background-color: #564a7e19;
+}
+article :is(code, var, samp) {
+	font-family: D2Coding, monospace;
+	font-style: normal;
+	color: #24292e;
+	background-color: #ffffff;
+	tab-size: 4;
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+}
+article :is(code:not(pre code), var, samp) {
+	margin: 0 0.05em;
+	padding: 0.15em;
+}
+article :is(h1, h2, h3, h4, h5, h6)::before {
+	display: block;
+	font-family: Pretendard, sans-serif;
+	font-feature-settings: "ss06";
+	font-size: 0.8rem;
+	line-height: 2;
+	color: black;
+	opacity: 75%;
+}
+article h1::before {
+	content: '#';
+}
+article h2::before {
+	content: '##';
+}
+article h3::before {
+	content: '###';
+}
+article h4::before {
+	content: '####';
+}
+article h5::before {
+	content: '#####';
+}
+article h6::before {
+	content: '######';
+}
+article hr {
+	margin: 2.5rem auto;
+	border: none;
+	width: 80%;
+	height: 1px;
+	color: inherit;
+	background-color: currentColor;
+	opacity: 50%;
+}
+article img {
+	display: block;
+	max-width: 100%;
+	max-height: max(16rem, 80vh);
+	width: auto;
+	height: auto;
+	box-shadow: 0 1px 3px 0 #00000040, 0 1px 2px -1px #00000040;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		color: white;
+		background-color: #202020;
+	}
+
+	.astro-code, .astro-code span {
+		color: var(--shiki-dark) !important;
+		background-color: var(--shiki-dark-bg) !important;
+	}
+
+	h1 {
+		color: #d5cafe;
+	}
+	a {
+		color: #91b0ff;
+	}
+	a:visited:not(.-fn, .-xfn) {
+		color: #cad9fe;
+	}
+
+	article blockquote {
+		border-left-color: #ab94fc;
+		background-color: #d5cafe19;
+	}
+	article :is(code, var, samp) {
+		color: #e1e4e8;
+		background-color: #24292e;
+	}
+	article :is(h1, h2, h3, h4, h5, h6)::before {
+		color: white;
+	}
+}
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	a, del {
+		transition: text-decoration-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+}

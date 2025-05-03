@@ -1,11 +1,34 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+import PostCard from '../components/PostCard.astro';
+import type { PostEntry } from '../registry/getPost';
+import { getPost } from '../registry/getPost';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const
+	collection = await getCollection('blog'),
+	posts = await Promise.all(
+		[...collection]
+			.sort((l, r) => +r.data.published - +l.data.published)
+			.map(x => getPost(x.id))
+	) as PostEntry[];
 ---
 
 <Layout>
-	<Welcome />
+	<main>
+		<header class="pt-32 px-[calc((100%_-_45rem)_/_2)] pb-4 max-w-45rem">
+			<h1 class="text-1rem leading-none">
+				<Logo heading alt="Widestring" />
+			</h1>
+		</header>
+		<article class="my-4">
+			<p><strong><a href="https://eatchangmyeong.github.io/">구 블로그</a>를 Astro로 재작성하고 있습니다.</strong> 아직 옮기지 못한 글도 순차적으로 모두 가져올 예정입니다.</p>
+		</article>
+		<nav>
+			{posts.map(post =>
+				<PostCard {...post} href={`/${post.published!.getFullYear()}/${post.slug!}`} />
+			)}
+		</nav>
+	</main>
 </Layout>

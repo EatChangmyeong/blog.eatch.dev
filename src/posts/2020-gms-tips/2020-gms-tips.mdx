@@ -1,0 +1,640 @@
+---
+title: '게임메이커 8.x / GMS 2.3+ 소소한 꿀팁'
+slug: 'gms-tips'
+published: 2020-04-24
+edited: 2025-04-19
+cover: '/res/cover/2020-gms-tips.png'
+permalink: 'https://eatch.dev/s/gms'
+tags:
+- 'GameMaker'
+---
+
+import { Image } from 'astro:assets';
+import AOut from '@components/post/a/AOut.astro';
+import ADoi from '@components/post/a/ADoi.astro';
+import AWp from '@components/post/a/AWp.astro';
+import AYt from '@components/post/a/AYt.astro';
+import Blockquote from '@components/post/Blockquote.astro';
+import RemarkSimple from '@components/post/RemarkSimple.astro';
+import Remark from '@components/post/Remark.astro';
+import Dive from '@components/post/Dive.astro';
+import Term from '@components/post/Term.astro';
+import Fn from '@components/post/fn/Fn.astro';
+import Ref from '@components/post/fn/Ref.astro';
+
+import Note from './Note.astro';
+
+import default_layer_depth_spacing from './default-layer-depth-spacing.png';
+import javascript_float_error from './javascript-float-error.png';
+import max_safe_integer from './max-safe-integer.png';
+
+<Blockquote href="https://cafe.naver.com/crazygm/221283">
+	<AOut href="https://cafe.naver.com/playgm/69477" restricted="KGMC 아카이브 (구 PlayGM) 회원만 열람 가능합니다.">구 PlayGM에 멍멍이님이 작성하셨던 겜메 팁</AOut>을 감명 깊게 읽었던 적이 있습니다. 그동안 게임메이커 스튜디오나, 굳이 겜메가 아니더라도 개발을 하면서 익힌 꿀팁...이라기보다는 꼼수나 그런 것들을 감히 저 글의 포맷을 빌려 공유해보려고 합니다.
+
+	<Fragment slot="author">이상명 (한국 게임메이커 커뮤니티)</Fragment>
+
+	<Fragment slot="cite">(Deprecated) 조금 소소할 수도 있지만 일단 올려보는 겜메/겜스 팁</Fragment>
+</Blockquote>
+
+<AOut href="https://cafe.naver.com/crazygm/221283">KGMC에 원본 글을 쓰면서</AOut> 저렇게 운을 뗀 게 벌써 5년하고도 10개월 전이네요. 2022년 중순까지는 계속 이 글을 업데이트했는데, 그 이후로 학업과 군복무 등의 이유로 GameMaker 사용이 줄어들면서 글이 어느 정도 오래 묵은 것 같은 느낌이 듭니다. 활발한 업데이트는 하지 않겠지만, 글은 삭제하지 않고 남겨 두겠습니다.
+
+이 글에서는 네이버 카페 한국 게임메이커 커뮤니티(KGMC, 구 CrazyGM) 및 게임메이커 아카이브(구 PlayGM) 회원만 열람 가능한 글을 인용하고 있습니다. 해당 내용의 삭제를 원하신다면 <span class="font-monospace">dlaud5379 [at] naver.com</span>이나 이 글의 댓글로 연락해 주세요.
+
+<Remark>
+* 이 글은 레거시 Game Maker 8.0 (이하 GM8) 및 최신 GameMaker (Studio 2.3 이후 버전, 이하 GMS2) 위주로 작성합니다. GameMaker: Studio 1.x (이하 GMS1)과 관련된 내용이 일부 포함되어 있습니다.
+	* <AOut href="https://gamemaker.io/en/blog/release-2022-3">2022.3 업데이트</AOut> 이후 기존에 사용하던 명칭인 "GameMaker Studio 2"가 "GameMaker"로 바뀌었습니다. 이 글에서는 지칭의 편의상 GMS2를 약어로 사용합니다.
+* 모든 도움말 페이지 링크는 <AOut href="https://manual.gamemaker.io">GMS2 온라인 매뉴얼</AOut>로 연결됩니다.
+* GameMaker의 일부 변수나 함수는 미국식(e.g. `make_color_rgb`)과 영국식(e.g. `make_colour_rgb`) 이름이 동시에 제공됩니다. 이 글에서는 영국식 철자로 통일합니다.
+* 지금도 그런지는 잘 모르겠지만, 여러 한국어 자료에서 `var`로 선언하고 이벤트나 함수가 끝나면 사라지는 변수를 '임시 변수'로 지칭하는 것 같습니다. 이 글에서는 매뉴얼의 표기를 따라 <Term term="local variable">지역 변수</Term>로 지칭합니다.
+</Remark>
+
+## 음수의 나머지는? \{#negative-remainder\}
+
+`mod`나 `%`(GMS1~) 연산자로 나머지를 구할 수 있습니다. 그런데 **나뉘는 수가 음수면 결과도 음수가 됩니다**(나누는 수의 부호는 무관합니다). 이 연산자의 동작은 <AWp art="Modulo" frag="In programming languages">언어별로 생각보다 많이 다르고</AWp>, 아예 여러 가지 버전의 연산자를 전부 제공하는 언어도 있습니다.
+
+나뉘는 수의 부호에 상관없이 양수인 결과가 나오게 하고 싶다면 `((a % b) + b) % b`를 하면 됩니다. 저는 <AOut href="https://stackoverflow.com/a/4467559/21257162">JavaScript 프로그래밍을 하면서 이 방법을 처음 익혔고</AOut>, 현재도 상황별로 응용해서 잘 사용하고 있습니다. 예를 들어서 0 이상 `n` 미만인 두 수 `a`와 `b`의 합의 나머지를 구할 때는 나머지 연산 1회짜리 `(a + b) % n`으로 충분합니다.
+
+## `angle_difference` \{#angle-difference\}
+
+GMS1부터는 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Angles_And_Distance/angle_difference.htm">`angle_difference(dest, src)`</AOut>라는 함수가 추가되어 두 각 사이의 차를 쉽게 계산할 수 있습니다. 이 함수는 `src`를 기준으로 한 `dest`의 각도, 즉 `dest - src`를 **-180°와 +180° 사이로 알아서 변환**해줍니다.
+
+사실 매뉴얼에도 올라와있는 만큼 "꼼수"는 아니긴 하지만 문서화가 되었고 유용한 함수라고 해서 전부 잘 알려진 것이 아니니만큼 실을 가치가 있다고 생각합니다. 저도 다른 언어 문서를 보면서 매일 몰랐던 것을 배우고 있습니다.
+
+## 정확한 시간 측정 \{#accurate-timekeeping\}
+
+GameMaker에서는 게임이 켜진 이후 흐른 시간을 측정하는 방법이 크게 세 가지가 있습니다.
+
+* <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Date_And_Time/current_time.htm">**`current_time`**</AOut>: 게임이 켜진 이후 흐른 시간입니다. 단위는 밀리초(ms)입니다(1,000 ms = 1초).
+* <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Date_And_Time/get_timer.htm">**`get_timer()`**</AOut>: 위와 같지만 변수가 아닌 함수의 형태이며, 단위는 마이크로초(μs)입니다(1,000,000 μs = 1초).
+* <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Date_And_Time/delta_time.htm">**`delta_time`**</AOut> (GMS1~): 마지막 프레임과 그 이전 프레임 간의 시차(즉, $$\Delta t$$)입니다. 단위는 마이크로초입니다.
+
+렉이 심하거나 (리듬게임처럼) 정확한 시간 측정이 중요한 게임이라면 이 기능이 유용하겠습니다. 단, 제가 아는 바가 맞다면 `current_time`과 `get_timer()` 모두 게임이 시작할 때 0부터 시작한다는 보장이 없습니다. 필요하다면 첫 프레임에 시각을 재서 기준값으로 삼는 것이 좋습니다.
+
+`delta_time`이나 비슷한 메커니즘을 게임에서 핵심적으로 사용하신다면 Jonas Tyroller님의 동영상 <AYt id="yGhfUcPjXuE"><Term term="Dear Game Developers, Stop Messing This Up!">게임 개발자 여러분, 이런 실수는 이제 그만 하세요!</Term></AYt>(영어)를 참고하시면 좋습니다.
+
+### 룸 스피드 저리가 \{#room-speed-is-dead\}
+
+사실 [#정확한 시간 측정](#accurate-timekeeping)도 "꼼수"와는 거리가 먼데 굳이 적은 이유는, **게임 내 프레임 체계를 아예 `get_timer()`로 대체할 수 있기 때문**입니다. 게임 코드에서 FPS 값(GameMaker의 경우 게임 속도)을 단 한 번도 참조하지 않고 `get_timer()`만으로 시간 관리를 해도 게임은 잘 돌아갑니다.
+
+GameMaker의 경우 그 특유의 체계 때문에 완전히 갈아치우는 것은 무리일 수도 있겠지만, 개인적으로 이미 이렇게 돌아가는 게임을 몇 개 만들어본 입장으로서~~꼰대~~ 고수분들이라면 도전해보는 것도 나쁘지 않을 것 같습니다~~무책임~~. 덤으로 이렇게 만들면 게임 속도를 무턱대고 9999까지 올려도 문제가 없다는 장점이 있습니다(<AOut href="https://cafe.naver.com/crazygm/222639">실제로 해본 적이 있습니다</AOut>).
+
+### 저 다시 sleep할래요 \{#gotta-sleep-again\}
+
+GM8에 있던 Sleep 액션이 GMS1에 들어와서는 사라졌는데, 혹시나 이 기능이 필요하신 분이 있다면 아래 코드로 이 액션을 모사할 수 있습니다. 잠들어있는 동안 마우스/키보드 입력을 포함한 게임의 모든 기능이 먹통이 되는 점은 감안하셔야 합니다.
+
+```js
+var t = get_timer();
+while(get_timer() - t < 잠들어있을_시간_마이크로초) {}
+```
+
+이와 연관된 팁으로, 도저히 한 스텝 내에 실행할 수 없는 무거운 알고리즘을 여러 스텝으로 나누어 실행하고 싶다면 해당 알고리즘을 한 번에 한 루프씩만 실행되도록 적당히 변형해 대괄호 안에 넣을 수도 있습니다.
+
+```js
+// 생성
+algo_steps = 0;
+```
+
+```js
+// 스텝
+/*
+for(var i = 0; i < 1000000; i++)
+	do_something(i);
+*/
+var
+	t = get_timer(),
+	// 한 스텝의 절반을 이 알고리즘에 할당합니다.
+	// 필요에 따라 계수 `0.5 *`를 조정하거나
+	// 고정 횟수만 실행하게 만들어도 됩니다.
+	dt = 0.5 * game_get_speed(gamespeed_microseconds);
+for(; get_timer() - t < dt && algo_steps < 1000000; algo_steps++)
+	do_something(i);
+```
+
+## `while;`;;;;;;;;; \{#while\}
+
+[#저 다시 sleep할래요](#gotta-sleep-again)에 관한 여담이지만, 문법이 비슷해 보여도 `;` 하나만 써도 한 문장으로 인식해서 대괄호 대신 세미콜론을 쓴 `while(...);`이 잘 실행되는 언어가 있는 한편, 그렇지 않아서 오류가 발생하는 언어도 있습니다. GM8에서는 "<Term term="Statement expected">구문이 와야 합니다</Term>"라는 런타임 오류가, GMS1 이후부터는 "<Term term="malformed while statement">잘못된 while문</Term>"이라는 컴파일 오류가 발생합니다.
+
+저는 처음에 이런 동작을 접하고 언어 사용자의 자유를 침해하는 듯한 느낌이 들어 마음에 들지 않았는데, 다시 생각해보니 적어도 숙련되지 않은 사용자가 `while`을 함수로 착각하고 뒤에 세미콜론을 붙인다든지 하는 실수를 예방하는 데는 도움이 될 것 같습니다.
+
+## 은행원의 반올림 \{#banker-s-rounding\}
+
+GameMaker는 반올림을 할 때 <AWp art="Rounding" frag="Rounding half to even"><Term term="round half to even">가까운 짝수로 반올림</Term></AWp>이라는 특수한 방법을 사용합니다. <Term term="Banker's rounding">은행원의 반올림</Term>이라고도 하는데, 이 방법으로 반올림을 하는 규칙은 다음과 같습니다.
+
+* 일반적인 반올림과 같이 가장 가까운 정수로 반올림합니다.
+* 단, 소수 부분이 정확히 .5라면 가장 가까운 두 정수 중 *짝수인 것*으로 반올림합니다.
+
+예를 들어 `round(0.5)` = 0이지만(*1이 아님*에 주의) `round(1.5)` = 2입니다. 다른 반올림 방법과 달리 반올림한 결과에 비교적 편향이 적다는 장점이 있어서 Python 등 일부 다른 언어에서도 반올림 함수를 이렇게 구현하기도 합니다.
+
+가끔씩 올라오는 "스프라이트가 깨져요" 문제도 이것이 원인일 수도 있습니다. 직접 재현에 실패해서 이것이 원인이라고 확답을 할 수는 없으니 혹시 걱정된다면 그리기 함수를 쓸 때 좌표에 꼭 `round`를 씌워주세요.
+
+### 헷갈리게 쓰인 도움말 \{#confusing-documentation\}
+
+점점 나아지고는 있지만, 개인적으로 GameMaker의 도움말을 읽다 보면 사소하지만 꼭 필요한 동작이 문서화가 되지 않은 경우가 많다고 느껴집니다. 개인적으로 참고하려고 적자면...
+
+* <AOut href="https://manual.gamemaker.io/monthly/en/index.htm#t=GameMaker_Language%2FGML_Reference%2FMaths_And_Numbers%2FNumber_Functions%2Fround.htm">`round`</AOut>는 부호와 무관하게 모든 수를 가까운 짝수로 반올림합니다.
+* <AOut href="https://manual.gamemaker.io/monthly/en/index.htm#t=GameMaker_Language%2FGML_Reference%2FMaths_And_Numbers%2FNumber_Functions%2Ffloor.htm">`floor`</AOut>는 <Term term="round towards negative infinity">음의 무한대로 버림</Term>합니다. 즉, `floor(x)`는 <var>x</var> 이하인 가장 큰 정수입니다.
+* <AOut href="https://manual.gamemaker.io/monthly/en/index.htm#t=GameMaker_Language%2FGML_Reference%2FMaths_And_Numbers%2FNumber_Functions%2Ffrac.htm">`frac(x)`</AOut>의 부호는 <var>x</var>와 같습니다. 즉, `frac(x) = x % 1`이 성립합니다.
+* GameMaker에는 <Term term="round towards zero">0으로 버림</Term>하는 내장 함수가 없지만, `x div 1`로 같은 동작을 구현할 수 있습니다.
+
+## 빠르게 작성하는 색상값 \{#convenient-color-code\}
+
+모든 버전의 GameMaker에서 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Drawing/Colour_And_Alpha/make_colour_rgb.htm">`make_colour_rgb`</AOut> 대신 `$BBGGRR` 문법으로 색상을 표현할 수 있습니다. 16진수 문법인 `$`와 GameMaker 내부의 색상 처리 방식을 응용한 것인데, `#RRGGBB` 형태의 헥스 코드를 2자리씩 끊은 뒤 순서를 뒤집어 입력하면 됩니다(e.g. `#ab94fc` = `$fc94ab`). 헥스 코드가 3자리라면 각 자리를 2번씩 써서 6자리로 만들면 됩니다(e.g. `#a9f` = `#aa99ff` = `$ff99aa`).
+
+GameMaker 2022.2.0.614부터는 <AOut href="https://manual.gamemaker.io/monthly/en/#t=GameMaker_Language%2FGML_Reference%2FDrawing%2FColour_And_Alpha%2FColour_And_Alpha.htm%23hex_colours">색상 전용 문법인 `#RRGGBB`가 생겨</AOut> 위의 변환 과정 없이 헥스 코드를 그대로 입력할 수 있습니다. 단, 3자리 헥스 코드(`#RGB`)는 지원하지 않습니다.
+
+## 문자열이 못 말려 \{#annoying-strings\}
+
+GMS1부터는 문자열 처리 방식이 달라져서 일부 문자열 관련 함수는 잘못 사용할 경우 비효율적으로 동작할 수 있습니다. 예를 들어, `string_char_at(str, n)`은 <var>n</var>에 비례해서 오래 걸립니다. **`for`문 안에서 돌아가고 있어도요.**
+
+이 현상은 100글자 정도 되는 짧은 문자열에서는 그냥 무시해도 상관이 없고, 그 이상의 긴 문자열을 효율적으로 처리하려면 적당한 길이(1000글자 정도)의 여러 문자열로 자르거나 버퍼를 이용할 수 있습니다.
+
+<Dive>
+<details>
+<summary>문자열 처리가 느려진 이유는?</summary>
+
+GMS1부터는 문자열을 <AWp lang="ko" art="UTF-8" />이라는 방식으로 저장하는데, 문자별로 메모리에서 차지하는 크기가 다릅니다. 예를 들어, '자주 쓰이는'<Fn id="frequent" /> 대표적인 문자인 숫자와 알파벳은 1바이트이지만, 한글은 1음절에 3바이트입니다.
+
+GM8의 문자열은 모든 문자가 크기가 같았기 때문에(그때는 애초에 다국어 지원이 없었습니다) 몇 번째 문자인지만 알면 그 문자의 위치를 곱셈 한 번으로 간단히 결정할 수 있었지만, UTF-8은 그렇지 않기 때문에 첫 글자부터 하나하나 세어가면서 찾아야 합니다.
+
+언어별로 문자 표현의 문제를 해결하는 방법이 다른데, UTF-8을 사용하는 언어 중 <AOut href="https://rust-lang.org">Rust</AOut>를 예로 들면 <AOut href="https://doc.rust-lang.org/stable/std/string/struct.String.html#utf-8">애초에 n번째 문자를 직접 읽지 못하도록 하고</AOut>, 그 대신 반복자 등의 장치를 통해 인접한 문자를 훑는 것이 더욱 간편하도록 설계되어 있습니다.
+</details>
+</Dive>
+
+## 알람의 정수 \{#integral-part-of-alarms\}
+
+<RemarkSimple>KGMC Budgerigar님께서 제보해 주셨습니다.</RemarkSimple>
+
+**알람을 소수로 설정할 수 없습니다.** `alarm[0] += 1.5;`를 하려고 하면 1.5를 버림한 값인 1만큼만 더해집니다.
+
+알람을 왜 이렇게 구현했는지는 잘 모르겠습니다. 단순 추측으로는 알람 실행을 확인하는 로직(`alarm[x] == 0`)을 단순화하기 위해서가 아닐까 싶습니다.
+
+## 좌표계 변환 \{#coordinate-transformation\}
+
+<var>hspeed</var>/<var>vspeed</var>와 <var>speed</var>/<var>direction</var>은 서로에게 **즉시** 영향을 미칩니다. 즉, 이벤트나 스크립트가 끝날 때 일괄 변환되는 것이 아니라 대입이 *되자마자* 다른 변수가 같이 바뀝니다.
+
+```js
+show_debug_message([speed, direction]); // [ 0, 0 ]
+hspeed = 3;
+vspeed = 4;
+show_debug_message([speed, direction]); // [ 5, 306.87 ]
+
+show_debug_message([hspeed, vspeed]); // [ 3, 4 ]
+speed = 10;
+show_debug_message([hspeed, vspeed]); // [ 6, 8 ]
+```
+
+직교좌표와 극좌표 사이의 변환을 자주 한다면 이 성질을 이용해 편리하게 코드를 짤 수 있습니다.
+
+## 깊이의 수렁 \{#depthless-pit\}
+
+GMS2 매뉴얼에는 깊이 값이 ±16,000을 넘어가는 레이어는 화면에 표시되지 않는다는 언급이 있습니다.
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Asset_Management/Rooms/General_Layer_Functions/layer_force_draw_depth.htm">
+	... 깊이 값이 적합한 범위(-16000부터 16000까지)를 벗어나는 레이어는 렌더링되지 않으므로, ...
+
+	<Fragment slot="original">
+		... but if you have layers that have a depth outside of the legal range (-16000 to 16000) then they won't be rendered, ...
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 `layer_force_draw_depth` 페이지</Fragment>
+</Blockquote>
+
+이 문제가 발생한다면 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Asset_Management/Rooms/General_Layer_Functions/layer_force_draw_depth.htm"><code>layer_force_draw_depth(force, depth)</code></AOut> 함수를 사용해 해결할 수 있습니다. <var>force</var>를 `true`로, <var>depth</var>에 적당한 값(0을 넣으면 충분해 보입니다)을 넣으면 거기에 해당하는 깊이에 *모든 레이어를 강제로 그립니다*. 물론 드로우 순서는 <var>depth</var> 내림차순으로 유지됩니다.
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Asset_Management/Rooms/General_Layer_Functions/layer_force_draw_depth.htm">
+	... 모든 레이어가 올바르게 그려질 수 있도록 Z 깊이를 (예컨대 0과 같은) 적절한 값으로 강제로 설정할 수 있다. 이 함수는 일반적으로 드로우 깊이를 허용된 레이어 범위를 벗어나는 값으로 설정할 수 있었던 구 버전의 GameMaker로 개발한 레거시 프로젝트와의 호환 목적으로만 사용한다.
+
+	<Fragment slot="original">
+		... so you can force the Z depth to a reasonable value - 0 for example - and they will all be rendered fine. Note that this is generally only for use with legacy projects from previous version of GameMaker where you could have draw depths higher or lower than the permitted layer range.
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 `layer_force_draw_depth` 페이지</Fragment>
+</Blockquote>
+
+마지막 문장 때문에 이 함수를 쓰기 찜찜하다면, 처음부터 정상 범위 안의 <var>depth</var> 값만 사용하도록 게임 로직을 작성해야 합니다. 예를 들어 기존에 깊이 값을 `depth = -y;`로 관리했다면, `depth = -(y * 100 / room_height);`로 바꾸면 (인스턴스가 룸 안에 있다는 가정 하에) 깊이 값이 0에서 100 사이로 조절됩니다.
+
+## 레이어끼리너무촘촘하게붙어있는데요 \{#thelayersaretoodense\}
+
+<RemarkSimple>KGMC dot cat님께서 제보해 주셨습니다.</RemarkSimple>
+
+GameMaker는 깊이 값을 소수로 지정하면 드로우 우선순위가 다소 튈 수도 있는 듯합니다(테스트해보지는 않았습니다). 정수 깊이 값만 사용하려고 한다면 기본 레이어 간격이 100이기 때문에 한 레이어당 100개의 깊이 값만 사용할 수 있는데, 환경설정의 <Term term="Room Editor">룸 에디터</Term>에서 <Term term="Default layer depth spacing">기본 레이어 깊이 간격</Term>을 바꾸면 레이어당 더 많은 깊이 값을 사용할 수 있습니다.
+
+<Image src={default_layer_depth_spacing} alt="환경 설정의 '룸 에디터' 화면에서 '기본 레이어 깊이 간격' 설정이 기본값인 100으로 맞추어져 있다." />
+
+### 구 버전에서는 어땠을까? \{#previous-depth-behavior\}
+
+GM8에서는 화면에 표시되는 깊이 제한은 없지만, 약 ±9,223,372,036,854,770,000을 넘어가면 게임이 튕깁니다. 부호 있는 64비트 정수형의 최댓값이 $$2^{63} - 1 = 9\,223\,372\,036\,854\,775\,807$$인 것과 관련이 있어 보입니다.
+
+GMS1 역시 화면에 표시되는 깊이 제한이 없으며, GM8에서처럼 게임이 튕기는 현상도 발생하지 않습니다. 잠깐 삼천포로 빠지자면, 화면에 깊이 값을 띄워놓고 테스트를 하다 부호와 무관하게 약 $$10^{18}$$을 넘는 수가 이렇게 표시되는 버그를 발견한 적이 있습니다.
+
+```
+1.
+J
+```
+
+도대체 어쩌다 이렇게 된 것인지는 모르겠지만, 오타 없이 1.(줄바꿈)J입니다. GMS2에서는 이 문제가 해결되었습니다.
+
+## 즐겁게 이동하다가 그대로 멈춰라 \{#stop-at-the-precise-position\}
+
+게임을 만들다 보면 원하는 점으로 움직이다가, 목표점에 도착하면 지나치지 않고 정확히 그 점에서 멈춰야 할 일이 생깁니다. 이때는 개인적으로 이 코드를 유용하게 쓰고 있습니다.
+
+```js
+x = clamp(목표_좌표, x - 속도, x + 속도);
+
+// GM8을 사용하신다면 `median`을 쓰면 됩니다.
+
+x = median(목표_좌표, x - 속도, x + 속도);
+```
+
+좌표가 <var>x</var>인 인스턴스가 <var>목표_좌표</var>를 향해 한 스텝에 음이 아닌 <var>속도</var>만큼 이동하며, 도착하면 떨림 현상 없이 정확히 <var>목표_좌표</var>에서 멈춥니다. 단, 1차원상의 이동에만 적용 가능합니다.
+
+## 얌전한 `default:`가 부뚜막에 먼저 올라간다 \{#revenge-of-default\}
+
+`switch`문을 쓸 때 `default:`를 **맨 뒤에 쓰지 않아도 됩니다**. 필요하다면 다른 `case`문처럼 맨 뒤가 아니라 중간에 끼워넣을 수도 있고, `break;`를 생략하면 다음 `case`로 넘어가는 동작도 같습니다.
+
+```js
+switch(t) {
+	default:
+		show_message("Default!");
+	case 5:
+		show_message("5");
+	break;
+}
+```
+
+위 코드를 실행하면 <var>t</var> = 5인 경우에는 메시지 상자 <samp>5</samp>만, 이외의 경우에는 <samp>Default!</samp> <samp>5</samp>가 차례대로 표시됩니다.
+
+GML 이외에도 C 스타일 `switch`문이 있는 일부 언어에서 이른 `default`를 지원합니다. 예를 들어 저는 <AOut href="https://eatch.dev/mcfont">옹기종기</AOut> 개발에 참고하려고 마인크래프트 자바 에디션을 디컴파일하다가 이 사실을 처음 알았습니다.
+
+## 단락 평가 \{#short-circuit-evaluation\}
+
+GMS1부터는 `||`와 `&&`의 두 연산자가 <Term term="short-circuit evaluation">단락 평가</Term><Fn id="short-circuit-evaluation" />라는 성능 최적화 기능을 지원합니다.
+
+```js
+// 실행되면 인자로 받은 값을 그대로 출력하고 바로 반환하는 함수입니다.
+// 무슨 식이 실행됐는지 확인하기 위한 용도입니다.
+function debugged(_value) {
+	show_debug_message(_value);
+	return _value;
+}
+
+// 우변이 실행되지 않습니다.
+if(debugged(1) || debugged(0)) {}
+// 1
+
+// 우변이 실행되지 않습니다.
+if(debugged(0) && debugged(1)) {}
+// 0
+```
+
+이 두 연산자는 좌변을 먼저 실행하고, 우변은 좌변만으로 값을 결정할 수 없을 경우에만 실행합니다.
+
+* `||`: 좌변이 참이면 우변의 값과 상관없이 식 전체가 참이므로 우변을 실행하지 않습니다.
+* `&&`: 좌변이 거짓이면 우변의 값과 상관없이 식 전체가 거짓이므로 우변을 실행하지 않습니다.
+
+최근에 추가된 `??`와 `??=` 연산자 역시 단락 평가를 지원합니다. 이 경우에는 좌변이 <Term term="nullish">비어 있지</Term> 않은(즉, `undefined`나 `pointer_null`이 아닌) 값이면 우변을 실행하지 않습니다.
+
+단락 평가를 잘 활용하면 더욱 빠르거나 간결한 코드를 작성할 수 있습니다.
+
+```js
+// ⚠️ oPlayer가 없으면 오류가 발생합니다.
+if(oPlayer.hp <= 0)
+	gameOver();
+
+// oPlayer 확인을 넣은 코드
+if(instance_exists(oPlayer))
+	if(oPlayer.hp <= 0)
+		gameOver();
+
+// 단락 평가를 활용해 재작성한 코드
+if(instance_exists(oPlayer) && oPlayer.hp <= 0)
+	gameOver();
+```
+
+3번째 코드는 1번째 코드처럼 오류가 발생할 여지가 없으면서도, 2번째 코드처럼 `if`문을 2번 사용하는 번거로움이 없습니다. 단, 무조건 이렇게 재작성하기 전에 먼저 재작성해서 얻는 득(성능 개선이나 가독성)이 실보다 큰지를 생각해 보아야 합니다(의외로 잘못 사용하면 가독성이 떨어질 수 있습니다). 추가로 무슨 일이 있어도 반드시 실행되어야 하는 함수를 이런 연산자의 우변에 넣으면 안 됩니다(좌변의 값에 따라 실행되지 않을 수도 있으므로).
+
+## 거꾸로 하는 배열 초기화 \{#array-initialization-in-reverse\}
+
+<RemarkSimple>KGMC Paragon님께서 제보해 주셨습니다.</RemarkSimple>
+
+GMS1부터는 배열을 생성할 때 **마지막부터** 혹은 `array_create`로 초기화하는 것이 빠릅니다. 예를 들어 길이가 1000인 배열 `arr`를 초기화하려면 무작정 `arr[999] = 0;`부터 하고 나머지를 채우거나, 처음부터 `arr = array_create(1000);`을 해야 합니다. *0부터 차례대로 넣지만 않으면 됩니다.*
+
+배열의 길이를 늘리는 연산이 다소 무겁기 때문에 발생하는 현상인데, 처음 두 방법은 배열을 최대 크기까지 한 번에 만들어두기 때문에 길이를 늘릴 필요가 없지만, 원소를 차례대로 넣으면 넣을 때마다 배열을 늘려야 하기 때문입니다(배열이 길수록 점점 눈에 띕니다). 2025년 2월에 런타임 v2024.11.0.226으로 테스트해본 결과 길이가 100,000인 배열을 생성할 때 처음부터 채웠을 경우 27.9초, 마지막부터 채웠을 경우 0.02초로 약 **1400배**(!!!)의 속도 차이가 났습니다.
+
+이 내용은 GameMaker 매뉴얼에서도 좋은 습관으로 언급하고 있습니다.
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/Additional_Information/Best_Practices_When_Programming.htm">
+	배열을 생성할 때는 그 길이에 맞추어 메모리가 할당되므로, 나중에 배열에 값을 채우지 않더라도 최대 크기로 초기화하는 것이 좋다. 예컨대, 어떤 배열에 담아야 할 값이 최대 100개라는 것을 알고 있다면, <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Variable_Functions/array_create.htm">`array_create()`</AOut> 함수를 이용해 배열 칸 100개를 바로 초기화하면 된다.
+
+	```js
+	array = array_create(100, 0);
+	```
+
+	이렇게 하면 이 배열의 메모리가 한 '묶음'으로 할당되고 모든 배열 값이 0으로 설정되며, 배열에 값을 추가할 때마다 메모리 전체를 재할당할 필요가 없으므로 게임이 느려지지 않는다.
+
+	<Fragment slot="original">
+		When you create an array, memory is allocated to it based on its size, so you should try to initialise an array to its maximum size first, even if you don't plan on filling it until later on. For example, if you know you need an array to hold a maximum of 100 values, you would initialise it to 100 slots straight away, using the <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Variable_Functions/array_create.htm">`array_create()`</AOut> function:
+
+		```js
+		array = array_create(100, 0);
+		```
+
+		This allocates the memory for it in one "chunk" with all array values being set to the default value of 0 and helps keep things fast, as otherwise every time you add a new value to the array the entire memory has to be re-allocated again.
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 Best Practices When Programming 페이지</Fragment>
+</Blockquote>
+
+다만 여기에는 커다란 함정이 있는데, **HTML5 타겟에서는 오히려 배열을 처음부터 초기화해야 합니다.**
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/Additional_Information/Best_Practices_When_Programming.htm">
+	<Note>참고</Note> HTML5 타겟에서는 배열 할당이 이렇게 적용되지 않으므로, 배열을 0부터 초기화해야 한다!
+
+	<Fragment slot="original">
+		<Note>NOTE</Note> On the HTML5 target assigning arrays like this does not apply and your arrays should be initialised from 0 for this target!
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 Best Practices When Programming 페이지</Fragment>
+</Blockquote>
+
+개인적으로 저는 GameMaker의 이 부분을 제일 싫어하는데, 추상화의 책임을 사용자에게 떠넘기는 것 같은 느낌이 들어서입니다. **겜스넘구데기**
+
+<Dive>
+<details>
+<summary>배열 초기화가 이렇게 느릴 이유가 없다</summary>
+
+엔진의 내부 구조를 아는 것은 아니지만, GameMaker에서는 배열을 할당할 때 정확히 배열 길이만큼의 공간을 할당하는 것으로 보입니다. 이 경우 배열에 새 원소를 삽입하려고 하면 원래 길이보다 한 칸 큰 공간을 할당하고, 원래 배열을 하나하나 옮긴 뒤, 원래 배열의 할당을 해제해야 하기 때문에 배열 길이에 비례하는 부하가 걸립니다. 배열을 처음부터 초기화하면 이 과정이 *매번* 일어나기 때문에 배열 길이의 *제곱*에 비례하는 시간이 걸립니다.
+
+한편 <AWp art="Dynamic array" frag="Geometric expansion and amortized cost">대부분의 유명한 언어</AWp>는 실제 길이보다 더 큰 공간을 미리 할당해두고 공간이 부족해질 때마다 상수배 큰 공간을 할당하는 전략을 사용하는데, 이렇게 하면 배열을 처음부터 할당해도 배열 길이만큼만의 시간만 필요하고, HTML5 호환 문제도 자동으로 해결됩니다. 도대체 왜 이렇게 구현하지 않은 것인지 모르겠습니다. 제가 모르는 무슨 문제가 있었겠죠...?
+</details>
+</Dive>
+
+## 모든 것이 수였던 시절 \{#when-everything-was-numbers\}
+
+지금은 아니지만, GMS2 초기까지는 **모든 리소스가 수였습니다**. 말 그대로 스프라이트, 사운드, 백그라운드, 패스, 스크립트, 셰이더, 폰트, 타임라인, 오브젝트, 룸 전부 다 내부적으로 번호가 붙고 코드에서 특정 에셋을 언급하면 실제 에셋 대신 그 번호가 런타임에서 움직이는 식이었습니다.
+
+GMS1까지는 추가로 에셋 트리의 맨 위에서 시작해서 에셋 종류별로 0부터 시작하는 번호를 붙인다는 규칙이 있었고, 이를 이용해서 `sprite_get_index("spr_foo_" + string(index))`로 원하는 스프라이트를 구하는 대신 에셋 트리에서 순서를 잘 지정한 다음 `spr_foo_0 + index`로 해결할 수도 있었습니다. GMS2부터는 그냥 배열 리터럴을 쓰면 됩니다.
+
+```js
+var _sprites = [spr_foo_0, spr_foo_1, spr_foo_2];
+draw_sprite(x, y, _sprites[index]);
+```
+
+현재의 GMS2에서는 <Term term="handle">핸들</Term>이라는 자료형으로 에셋뿐만 아니라 자료구조, 인스턴스, 스크립트 함수, 파티클 시스템, 버퍼, 서피스 등 여러 가지 자원을 관리하고 있고, `typeof` 함수에 전달하면 `"ref"`를 반환합니다. 함수는 다소 복잡한데, 스크립트에서 선언한 함수는 핸들, 오브젝트에서 선언한 함수는 수, 메소드는 별도의 `"method"` 자료형으로 관리되는 듯합니다.
+
+### GML에서 함수형 프로그래밍을 추구하면 안 되는 걸까? \{#is-it-wrong-to-try-to-go-functional-in-gml\}
+
+모든 것이 수가 된다고 해서 스크립트 이름이 올 곳에 냅다 수를 적고 호출할 수는 없지만, 그런 역할을 대신 해주는 함수는 있습니다. <AOut href="https://cafe.naver.com/playgm/69477" restricted="KGMC 아카이브 (구 PlayGM) 회원만 열람 가능합니다.">원본 글</AOut> 34번을 잠깐 인용해 보겠습니다.
+
+<Blockquote href="https://cafe.naver.com/playgm/69477" restricted="KGMC 아카이브 (구 PlayGM) 회원만 열람 가능합니다.">
+	**34. 의외로 쓸만해보이는, 그러나 어떻게 써야할 지 모를**
+
+	`script_execute(스크립트명, 인자1, 인자2.. )` 함수의 진정한 의의는 스크립트의 '이름'만 적어도 된다는겁니다. 무슨 의미냐하면
+
+	```js
+	script_execute(choose(Scr_up, Scr_down, Scr_left, Scr_right), 3)
+	```
+
+	이런 게 가능하다는 이야기입니다. 물론 '스크립트' 한정이고, 내장 함수는 불가능합니다.
+
+	<Fragment slot="author">멍멍이 (게임메이커 아카이브, 구 PlayGM)</Fragment>
+
+	<Fragment slot="cite">겜메 팁 [04. 20]</Fragment>
+</Blockquote>
+
+이 글을 처음 적을 당시부터 함수형 프로그래밍에 관심이 꽤 있었고, 이 글을 보고 (당시의) 'GML로도 기초적인 함수형 프로그래밍이 되겠구나'라는 생각을 한 적이 있습니다. 이후 <AOut href="https://gamemaker.io/en/blog/gamemaker-studio-2-dot-3-new-gml-features">GMS 2.3에 일급 함수와 메소드 지원이 추가되면서</AOut> (여전히 흑마법에 가깝지만) 그나마 조금 더 함수형처럼 생긴 함수형 프로그램을 할 수 있게 되었습니다.<Fn id="this-binding" />
+
+```js
+function plus_fn(_x) {
+	// `{ _x }`는 `{ _x: _x }`를 줄인 표현입니다.
+	return method({ _x }, function(_y) {
+		return _x + _y;
+	});
+}
+
+var plus_three = plus_fn(3);
+show_message([ plus_three(5), plus_three(123) ]); // [ 8, 126 ]
+```
+
+이 이후로도 <AOut href="https://manual.gamemaker.io/monthly/en/#t=GameMaker_Language%2FGML_Reference%2FVariable_Functions%2Farray_map.htm">`array_map`</AOut>이나 <AOut href="https://manual.gamemaker.io/monthly/en/#t=GameMaker_Language%2FGML_Reference%2FVariable_Functions%2Farray_find_index.htm">`array_find_index`</AOut> 등 일급 함수를 더욱 활용할 수 있는 내장함수가 계속 들어오고 있고, <AOut href="https://github.com/YoYoGames/GMRT-Beta/blob/main/docs/languages/JavascriptLanguageSetup.md">차기 런타임에 JavaScript 지원 작업이 이루어지고 있는 등</AOut> 앞으로 GameMaker에서 함수형 프로그래밍을 하기 더 쉬워질 것으로 보입니다.
+
+### 요즘 GML의 자료형 \{#datatypes-in-current-gml\}
+
+제가 기억하는 GM8의 자료형은 기껏해봐야 실수, 문자열, 1차원/2차원 배열밖에 없었는데, 최신 버전에서는 <AOut href="https://manual.gamemaker.io/monthly/en/#t=GameMaker_Language%2FGML_Reference%2FVariable_Functions%2Ftypeof.htm">`typeof`</AOut> 함수의 반환값을 기준으로 무려 11종류의 (정상적인) 자료형을 지원합니다.
+
+* `"number"`: 기존 GameMaker의 실수와 같습니다. 현재는 부동소숫점 실수를 그대로 사용하기 때문에 `NaN`과 ±`infinity`도 이 자료형에 속합니다.
+* `"string"`: 기존 GameMaker의 문자열과 같습니다.
+* `"array"`: 기존 GameMaker와 달리 1차원 배열만 있는 대신 배열 중첩이 가능합니다.
+* `"bool"`: 기존 GameMaker에서는 `true`가 *실수* 1, `false`가 *실수* 0으로 정의되었지만 현재는 **별도의** 자료형으로 구분되었고 `1`과 `true`의 구분이 가능합니다.
+* `"int32"`/`"int64"` (32비트/64비트 정수)
+* `"ptr"` (포인터)
+* `"undefined"`: 말 그대로 '정의되지 않은' 값입니다.
+	* 함수 인자로 전달받은 값이 없거나 반환값이 없을 때 `undefined`가 자동으로 삽입됩니다. 인자가 `undefined`인 경우에도 전달받은 값이 없는 것으로 취급하며, 그 인자에 기본값이 있으면 기본값이 전달됩니다.
+	* 단, 지역변수를 선언만 한 경우에는 `undefined`가 삽입되지 않고, 사용하려고 하면 런타임 오류가 발생합니다.
+* `"method"` (메소드 변수)
+* `"struct"` (구조체)
+* `"ref"` (핸들)
+* 기타 비정상적인 자료형
+	* `"null"` (참고로 `typeof(pointer_null) = "ptr"`입니다.)
+	* `"unknown"`: 메모리가 손상되는 등의 심각한 상황에만 볼 수 있는 '자료형'입니다.
+
+## GameMaker의 수 처리 \{#number-handling-in-gamemaker\}
+
+GMS1부터는 모든 수를 *배정밀도 부동소숫점*으로 저장합니다. 이 실수 표현은 C/C++에서 이미 `double` 타입으로 지원하고 있고, 국제 표준<Ref id="IEEE754" sup />으로도 채택되었기 때문에 절대 다수의 언어에서 똑같이 지원하고 있습니다. 다만 이 표현도 단점이 있기 때문에 다른 언어에서 배정밀도 부동소숫점으로 겪는 문제를 GameMaker도 똑같이 겪습니다.
+
+### $$0.1 + 0.2 \neq 0.3$$ \{#0-1-plus-0-2-neq-0-3\}
+
+충격적이게도 0.1 + 0.2는 0.3이 **아닙니다**. GameMaker처럼 배정밀도 부동소숫점을 기본으로 하는 JavaScript로 확인해 보면 이렇습니다.
+
+<Image src={javascript_float_error} alt="웹 브라우저 콘솔에서 JavaScript 표현식을 평가한 결과. 0.3은 0.3, 0.1 + 0.2는 0.30000000000000004, 0.1 + 0.2 == 0.3은 false이다." />
+
+한편 GameMaker에서는 `0.1 + 0.2 == 0.3`이 성립하는 것처럼 보이는데, 이건 엔진 내부에서 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Number_Functions/math_set_epsilon.htm">`math_set_epsilon`</AOut>으로 보정한 결과입니다. 이 설정값은 기본값이 0.000001인데, 값을 비교할 때 이 값 이하의 차이가 나면 계산 오차인 것으로 생각하고 `true`로 취급합니다. 부동소숫점 오차를 다 신경써야 할 정도로 깊게 들어가지 않는 이상 별로 신경쓰지 않고 개발해도 되겠습니다.
+
+혹시 못 믿으시겠다면 드로우 이벤트에 아래 코드를 넣고 실행해서 뭐라고 나오는지 직접 확인해보시는 것을 권장드립니다.
+
+```js
+// 오차를 허용하지 않음
+math_set_epsilon(0);
+draw_text(16, 16,
+	$"string_format(0.1 + 0.2, 1, 17) = {string_format(0.1 + 0.2, 1, 17)}\n" +
+	$"string_format(0.3, 1, 17) = {string_format(0.3, 1, 17)}\n" +
+	$"0.1 + 0.2 == 0.3 = {0.1 + 0.2 == 0.3}"
+);
+```
+
+#### 이상한 오차 보정 \{#error-correction-gone-wrong\}
+
+GMS2에서는 오차 보정이 조금 이상하게 작동합니다. 컴파일러 최적화가 원인인 것으로 추측하고 있는데, 실제 원인이 무엇인지는 도통 모르겠습니다.
+
+```js
+var _foo = 0.1 + 0.2;
+show_debug_message(0.1 + 0.2 == 0.3); // 0
+show_debug_message(_foo == 0.3); // 1
+```
+
+### 잃어버린 정밀도 \{#missing-precision\}
+
+<RemarkSimple>KGMC Paragon님께서 BigNum.gml을 제보해 주셨습니다.</RemarkSimple>
+
+부동소숫점 표현은 수가 커질수록 소숫점 아래의 정밀도가 점점 떨어지는 문제가 있으며, ±9,007,199,254,740,991(약 9천조)을 넘어가면 정수도 정확하게 표현할 수 없게 됩니다.
+
+<Image src={max_safe_integer} alt="GameMaker에서 상수 max_safe_integer에 -5부터 5까지를 더한 결과. 부동소숫점 오차로 인해 2와 4를 더한 결과가 참값과 다르다." />
+
+물론 이 시점 이후로도 수의 크기가 2배가 될 때마다 정밀도도 2배씩 줄어듭니다. 이것보다 더 큰 정수를 정확히 표현해야 한다면 <AOut href="https://sahaun.itch.io/bignumgml">BigNum.gml</AOut> 등 큰 수에 특화된 라이브러리를 찾아보시는 것이 좋습니다.
+
+<Dive>
+<details>
+<summary>정밀도가 왜 떨어질까?</summary>
+
+배정밀도 부동소숫점을 쉽게 설명하자면 수를 표현할 때 정해진 자리(유효숫자) 이상의 수를 쓸 수 없는 대신, 원하는 곳(적은 수 바깥을 포함해서)에 소숫점을 찍을 수 있는 실수 표현 방식입니다. 예를 들어 *설명을 위해* 7자리의 10진수만 적을 수 있다고 생각하고(실제로는 52자리의 2진수입니다) "1234567"을 적었다면 아래처럼 소숫점을 원하는 곳에 찍음으로써 넓은 범위의 수를 표현할 수 있습니다.
+
+* 1.234567
+* 12345.67
+* 1234567\.
+	* 소숫점 아래에 0이 무한히 있다고 가정하면 1,234,567이라는 정수를 표현한 것이 됩니다.
+* 12345670000\.
+	* 바로 위의 1234567.에서 소숫점을 4자리 오른쪽으로 옮긴 것입니다.
+	* 유효숫자가 7자리이기 때문에 12,345,670,000과 12,345,680,000 사이의 정수는 표현할 수 없습니다.
+* .1234567
+	* 소숫점 왼쪽에도 0이 무한히 있다고 가정하면 0.1234567이라는 소수를 표현한 것이 됩니다.
+* .00000000001234567
+	* 바로 위의 .1234567에서 소숫점을 10자리 왼쪽으로 옮긴 것입니다.
+
+이 표현을 <AOut href="https://hanja.dict.naver.com/#/entry/ccko/6132bcdb198c416b871ddbb875ba9fef"><Term term="浮動">*부동*</Term></AOut>소숫점이라고 하는 것도 소숫점에 정해진 위치가 없고 '<Term term="floating">둥둥 떠다니기</Term>' 때문입니다. (움직이지 않는다는 의미의 <Term term="不動">부동</Term>이 아닙니다!)
+
+물론 실제로는 소숫점을 너무 먼 곳에 찍을 수 없다는 제한이 있고, 최대 약 $$1.8 \times 10^{308}$$까지의 값을 담을 수 있습니다. 수가 커질수록 정밀도가 떨어지는 특징 역시 유효숫자가 제한되어 있다는 데서 옵니다.
+</details>
+</Dive>
+
+## 문자열 무한으로 즐겨요 \{#unlimited-strings\}
+
+제가 아는 모든 버전의 GameMaker에서는 문자열의 길이에 제한이 없습니다. 다만 몇억 글자 정도로 지나치게 긴 문자열을 만들려고 하면 메모리 부족으로 인해 강제 종료되거나 런타임 오류가 발생할 수 있습니다.
+
+## 이벤트가 있었는데 없어졌습니다 \{#where-d-the-event-go\}
+
+GMS1까지는 이벤트 안에 아무런 내용(DnD든 GML이든)도 없을 경우에는 그 이벤트를 **존재하지 않는 것**으로 취급했습니다. `alarm[x]` 자동 감산이나 물리엔진 충돌 판정 등 특정 이벤트가 있어야 실행되는 로직이 있는데, 이런 경우에는 주석 하나라도 추가해야 올바르게 동작합니다.
+
+GML2부터는 빈 이벤트도 있는 것으로 취급하도록 수정되었기 때문에 굳이 주석을 넣지 않아도 됩니다. 다만 이벤트 존재 여부 자체는 확인합니다.
+
+## 누가 그걸 그렇게 써요 \{#ancient-notations\}
+
+`=` 대신 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Variables_And_Variable_Scope.htm">`:=`</AOut>, `{`...`}` 대신 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Language_Features/begin_end.htm">`begin`...`end`</AOut>를 쓸 수 있습니다. 놀랍게도 GM8 시절부터 지원하는 문법이었지만, 공식적으로 권장하고 있지는 않으며 하위 호환성을 위해서만 지원하고 있다고 합니다.
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Variables_And_Variable_Scope.htm">
+	<Note>참고</Note> GameMaker 언어에서는 대입 연산자로 `:=` 역시 허용하지만, 이는 흔하게 사용되는 방법이라고는 하기 어렵다.
+
+	```js
+	<variable> := <expression>;
+	```
+
+	<Fragment slot="original">
+		<Note>NOTE</Note> The GameMaker Language will also accept `:=` for assignments, although this is not typically the most common way to do it:
+
+		```js
+		<variable> := <expression>;
+		```
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 Variables And Variable Scope 페이지</Fragment>
+</Blockquote>
+
+<Blockquote href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Overview/Language_Features/begin_end.htm">
+	[`begin`과 `end`]의 사용은 전형적이지 않고 무엇보다도 레거시 지원을 위해서 제공되는 언어 기능이며, 향후에 비권장 취급될 수 있음에 유의하라.
+
+	<Fragment slot="original">
+		Note that using these keywords is not typical and is provided as part of the language more for legacy support than anything else, and at any time in the future they may be deprecated.
+	</Fragment>
+
+	<Fragment slot="cite">GameMaker 매뉴얼 중 `begin` / `end` 페이지</Fragment>
+</Blockquote>
+
+자세한 사항을 더 적어보자면...
+
+* 비교 연산자로 쓰이는 `=`도 `:=`로 쓸 수 있습니다. GameMaker가 아니더라도 지금까지 프로그래밍을 하면서 `:=` 기호를 비교 연산자로 사용하는 사례를 단 한 번도 보지 못해서 이렇게 쓰는 게 별로 말이 된다는 생각은 안 듭니다.
+* 비교 연산자 `==`를 `:=:=`로 쓸 수는 없습니다.
+* `begin`...`}`와 `{`...`end`도 허용됩니다.
+* 두 형태 모두 GMS2에 와서야 문서화가 된 것으로 기억하고 있습니다.
+
+## `degtorad`를 멀리하고 `dsin`을 가까이 \{#avoid-degtorad-use-dsin\}
+
+굳이 GameMaker가 아니더라도 삼각함수($$\sin$$, $$\cos$$, ...)는 따로 언급이 없으면 육십분법 대신 호도법을 씁니다. 육십분법은 우리가 일상적으로 사용하는, $$360^\circ$$가 한 바퀴인 각도 체계고, 호도법은 $$2 \pi$$ ($$\mathrm{rad}$$)가 한 바퀴인 각도 체계입니다.
+
+GameMaker의 삼각함수(`sin`, `cos`, `tan`, `arcsin`, `arccos`, `arctan`, `arctan2`)도 당연히 호도법을 쓰는데, GMS1부터 육십분법을 쓰는 `dsin`, `dcos`, `dtan`, `darcsin`, `darccos`, `darctan`, `darctan2`가 추가되어 육십분법 각도를 더 편하게 쓸 수 있게 되었습니다. 예를 들어, `sin(pi)`, `sin(degtorad(180))`, `dsin(180)`은 전부 같은 의미입니다.
+
+## 비직관적인 `self` \{#counterintuitive-self\}
+
+GMS2 구조체 안에서 `self`를 사용할 때는 상황에 따라 의미가 완전히 달라집니다.
+
+* `self`를 그대로 사용하면 만들어지고 있는 구조체 자신을 가리킵니다.
+* `self`의 값에 접근할 때는 구조체 자신이 *아니라* 바깥의 인스턴스/구조체의 값에 접근합니다.
+
+이는 `other`의 경우에도 같습니다.
+
+```js
+name = "instance";
+
+outer = {
+	name: "outer",
+	self_ref: self,
+	self_name: self.name,
+	inner: {
+		name: "inner",
+		other_ref: other,
+		other_name: other.name
+	}
+}
+
+show_debug_message(outer.self_ref.name); // outer
+show_debug_message(outer.self_name); // instance
+show_debug_message(outer.inner.other_ref.name); // outer
+show_debug_message(outer.inner.other_name); // instance
+```
+
+## 지역 변수가 흘러나와요! \{#local-variables-are-leaking\}
+
+지역 변수는 어디서 선언했는지와 *상관 없이* 이벤트나 함수가 종료될 때까지 남아 있습니다. 게다가 `var` 구문으로 선언했던 변수를 (초깃값 없이) 다시 선언해도 그 변수가 초기화되지 않습니다.
+
+```js
+var _foo = 5;
+show_debug_message(_foo); // 5
+
+for(var i = 0; i < 3; i++) {
+	var _foo, _bar; // _foo가 초기화되지 않습니다.
+	show_debug_message(_foo); // 5, 5, 5
+	_bar = i;
+}
+
+// _bar가 없어지지 않습니다.
+show_debug_message(_bar); // 2
+
+var _bar; // _bar가 초기화되지 않습니다.
+show_debug_message(_bar); // 2
+```
+
+조건문이나 반복문 안팎에 같은 이름의 지역 변수를 선언하고 초기화를 하지 않으면 끔찍한 일이 발생할 수도 있으니 선언할 때마다 다른 이름을 사용하고, (`undefined`로라도) 초기화하는 것이 좋습니다. 저도 잊을 만하면 이 함정을 자꾸 밟습니다.
+
+## 질긴 생명력의 `image_single` \{#the-diehard-image-single\}
+
+<Blockquote href="https://cafe.naver.com/playgm/69477" restricted="KGMC 아카이브 (구 PlayGM) 회원만 열람 가능합니다.">
+	**51. 질긴 생명력의 `image_single`**
+
+	`image_single`은 특정 장을 고정 표시하는 변수입니다. 즉, 3번째 장만 표시하고 싶다면 `image_single = 2` 라고 하면 됩니다. 이는 곧 `image_index = 2; image_speed = 0`과 같지만 한 줄로 처리할 수 있다는 게 장점입니다. 고정 표시를 해제하고 싶으면 `image_single = -1` (기본 값입니다) 이라 설정하면 됩니다. 해제하는 순간 `image_speed` 는 1이 되고(전에 몇이었건 무조건 1이 됩니다. 주의!), `image_index`는 현재 값부터 출발합니다.
+
+	분명히 5.3A → 6.0으로 버전업 하면서 '삭제된 변수'라고 했습니다만, 6.0, 6.1, 7.0, 8.0, 8.1, 심지어 겜스에서도 잘 작동하는 변수입니다. 뭐하자는 건지 모르겠습니다.
+
+	<Fragment slot="author">멍멍이 (게임메이커 아카이브, 구 PlayGM)</Fragment>
+
+	<Fragment slot="cite">겜메 팁 [04. 20]</Fragment>
+</Blockquote>
+
+방금 테스트해봤는데 심지어 GMS2에서도 잘 작동하는 변수입니다. 뭐하자는 건지 모르겠습니다.
+
+export const footnotes = {
+	frequent: '엄밀히는 유니코드에서 작은 번호를 배정받은 문자일수록 크기가 작고, 숫자와 알파벳이 처음 128자리에 배정되었기 때문에 1바이트를 차지한다고 해야 맞습니다. 물론 처음 128자리는 기존에 널리 쓰이던 ASCII에서 그대로 가져온 것이기 때문에 \'자주 쓰이는\'이라고 해도 틀린 것은 아닙니다.',
+	'short-circuit-evaluation': '\'단락\'은 전기회로의 단락에서 따온 것이고, \'평가\'는 식의 값을 구하는 것을 유식하게 이르는 말이라고 생각하면 됩니다.',
+	'this-binding': () => <>'그나마'라고 부연한 이유는 <a href="/2023/first-class-function">다른 글</a>에서 좀 더 자세히 다룹니다.</>
+};
+
+export const references = {
+	IEEE754: () => <>IEEE 754-2019 <ADoi doi="10.1109/IEEESTD.2019.8766229" restricted><em>IEEE Standard for Floating-Point Arithmetic</em></ADoi></>
+};
