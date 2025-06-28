@@ -1,0 +1,39 @@
+---
+import RemarkBase from './post/RemarkBase.astro';
+---
+
+<RemarkBase colorLight="#e8e0ff" colorDark="#280050">
+	<Fragment slot="title"><span class="i-majesticons-sparkles-line" role="none" /> <a class="-no-color text-unset" href="/genai">생성형 AI 투명성</a></Fragment>
+	<p>이 글을 작성하는 데 생성형 AI를 다음과 같이 사용했습니다.</p>
+	<slot />
+	{Astro.slots.has('direct') &&
+		<details>
+			<summary><span class="i-majesticons-file-duplicate-line" role="none" /> <strong>직접 사용</strong></summary>
+			<slot name="direct" />
+		</details>
+	}
+	{Astro.slots.has('quote') &&
+		<details>
+			<summary><span class="i-majesticons-tooltips-2-line" role="none" /> <strong>인용</strong></summary>
+			<slot name="quote" />
+		</details>
+	}
+	{Astro.slots.has('material') &&
+		<details>
+			<summary><span class="i-majesticons-image-line" role="none" /> <strong>자료성 사용</strong></summary>
+			<slot name="material" />
+		</details>
+	}
+	{Astro.slots.has('indirect') &&
+		<details>
+			<summary><span class="i-majesticons-search-line" role="none" /> <strong>간접 사용</strong></summary>
+			<slot name="indirect" />
+		</details>
+	}
+	{Astro.slots.has('impl') &&
+		<details>
+			<summary><span class="i-majesticons-code-block-line" role="none" /> <strong>구현</strong></summary>
+			<slot name="impl" />
+		</details>
+	}
+</RemarkBase>
