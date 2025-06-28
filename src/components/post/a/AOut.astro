@@ -65,17 +65,22 @@ function tryHighlight(urlStr: string): string | [string, string, string] {
 }
 
 const
+	UNAVAILABLE_TEXT = '더 이상 접속할 수 없는 페이지입니다.',
+	RESTRICTED_TEXT = '열람 제한이 있는 페이지입니다.';
+
+const
 	highlighted = tryHighlight(href),
-	restrictedTitle = Astro.props.unavailable
-		? '더 이상 접속할 수 없는 페이지입니다.'
-	: Astro.props.restricted === true
-		? '열람 제한이 있는 페이지입니다.'
+	restricted_text = Astro.props.restricted === true
+		? RESTRICTED_TEXT
 		: Astro.props.restricted || undefined;
 ---
 
 <a
 	href={href} target="_blank"
-	title={restrictedTitle}
+	title={Astro.props.unavailable
+		? UNAVAILABLE_TEXT
+		: restricted_text
+	}
 >{
 	Astro.slots.has('default')
 		? <slot />
@@ -89,10 +94,10 @@ const
 				</>
 		}</span>
 }{
-}<span class="i-majesticons-external-link-line v-super text-[length:smaller]" />{
+}<span class="i-majesticons-external-link-line v-super text-[length:smaller]" aria-label="(외부 링크)" />{
 	Astro.props.unavailable &&
-		<span class="i-majesticons-ban-line v-super text-[length:smaller]" />
+		<span class="i-majesticons-ban-line v-super text-[length:smaller]" aria-label={`(${UNAVAILABLE_TEXT})`} />
 }{
 	Astro.props.restricted &&
-		<span class="i-majesticons-lock-line v-super text-[length:smaller]" />
+		<span class="i-majesticons-lock-line v-super text-[length:smaller]" aria-label={restricted_text ? `(${restricted_text})` : undefined} />
 }</a>

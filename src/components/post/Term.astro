@@ -5,4 +5,4 @@ interface Props {
 const { term } = Astro.props;
 ---
 
-<slot /><sup>{term}</sup>
+<slot /><sup aria-label={`(${term})`}>{term}</sup>

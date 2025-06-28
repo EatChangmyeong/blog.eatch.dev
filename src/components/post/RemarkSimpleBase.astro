@@ -10,6 +10,6 @@ const { colorLight, colorDark } = Astro.props;
 	'remark-color': colorLight,
 	'remark-color-dark': colorDark,
 }} />
-<div class="-block bg-[--remark-color] @dark:bg-[--remark-color-dark]">
+<div class="-block bg-[--remark-color] @dark:bg-[--remark-color-dark]" role="note">
 	<slot />
 </div>

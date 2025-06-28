@@ -22,7 +22,11 @@ const { type, id, label, refs, xlinkClass, Content } = Astro.props;
 	{
 		[...Array(refs)].map((_, i) =>
 			<>
-				{' '}<a class={`-xfn ${xlinkClass}`} href={`#x${type}:${id}:${i + 1}`}>↑</a>
+				{' '}<a class={`-xfn ${xlinkClass}`} href={`#x${type}:${id}:${i + 1}`} aria-label={refs > 1 ? `본문으로 돌아가기 (${i + 1})` : '본문으로 돌아가기'}>
+					↑{refs > 1 &&
+						<sub>{i + 1}</sub>
+					}
+				</a>
 			</>
 		)
 	}

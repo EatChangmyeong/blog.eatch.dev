@@ -11,6 +11,6 @@ if(__xref__ === undefined)
 
 {
 	sup
-		? <sup><a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`}>[{id}]</a></sup>
-		: <a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`}>[{id}]</a>
+		? <sup><a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`} aria-label={`참고 문헌 ${id}`}>[{id}]</a></sup>
+		: <a id={`xref:${id}:${__xref__}`} class="-fn text-[#c0c] @dark:text-[#f6f]" href={`#ref:${id}`} aria-label={`참고 문헌 ${id}`}>[{id}]</a>
 }
