@@ -1,0 +1,17 @@
+---
+import type { ReferenceDataEntry } from 'astro:content';
+import RemarkSimpleBase from './RemarkSimpleBase.astro';
+import { getPost } from '~/src/registry/getPost';
+interface Props {
+	parent: ReferenceDataEntry<'blog', string>,
+}
+const { parent } = Astro.props;
+const resolved = await getPost(parent.id);
+if(!resolved)
+	throw new Error(`post ${parent.id} not available`);
+const { title, published } = resolved;
+---
+
+<RemarkSimpleBase colorLight="#e0e0ff" colorDark="#000050">
+	<p><span class="i-majesticons-arrow-circle-up-line" role="none" /> 이 글은 <a href={`/${published!.getFullYear()}/${parent.id}`}>{title}</a>의 보충 글입니다.</p>
+</RemarkSimpleBase>

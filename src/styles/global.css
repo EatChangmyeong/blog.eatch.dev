@@ -121,6 +121,11 @@ del {
 del:hover {
 	text-decoration-color: transparent;
 }
+kbd {
+	margin: 0 0.1rem;
+	border: 1px solid currentcolor;
+	padding: 0.1rem 0.25rem;
+}
 
 article :is(blockquote, h1, h2, h3, h4, h5, h6, img, p, .astro-code, .-block) {
 	overflow-x: auto;
