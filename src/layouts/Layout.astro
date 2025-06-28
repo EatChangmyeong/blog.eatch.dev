@@ -1,6 +1,8 @@
 ---
 import TopBar from '../components/TopBar.astro';
 
+const BLOG_TITLE = 'Widestring (indev)';
+
 interface Props {
 	title?: string,
 	footer?: boolean,
@@ -8,6 +10,10 @@ interface Props {
 const { title, footer = true } = Astro.props;
 
 import '../styles/global.css';
+
+// Astro somehow crashes if `import.meta` is above any `import` statement
+// https://stackoverflow.com/a/78381054/21257162
+const DEV = import.meta.env.DEV;
 ---
 
 <!doctype html>
@@ -17,20 +23,22 @@ import '../styles/global.css';
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="https://eatch.dev/ei/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>{
-			title
-				? `${title} · Widestring (indev)`
-				: 'Widestring (indev)'
+		<title>{DEV
+			? '[DEV] '
+			: ''
+		}{title
+			? `${title} · ${BLOG_TITLE}`
+			: BLOG_TITLE
 		}</title>
 	</head>
 	<body>
 		<TopBar>
-			{title ?? 'Widestring (indev)'}
+			{title ?? BLOG_TITLE}
 		</TopBar>
 		<slot />
 		{footer &&
 			<footer class="mt-8 mx-auto max-w-45rem text-right text-sm opacity-75">
-				© 2020-2025 <address class="inline not-italic"><a href="https:/eatch.dev">EatChangmyeong</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
+				© <address class="inline not-italic"><a href="https://eatch.dev">EatChangmyeong</a> · <a class="-no-color text-#0085FF" href="https://bsky.app/profile/blog.eatch.dev"><span class="i-simple-icons-bluesky" /> Bluesky</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
 			</footer>
 		}
 	</body>
