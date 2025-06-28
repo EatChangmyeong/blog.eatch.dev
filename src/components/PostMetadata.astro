@@ -7,9 +7,13 @@ interface Props {
 	minutesRead?: number,
 	published?: Date,
 	edited?: Date,
+	translation?: {
+		published?: Date,
+		edited?: Date,
+	},
 	tags?: string[],
 }
-const { minutesRead, published, edited, tags } = Astro.props;
+const { minutesRead, published, edited, translation, tags } = Astro.props;
 ---
 
 {(() => {
@@ -17,8 +21,18 @@ const { minutesRead, published, edited, tags } = Astro.props;
 		minutesRead
 			? <MinutesRead minutes={minutesRead} />
 			: undefined,
-		published ? <><Date date={published} /> 작성</> : undefined,
-		edited ? <><Date date={edited} /> 수정</> : undefined,
+		translation?.published
+			? <>원본 작성일 <Date date={translation.published} /></>
+			: undefined,
+		published
+			? <><Date date={published} /> {translation ? '번역' : '작성'}</>
+			: undefined,
+		translation?.edited
+			? <><Date date={translation.edited} /> 수정본 반영</>
+			: undefined,
+		edited
+			? <><Date date={edited} /> 수정</>
+			: undefined,
 	]
 		.filter(x => x)
 		.map((x, i) =>

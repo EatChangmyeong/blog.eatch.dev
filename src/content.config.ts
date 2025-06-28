@@ -1,13 +1,23 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, reference, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const
 	base = z.object({
 		title: z.string(),
+		order: z.number().optional(),
 		edited: z.date().optional(),
 		cover: z.string().optional(),
 		permalink: z.string().url().optional(),
 		tags: z.string().array().optional(),
+		parent: reference('blog').optional(),
+		translation: z.object({
+			title: z.string(),
+			author: z.string(),
+			published: z.date().optional(),
+			edited: z.date().optional(),
+			link: z.string().url(),
+		}).optional(),
+		interactive: z.boolean().or(z.literal('desktop')).optional(),
 	}),
 	additional = z.object({
 		slug: z.string(),

@@ -10,7 +10,12 @@ const
 	collection = await getCollection('blog'),
 	posts = await Promise.all(
 		[...collection]
-			.sort((l, r) => +r.data.published - +l.data.published)
+			.sort((l, r) => {
+				const by_date = +r.data.published - +l.data.published;
+				if(by_date != 0)
+					return by_date;
+				return (r.data.order ?? 0) - (l.data.order ?? 0);
+			})
 			.map(x => getPost(x.id))
 	) as PostEntry[];
 ---

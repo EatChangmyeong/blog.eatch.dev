@@ -1,0 +1,18 @@
+---
+import Noscript from './Noscript.astro';
+
+type Props = {
+	select?: boolean,
+};
+const { select = false } = Astro.props;
+---
+
+<div class:list={{
+	'-block': true,
+	'select-none': !select,
+}}>
+	<Noscript>
+		인터랙티브 콘텐츠를 확인하려면 JavaScript를 켜 주세요.
+	</Noscript>
+	<slot />
+</div>

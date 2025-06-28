@@ -2,14 +2,21 @@
 import Layout from './Layout.astro';
 import Logo from '../components/Logo.astro';
 import PostMetadata from '../components/PostMetadata.astro';
+import Parent from '@components/post/Parent.astro';
 import Permalink from '@components/post/Permalink.astro';
+import Noscript from '@components/post/Noscript.astro';
+import DesktopWarning from '@components/post/DesktopWarning.astro';
 import FnEntry from '@components/post/fn/FnEntry.astro';
 import type { PostEntry } from '../registry/getPost';
 
 interface Props extends PostEntry {}
 const {
-	title, published, edited, tags, permalink, cover,
-	minutesRead, footnotes, transnotes, references,
+	title,
+	published, edited,
+	permalink, cover, tags, interactive,
+	parent,
+	translation, minutesRead,
+	footnotes, transnotes, references,
 } = Astro.props;
 ---
 
@@ -36,18 +43,43 @@ const {
 				<a href="/">
 					<Logo alt="블로그 메인으로" />
 				</a>
-				<h1>{title}</h1>
+				{translation
+					? <hgroup>
+						<h1>{title}</h1>
+						<p class="my-0 text-6 opacity-75">
+							<a class="-no-color text-unset italic no-underline" href={translation.link}>
+								{translation.title}
+							</a>
+							{translation.author &&
+								<span class="opacity-75">- {translation.author}</span>
+							}
+						</p>
+					</hgroup>
+					: <h1>{title}</h1>
+				}
 				<PostMetadata
 					minutesRead={minutesRead}
 					published={published}
 					edited={edited}
+					translation={translation}
 					tags={tags}
 				/>
 			</div>
 		</header>
 		<article>
+			{parent &&
+				<Parent parent={parent} />
+			}
 			{permalink &&
 				<Permalink href={permalink} />
+			}
+			{interactive &&
+				<Noscript>
+					이 글은 인터랙티브 콘텐츠를 포함하고 있습니다. 인터랙티브 콘텐츠를 확인하려면 JavaScript를 켜 주세요.
+				</Noscript>
+			}
+			{interactive == 'desktop' &&
+				<DesktopWarning />
 			}
 			<slot />
 			{
