@@ -68,12 +68,6 @@ body {
 	color: black;
 	background-color: white;
 }
-header {
-	margin: -1rem -1rem 0;
-	padding: 1rem 1rem 0;
-	position: relative;
-	width: calc(100% + 2rem);
-}
 article, nav {
 	margin: auto;
 	max-width: 45rem;
@@ -106,10 +100,10 @@ h5 {
 h6 {
 	font-size: 1.2rem;
 }
-a {
+a:not(.-no-color, .-fn, .-xfn) {
 	color: #0036c8;
 }
-a:visited:not(.-fn, .-xfn) {
+a:visited:not(.-no-color, .-fn, .-xfn) {
 	color: #4a587e;
 }
 a:hover {
@@ -121,10 +115,10 @@ a.-fn {
 a.-fn:hover {
 	text-decoration-color: currentcolor;
 }
-article del {
+del {
 	opacity: 75%;
 }
-article del:hover {
+del:hover {
 	text-decoration-color: transparent;
 }
 
@@ -193,22 +187,22 @@ article :is(h1, h2, h3, h4, h5, h6)::before {
 	opacity: 75%;
 }
 article h1::before {
-	content: '#';
+	content: '#' / '';
 }
 article h2::before {
-	content: '##';
+	content: '##' / '';
 }
 article h3::before {
-	content: '###';
+	content: '###' / '';
 }
 article h4::before {
-	content: '####';
+	content: '####' / '';
 }
 article h5::before {
-	content: '#####';
+	content: '#####' / '';
 }
 article h6::before {
-	content: '######';
+	content: '######' / '';
 }
 article hr {
 	margin: 2.5rem auto;
@@ -219,13 +213,29 @@ article hr {
 	background-color: currentColor;
 	opacity: 50%;
 }
-article img {
+article img, article video {
 	display: block;
 	max-width: 100%;
 	max-height: max(16rem, 80vh);
 	width: auto;
 	height: auto;
 	box-shadow: 0 1px 3px 0 #00000040, 0 1px 2px -1px #00000040;
+}
+article input, article button {
+	border: 1px solid currentcolor;
+	font-size: inherit;
+	font-family: inherit;
+	color: currentcolor;
+	background-color: transparent;
+}
+article input:not([type="button"]) {
+	width: 5rem;
+}
+article input:invalid {
+	border-color: #ff0000;
+}
+article button:hover:not(:active) {
+	transform: translateY(-0.1rem);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -242,10 +252,10 @@ article img {
 	h1 {
 		color: #d5cafe;
 	}
-	a {
+	a:not(.-no-color, .-fn, .-xfn) {
 		color: #91b0ff;
 	}
-	a:visited:not(.-fn, .-xfn) {
+	a:visited:not(.-no-color, .-fn, .-xfn) {
 		color: #cad9fe;
 	}
 

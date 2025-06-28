@@ -36,7 +36,13 @@ export async function getPost(query: string): Promise<PostEntry | undefined> {
 				references: referenceOrder,
 			},
 		} = await render(post),
-		{ slug, title, published, edited, cover, permalink, tags } = post.data,
+		{
+			slug, title,
+			published, order, edited,
+			cover, permalink, tags, interactive,
+			parent,
+			translation,
+		} = post.data,
 		{ footnotes, transnotes, references } = import.meta.glob(
 			'~/src/posts/**/*.mdx',
 			{ eager: true }
@@ -46,14 +52,11 @@ export async function getPost(query: string): Promise<PostEntry | undefined> {
 			references?: Record<string, (() => AstroVNode) | string>,
 		};
 	return {
-		slug,
-		Content,
-		title,
-		published,
-		edited,
-		cover,
-		permalink,
-		tags,
+		slug, title, Content,
+		published, order, edited,
+		cover, permalink, tags, interactive,
+		parent,
+		translation,
 		minutesRead,
 		footnotes: footnotes && {
 			order: footnoteOrder,

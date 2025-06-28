@@ -15,7 +15,17 @@ const {
 
 <Layout title={title}>
 	<main>
-		<header class:list={['relative', 'bg-white', '@dark:bg-#202020', cover ? 'z-2' : 'z-0']}>
+		<header class:list={[
+			'relative',
+			'mt--4',
+			'mx--4',
+			'pt-4',
+			'px-4',
+			'w-[calc(100%_+_2rem)]',
+			'bg-white',
+			'@dark:bg-#202020',
+			cover ? 'z-2' : 'z-0'
+		]}>
 			{cover &&
 				<>
 					<img class="absolute left-0 top-0 w-100% h-100% object-cover" src={cover} alt="" />

@@ -8,11 +8,11 @@ const
 	BATCH = 256,
 	BATCH_HEIGHT_STYLE = 'h-1024',
 	STATE_STYLE_MAP = [
-		'border-[hsl(0deg_100%_50%)]',
-		'border-[hsl(72deg_100%_50%)]',
-		'border-[hsl(144deg_100%_50%)]',
-		'border-[hsl(216deg_100%_50%)]',
-		'border-[hsl(288deg_100%_50%)]',
+		'b-[hsl(0deg_100%_50%)]',
+		'b-[hsl(72deg_100%_50%)]',
+		'b-[hsl(144deg_100%_50%)]',
+		'b-[hsl(216deg_100%_50%)]',
+		'b-[hsl(288deg_100%_50%)]',
 	];
 
 function step<State extends number>(
@@ -81,7 +81,7 @@ function Diagram(props: {
 			style={`left: ${x}rem; top: ${y}rem; height: ${height}rem;`}
 		/>),
 		renderedTrace = trace.map(([q, x], y) => <div
-			class={`box-border absolute w-4 h-4 border-solid border-2px ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-3`}
+			class={`box-border absolute w-4 h-4 b-solid b-2px ${q === null ? 'b-#808080' : STATE_STYLE_MAP[q]} z-3`}
 			style={`left: ${x}rem; top: ${y}rem;`}
 		/>),
 		rendered = <div class={`relative w-4 ${BATCH_HEIGHT_STYLE} mx-auto`}>

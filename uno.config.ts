@@ -14,9 +14,25 @@ export default defineConfig({
 			},
 		}),
 	],
-	rules: [
-		['font-heading', { 'font-family': '\'나눔스퀘어라운드\', sans-serif' }],
-		['font-sans-serif', { 'font-family': 'Pretendard, sans-serif' }],
-		['font-monospace', { 'font-family': 'D2Coding, monospace' }],
-	],
+	theme: {
+		animation: {
+			keyframes: {
+				blink: '{0% { visibility: visible; } 50% { visibility: hidden; }}',
+			},
+			durations: {
+				blink: '1s',
+			},
+			timingFns: {
+				blink: 'step-end',
+			},
+			counts: {
+				blink: 'infinite',
+			},
+		},
+		fontFamily: {
+			'heading': ['나눔스퀘어라운드', 'sans-seif'],
+			'sans-seif': ['Pretendard', 'sans-serif'],
+			'monospace': ['D2Coding', 'monospace'],
+		},
+	},
 });
