@@ -88,7 +88,7 @@ import c_pointer from './c-pointer.png';
 
 역방향 반복자에 대한 설명까지 날로 먹을 수는 없었습니다.
 
-이 네 가지 의문점이 제가 C++의 STL을 처음 배우면서 가장 헷갈렸던 부분인데, 네이버 블로그를 사용하던 시절에 [같은 주제로 글을 올린 적이 있습니다](https://blog.naver.com/dlaud5379/221896362168). 물론 역방향 반복자에 대해서도 '한 칸 앞을 참조해야 `.end()`를 시작점으로, `.begin()`을 끝점 너머로 재사용할 수 있다'는 설명을 할 수 있지만, 이 글에서는 반복자를 이해하는 조금 더 통합적인 시각을 제시하려고 합니다.
+이 네 가지 의문점이 제가 C++의 STL을 처음 배우면서 가장 헷갈렸던 부분인데, 네이버 블로그를 사용하던 시절에 <AOut href="https://blog.naver.com/dlaud5379/221896362168">같은 주제로 글을 올린 적이 있습니다</AOut>. 물론 역방향 반복자에 대해서도 '한 칸 앞을 참조해야 `.end()`를 시작점으로, `.begin()`을 끝점 너머로 재사용할 수 있다'는 설명을 할 수 있지만, 이 글에서는 반복자를 이해하는 조금 더 통합적인 시각을 제시하려고 합니다.
 
 ## 다른 멘탈 모델로 보기 \{#in-another-mental-model\}
 
@@ -148,7 +148,7 @@ C++의 반복자 분류 중 이 글과 관련이 있는 것은 가장 포괄적�
 
 ## 읽기 연산 \{#input\}
 
-아래아한글을 써보신 경험이 있다면 **<Term term="insert">삽입</Term> 모드**와 **<Term term="overtype">수정</Term> 모드**라는 개념을 들어보았을 것이라고 생각합니다. '제대로 된' 웬만한 텍스트 에디터에는 모두 있는 기능인데, Visual Studio Code는 의외로 [출시된 지 9년 7개월(!!)이 지나서야 지원하기 시작했습니다](https://code.visualstudio.com/updates/v1_96).
+아래아한글을 써보신 경험이 있다면 **<Term term="insert">삽입</Term> 모드**와 **<Term term="overtype">수정</Term> 모드**라는 개념을 들어보았을 것이라고 생각합니다. '제대로 된' 웬만한 텍스트 에디터에는 모두 있는 기능인데, Visual Studio Code는 의외로 <AOut href="https://code.visualstudio.com/updates/v1_96">출시된 지 9년 7개월(!!)이 지나서야 지원하기 시작했습니다</AOut>.
 
 <AnimatedImage src={overtype} alt="Visual Studio Code에서 수정 모드를 사용해 코드를 수정하고 있다." />
 
