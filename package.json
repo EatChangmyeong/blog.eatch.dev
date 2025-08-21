@@ -9,13 +9,13 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "^4.3.0",
+		"@astrojs/mdx": "^4.3.4",
 		"@astrojs/solid-js": "^5.1.0",
 		"@iconify-json/majesticons": "^1.2.2",
 		"@iconify-json/simple-icons": "^1.2.38",
 		"@types/knuth-shuffle-seeded": "^1.0.2",
 		"@unocss/reset": "^66.0.0",
-		"astro": "^5.10.0",
+		"astro": "^5.13.2",
 		"immutable": "^5.0.3",
 		"knuth-shuffle-seeded": "^1.0.6",
 		"mdast-util-to-string": "^4.0.0",

@@ -169,7 +169,7 @@ article blockquote {
 	border-left: 0.25rem solid #564a7e;
 	background-color: #564a7e19;
 }
-article :is(code, var, samp) {
+article :is(code, var:not(.-override), samp) {
 	font-family: D2Coding, monospace;
 	font-style: normal;
 	color: #24292e;
@@ -178,7 +178,7 @@ article :is(code, var, samp) {
 	-moz-tab-size: 4;
 	-o-tab-size: 4;
 }
-article :is(code:not(pre code), var, samp) {
+article :is(code:not(pre code), var:not(.-override), samp) {
 	margin: 0 0.05em;
 	padding: 0.15em;
 }
@@ -268,7 +268,7 @@ article button:hover:not(:active) {
 		border-left-color: #ab94fc;
 		background-color: #d5cafe19;
 	}
-	article :is(code, var, samp) {
+	article :is(code, var:not(.-override), samp) {
 		color: #e1e4e8;
 		background-color: #24292e;
 	}
