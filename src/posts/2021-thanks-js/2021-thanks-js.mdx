@@ -2,7 +2,7 @@
 title: 'Thanks for inventing JavaScript'
 slug: 'thanks-js'
 published: 2021-08-19
-edited: 2025-08-21
+edited: 2025-10-25
 cover: '/res/cover/2021-thanks-js.png'
 tags:
 - 'JavaScript'
@@ -75,7 +75,7 @@ import ieee754 from './ieee754.png';
 그런데 <AOut href={h.type.lang.numeric.number.$}>6.1.6.1 <Term term="The Number Type">Number 타입</Term></AOut>에서는 `NaN`도 Number인 것으로 정의하고 있습니다.<Fn id="ecma262-language-types" />
 
 <Blockquote>
-	*Number 타입*은 정확히 18,437,736,874,454,810,627(즉, $$2^{64} - 2^{53} + 3$$)개의 값을 가지고, 배정밀도 부동소수점의 <ADoi doi="10.1109/IEEESTD.2019.8766229" restricted>IEEE 754-2019</ADoi> binary64 값을 IEEE 이진 부동소수점 산술 표준에서 명시한 대로 나타내나, IEEE 표준의 9,007,199,254,740,990(즉, $$2^{53} - 2$$)개의 서로 다른 NaN 값은 ECMAScript에서 특수한 단일 **NaN** 값으로 나타내어진다. (**NaN** 값은 프로그램 표현식 `NaN`으로 생성됨에 유의하라.) ...
+	*Number 타입*은 정확히 18,437,736,874,454,810,627(즉, $$2^{64} - 2^{53} + 3$$)개의 값을 가지고, 배정밀도 부동소수점의 <ADoi doi="10.1109/IEEESTD.2019.8766229" restricted>IEEE 754-2019</ADoi> binary64 값을 IEEE 이진 부동소수점 산술 표준에서 명시한 대로 나타내나, IEEE 표준의 9,007,199,254,740,990(즉, $$2^{53} - 2$$)개의 서로 다른 NaN 값은 ECMAScript에서 특수한 단일 **NaN** 값으로 나타내어진다. (**NaN** 값은 프로그램 식 `NaN`으로 생성됨에 유의하라.) ...
 
 	<Fragment slot="original">
 		The *Number type* has exactly 18,437,736,874,454,810,627 (that is, $$2^{64} - 2^{53} + 3$$) values, representing the double-precision floating point <ADoi doi="10.1109/IEEESTD.2019.8766229" restricted>IEEE 754-2019</ADoi> binary64 values as specified in the IEEE Standard for Binary Floating-Point Arithmetic, except that the 9,007,199,254,740,990 (that is, $$2^{53} - 2$$) distinct NaN values of the IEEE Standard are represented in ECMAScript as a single special **NaN** value. (Note that the **NaN** value is produced by the program expression `NaN`.) ...
@@ -332,7 +332,7 @@ JavaScript에서 각 분야별로 가장 큰/작은 Number 타입의 수는 다�
 * `[].toString()` = `""`이므로 `[]+[]` = `"" + ""` = `""`입니다.
 * `{}.toString()` = `"[object Object]"`이므로 `[]+{}` = `"" + "[object Object]"` = `"[object Object]"`가 됩니다.
 
-다만, `{}+[]`는 예외적으로 객체 `{}`와 배열 `[]`을 더하는 것이 아니라 **비어 있는 블록** `{}`과 배열에 단항 덧셈을 하는 표현식 `+[]`으로 파싱되기 때문에 다른 결과가 나옵니다. 이 값은 <AOut href={h.abs.conv.tonumber.$}>ToNumber</AOut>(<Var>argument</Var> = **[]**), <AOut href={h.abs.conv.toprimitive}>ToPrimitive</AOut>(<Var>input</Var> = **[]**, <Var>preferredType</Var> = NUMBER)를 거쳐 <strong>""</strong>이 된 뒤 <AOut href={h.abs.conv.tonumber.$}>ToNumber</AOut>(<Var>argument</Var> = **""**), <AOut href={h.abs.conv.tonumber.string.stringtonumber}>StringToNumber</AOut>(<Var>str</Var> = **""**), 마지막으로 <AOut href={h.abs.conv.tonumber.string.stringnumericvalue}>StringNumericValue</AOut>(*StringNumericLiteral* ::: <Var>StrWhiteSpace</Var><sub>opt</sub>)의 많은 단계를 거쳐 $$+0_\mathbb{F}$$, 즉 `0`이 됩니다. `+[]` = `0`이라는 내용을 이렇게까지 늘여서 써도 되나...? 참고로 `({}+[])`은 정상적(?)으로 `"[object Object]"`가 됩니다.
+다만, `{}+[]`는 예외적으로 객체 `{}`와 배열 `[]`을 더하는 것이 아니라 **비어 있는 블록** `{}`과 배열에 단항 덧셈을 하는 식 `+[]`으로 파싱되기 때문에 다른 결과가 나옵니다. 이 값은 <AOut href={h.abs.conv.tonumber.$}>ToNumber</AOut>(<Var>argument</Var> = **[]**), <AOut href={h.abs.conv.toprimitive}>ToPrimitive</AOut>(<Var>input</Var> = **[]**, <Var>preferredType</Var> = NUMBER)를 거쳐 <strong>""</strong>이 된 뒤 <AOut href={h.abs.conv.tonumber.$}>ToNumber</AOut>(<Var>argument</Var> = **""**), <AOut href={h.abs.conv.tonumber.string.stringtonumber}>StringToNumber</AOut>(<Var>str</Var> = **""**), 마지막으로 <AOut href={h.abs.conv.tonumber.string.stringnumericvalue}>StringNumericValue</AOut>(*StringNumericLiteral* ::: <Var>StrWhiteSpace</Var><sub>opt</sub>)의 많은 단계를 거쳐 $$+0_\mathbb{F}$$, 즉 `0`이 됩니다. `+[]` = `0`이라는 내용을 이렇게까지 늘여서 써도 되나...? 참고로 `({}+[])`은 정상적(?)으로 `"[object Object]"`가 됩니다.
 
 ### 무엇이 문제일까? \{#array-plus-array-what-went-wrong\}
 

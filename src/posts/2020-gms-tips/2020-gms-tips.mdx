@@ -2,7 +2,7 @@
 title: '게임메이커 8.x / GMS 2.3+ 소소한 꿀팁'
 slug: 'gms-tips'
 published: 2020-04-24
-edited: 2025-06-08
+edited: 2025-10-25
 cover: '/res/cover/2020-gms-tips.png'
 permalink: 'https://eatch.dev/s/gms'
 tags:
@@ -448,7 +448,7 @@ GMS1부터는 모든 수를 *배정밀도 부동소숫점*으로 저장합니다
 
 충격적이게도 0.1 + 0.2는 0.3이 **아닙니다**. GameMaker와 문법이 비슷하고 배정밀도 부동소숫점을 기본으로 하는 JavaScript로 확인해 보면 이렇습니다.
 
-<Image src={javascript_float_error} alt="웹 브라우저 콘솔에서 JavaScript 표현식을 평가한 결과. 0.3은 0.3, 0.1 + 0.2는 0.30000000000000004, 0.1 + 0.2 == 0.3은 false이다." />
+<Image src={javascript_float_error} alt="웹 브라우저 콘솔에서 JavaScript 식을 평가한 결과. 0.3은 0.3, 0.1 + 0.2는 0.30000000000000004, 0.1 + 0.2 == 0.3은 false이다." />
 
 한편 GameMaker에서는 `0.1 + 0.2 == 0.3`이 성립하는 것처럼 보이는데, 이건 엔진 내부에서 <AOut href="https://manual.gamemaker.io/monthly/en/GameMaker_Language/GML_Reference/Maths_And_Numbers/Number_Functions/math_set_epsilon.htm">`math_set_epsilon`</AOut>으로 보정한 결과입니다. 이 설정값은 기본값이 0.000001인데, 값을 비교할 때 이 값 이하의 차이가 나면 계산 오차인 것으로 생각하고 `true`로 취급합니다. 부동소숫점 오차를 다 신경써야 할 정도로 깊게 들어가지 않는 이상 별로 신경쓰지 않고 개발해도 되겠습니다.
 
