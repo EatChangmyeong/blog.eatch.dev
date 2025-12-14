@@ -11,7 +11,6 @@ tags:
 import { Image } from 'astro:assets';
 import AOut from '@components/post/a/AOut.astro';
 import ABoj from '@components/post/a/ABoj.astro';
-import ADoi from '@components/post/a/ADoi.astro';
 import AWp from '@components/post/a/AWp.astro';
 import AYt from '@components/post/a/AYt.astro';
 import Remark from '@components/post/Remark.astro';
@@ -2726,19 +2725,3 @@ Claude를 사용해 아래 주제에 대한 보조 조사를 진행했습니다.
 * 파일 범위 선언과 `extern` 지정자의 상호작용
 </Fragment>
 </GenAI>
-
-export const footnotes = {
-	'three-tabs': '다소 부끄러운 고백이지만 제가 실제로 들여쓰기 설정을 이렇게 한 적이 있었습니다. 지금은 4칸 너비의 탭을 쓰고 있습니다.',
-	'ub-consequence': '컴퓨터를 포맷해버린다고 쓰긴 했지만 실제로 자주 일어날 만한 일을 꼽자면 엉뚱한 곳에서 전혀 무관한 문제를 일으켜서 최소 몇 시간을 디버깅으로 날리게 만드는 것이 가장 유력하겠습니다.',
-	'c23-bits-in-byte': 'C23의 용어집에서는 \'바이트의 비트 수가 구현체 정의 값\'이라는 명시적인 언급이 삭제되었지만(3.7), 부록 J의 구현체 정의 동작 목록에는 수록되어 있습니다(J.3.5/1의 (1)).',
-	'most-vexing-parse': () => <>이 현상은 같은 구문을 함수 선언으로도 클래스 객체 초기화로도 읽을 수 있을 때 공통적으로 발생하는 현상이며, <AWp art="Most vexing parse"><Term term="most vexing parse">제일 짜증나는 파싱*</Term></AWp>이라는 이름도 붙어 있습니다.</>,
-};
-
-export const transnotes = {
-	'expression': () => <>기존에는 expression을 일괄적으로 '표현식'으로 번역했지만, Hackers' Pub의 글 <AOut href="https://hackers.pub/@ja/2025/expression">"expression"은 "표현식"이 아니라 그냥 "식"</AOut>의 취지에 동의해 번역어를 변경했습니다. 글의 요지는 수학과 전산학 맥락에서 expression을 번역할 때 사전적 의미 중 하나인 '표현'을 추가하는 것이 오히려 부자연스러우며, '식'이라고만 번역해도 해석에 문제가 없다는 것입니다.</>,
-};
-
-export const references = {
-	ISO9899: () => <>ISO/IEC 9899:2024 <AOut href="https://www.iso.org/standard/82075.html" restricted="전문 열람에 유료 구매가 필요합니다."><em>Information technology — Programming languages — C</em></AOut></>,
-	IEEE754: () => <>IEEE 754-2019 <ADoi doi="10.1109/IEEESTD.2019.8766229" restricted><em>IEEE Standard for Floating-Point Arithmetic</em></ADoi></>,
-};

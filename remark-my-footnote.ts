@@ -5,6 +5,8 @@ import type {} from 'mdast-util-mdx-jsx';
 import { u } from 'unist-builder';
 import { visit } from 'unist-util-visit';
 
+export type FootnoteOrder = [string, number][];
+
 const attributeSchema = z.looseObject({
 	type: z.literal('mdxJsxAttribute'),
 	name: z.literal('id'),
@@ -87,12 +89,12 @@ export default function() {
 		);
 		if(footnotes.size)
 			data.astro!.frontmatter!.footnotes = [...footnotes]
-				.map(([id, { refs }]) => [id, refs]);
+				.map(([id, { refs }]) => [id, refs]) satisfies FootnoteOrder;
 		if(transnotes.size)
 			data.astro!.frontmatter!.transnotes = [...transnotes]
-				.map(([id, { refs }]) => [id, refs]);
+				.map(([id, { refs }]) => [id, refs]) satisfies FootnoteOrder;
 		if(references.size)
 			data.astro!.frontmatter!.references = [...references]
-				.map(([id, { refs }]) => [id, refs]);
+				.map(([id, { refs }]) => [id, refs]) satisfies FootnoteOrder;
 	};
 }

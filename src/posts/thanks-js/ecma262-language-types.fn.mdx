@@ -1,0 +1,6 @@
+import AOut from '@components/post/a/AOut.astro';
+import Term from '@components/post/Term.astro';
+
+import h from './href.ts';
+
+ECMA-262 표준에서 정의하는 "<Term term="language types"><AOut href={h.type.lang.$}>언어 타입</AOut></Term>"은 `typeof`가 반환하는, '사용자에게 노출되는' 타입과 다소 차이가 있는데, `null`은 Object가 아닌 별도의 Null 타입으로, `typeof`가 `"function"`인 값은 내부 메소드 [[Call]]이 있는 Object 타입으로 분류되어 있습니다.

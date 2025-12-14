@@ -1,5 +1,5 @@
 ---
-import type { AstroVNode } from 'astro/jsx-runtime';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
 interface Props {
 	type: 'fn' | 'tn' | 'ref',
@@ -7,18 +7,13 @@ interface Props {
 	label: string,
 	refs: number,
 	xlinkClass?: string,
-	Content: (() => AstroVNode) | string,
+	Content: AstroComponentFactory,
 }
 const { type, id, label, refs, xlinkClass, Content } = Astro.props;
 ---
 
-<p>
-	<sup id={`${type}:${id}`}>{label}</sup>
-	{
-		typeof Content == 'string'
-			? Content
-			: <Content />
-	}
+<p class="font-size-[0.8em]" id={`${type}:${id}`}>
+	{label}
 	{
 		[...Array(refs)].map((_, i) =>
 			<>
@@ -31,3 +26,4 @@ const { type, id, label, refs, xlinkClass, Content } = Astro.props;
 		)
 	}
 </p>
+<Content />

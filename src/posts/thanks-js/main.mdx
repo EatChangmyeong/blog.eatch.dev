@@ -511,19 +511,3 @@ JavaScript의 문제가 아닌 걸 치우고 IEEE 754의 문제만 따로 모아
 <Image src={ieee754} alt={`위의 "Thanks for inventing Javascript" 이미지에서 IEEE 754의 문제인 코드만 남기고 문구를 "Thanks for inventing IEEE 754"로 수정했다.`} />
 
 차라리 JavaScript를 이렇게 깠으면 저도 ~~트위터에~~ ~~X에~~ 블루스카이에 "자바스크립트넘구데기" 같은 자조적인 글을 쓰면서 저 짤을 올렸을 겁니다. 맨 위의 짤은 *JavaScript 자체의 문제가 아닌 것을 슬쩍 끼워넣어서 문제의 본질을 흐리고 있습니다*. 애초에 그냥 웃자고 만든 밈짤인데 민감하게 반응한 감도 없지는 않지만, 누군가는 이 얘기를 해야 한다고 항상 생각하고 있었습니다. 아무튼 저는 할 말을 전부 했으니 여한이 없습니다. 😝
-
-export const footnotes = {
-	'ecma262-language-types': () => <>ECMA-262 표준에서 정의하는 "<Term term="language types"><AOut href={h.type.lang.$}>언어 타입</AOut></Term>"은 <code>typeof</code>가 반환하는, '사용자에게 노출되는' 타입과 다소 차이가 있는데, <code>null</code>은 Object가 아닌 별도의 Null 타입으로, <code>typeof</code>가 <code>"function"</code>인 값은 내부 메소드 [[Call]]이 있는 Object 타입으로 분류되어 있습니다.</>,
-	'numeric-separator': () => <>ES2021부터 수를 작성할 때는 숫자 사이에 <code>_</code> 문자를 삽입해서 자릿수를 구분할 수 있으며, 소수점 앞뒤, 지수 자리, 이진수, 팔진수, 십육진수, BigInt를 모두 지원합니다.</>,
-	'max-identity': () => <>엄밀히 말해 max의 항등원은 <AWp art="Extended real number line">확장된 실수</AWp>, 즉 ±∞가 추가된 실수 체계에서만 정의되며, 일반적인 실수 집합에서는 max의 항등원이 존재하지 않습니다. 추가로 JavaScript의 Number에는 <code>NaN</code>이 정의되어 있는데, max(NaN, -∞) = max(-∞, NaN) = NaN이므로 문제가 없습니다.</>,
-	supremum: () => <>물론 더 엄밀하게 따지면 최댓값과 최솟값은 <em>주어진 집합의 원소 중에서</em> 골라야 하는 값이므로 공집합에 대해서 정의되지 않기 때문에, 이렇게 정의할 거면 이름을 <AWp lang="ko" art="상한과 하한"><code>supremum</code>/<code>infimum</code></AWp>으로 지어야 한다는 반박이 가능합니다.</>,
-	tostring: () => <>ToString은 String이 아닌 값을 String인 값으로 바꾸는 추상 연산입니다. 이 맥락에서는 <Var>lPrim</Var>과 <Var>rPrim</Var>이 모두 String이므로 의미 있는 동작을 하지 않습니다.</>,
-};
-
-export const transnotes = {
-	significand: () => <><AOut href="https://mathbang.net/599">상용로그의 지표와 가수 개념</AOut>에서 번역어를 차용했습니다.</>
-};
-
-export const references = {
-	ECMA262: () => <>ECMA-262 <AOut href="https://tc39.es/ecma262/multipage/"><em>ECMAScript® 2026 Language Specification</em></AOut>. 2025년 8월 21일 현재 2026년판으로, 판올림 시 목차 번호나 세부 알고리즘이 바뀔 수 있지만 글의 취지에는 영향이 없습니다.</>,
-};

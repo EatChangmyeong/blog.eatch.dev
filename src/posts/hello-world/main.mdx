@@ -7,7 +7,6 @@ tags:
 - '테스트'
 ---
 
-import AOut from '@components/post/a/AOut.astro';
 import Fn from '@components/post/fn/Fn.astro';
 import Tn from '@components/post/fn/Tn.astro';
 import Ref from '@components/post/fn/Ref.astro';
@@ -59,16 +58,3 @@ import Ref from '@components/post/fn/Ref.astro';
 '잇넘귀'는 '잇창명 너무 귀여워'의 준말로, 제가 생각해도 제가 너무 귀여울 때 쓰는 단어입니다. ~~바로 지금처럼요~~
 
 이 문서의 한글 입숨은 원래 <Ref id="Hwang12" />에서 생성한 것으로 기억하는데, 지금은 아쉽게도 접속할 수가 없네요.
-
-export const footnotes = {
-	test1: '각주 내용 1',
-	test2: '각주 내용 2',
-};
-
-export const transnotes = {
-	test1: '(충격) 번역한 글이 아닌데 역주가 붙는 글이 있다???',
-};
-
-export const references = {
-	Hwang12: () => <AOut href="https://hangul.thefron.me/" unavailable />,
-};
