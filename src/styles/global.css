@@ -127,7 +127,7 @@ kbd {
 	padding: 0.1rem 0.25rem;
 }
 
-article :is(blockquote, h1, h2, h3, h4, h5, h6, img, p, .astro-code, .-block) {
+article :is(blockquote, h1, h2, h3, h4, h5, h6, img, p, .astro-code, mjx-container[jax="SVG"][display="true"], .-block) {
 	overflow-x: auto;
 	overflow-y: clip;
 }
@@ -159,7 +159,7 @@ article li > :is(ol, ul) {
 	margin-top: 0;
 	margin-bottom: 0;
 }
-article :is(p, summary) {
+article :is(p, summary, mjx-container[jax="SVG"][display="true"]) {
 	margin: 0.5rem;
 }
 article :is(.astro-code, .-block) {
