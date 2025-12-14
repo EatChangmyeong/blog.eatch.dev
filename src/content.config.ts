@@ -32,8 +32,15 @@ export type Post = z.infer<typeof strictSchema>;
 export const collections = {
 	blog: defineCollection({
 		loader: glob({
-			base: './src/posts',
-			pattern: './**/*.mdx',
+			base: 'src/posts',
+			pattern: [
+				'*/main.mdx',
+				'*.mdx',
+			],
+			generateId({ entry }) {
+				const split = entry.slice(0, -4).split('/')[0];
+				return split.split('-').slice(1).join('-');
+			},
 		}),
 		schema: strictSchema,
 	}),
