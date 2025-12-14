@@ -20,7 +20,6 @@ const
 		interactive: z.boolean().or(z.literal('desktop')).optional(),
 	}),
 	additional = z.object({
-		slug: z.string(),
 		published: z.date(),
 	}),
 	lenientSchema = base.merge(additional.partial()).passthrough(),

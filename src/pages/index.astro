@@ -30,7 +30,7 @@ const
 		</article>
 		<nav>
 			{posts.map(post =>
-				<PostCard {...post} href={`/${post.published!.getFullYear()}/${post.slug!}`} />
+				<PostCard {...post} href={`/${post.published!.getFullYear()}/${post.id}`} />
 			)}
 		</nav>
 	</main>
