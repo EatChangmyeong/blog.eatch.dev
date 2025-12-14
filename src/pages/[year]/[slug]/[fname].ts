@@ -2,8 +2,10 @@ import type { APIRoute, GetStaticPaths } from 'astro';
 import { glob } from 'tinyglobby';
 import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
+import { getCollection } from 'astro:content';
 
 export const getStaticPaths = (async () => {
+	const yearMapping = new Map((await getCollection('blog')).map(post => [post.id, post.data.published.getFullYear()]));
 	const files = await glob(
 		'*/attach/*',
 		{
@@ -12,16 +14,12 @@ export const getStaticPaths = (async () => {
 		}
 	);
 	return files.map(path => {
-		const [yearSlug,, fname] = path.split('/');
-		const [year, ...slug] = yearSlug.split('-');
-		return {
-			params: {
-				year,
-				slug: slug.join('-'),
-				fname,
-			},
-		};
-	});
+		const [slug,, fname] = path.split('/');
+		const year = yearMapping.get(slug);
+		return year === undefined
+			? undefined
+			: { params: { year, slug, fname } };
+	}).filter(item => item !== undefined);
 }) satisfies GetStaticPaths;
 
 export const GET = (async ({ params: { year, slug, fname } }) => {

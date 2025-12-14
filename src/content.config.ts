@@ -37,8 +37,7 @@ export const collections = {
 				'*.mdx',
 			],
 			generateId({ entry }) {
-				const split = entry.slice(0, -4).split('/')[0];
-				return split.split('-').slice(1).join('-');
+				return entry.slice(0, -4).split('/')[0];
 			},
 		}),
 		schema: strictSchema,
