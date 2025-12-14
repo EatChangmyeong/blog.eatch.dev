@@ -1,10 +1,18 @@
-// https://docs.astro.build/en/recipes/reading-time/
-
-import type { Root, PhrasingContent } from 'mdast';
+import { z } from 'zod';
+import type { Root } from 'mdast';
 import type { VFile } from 'vfile';
-import type { MdxJsxAttribute } from 'mdast-util-mdx-jsx';
+import type {} from 'mdast-util-mdx-jsx';
 import { u } from 'unist-builder';
 import { visit } from 'unist-util-visit';
+
+const attributeSchema = z.looseObject({
+	type: z.literal('mdxJsxAttribute'),
+	name: z.literal('id'),
+});
+const schema = z.array(attributeSchema.optional().catch(undefined))
+	.transform(xs => xs.filter(x => x !== undefined))
+	.pipe(z.tuple([attributeSchema.extend({ value: z.string() })]))
+	.transform(([{ value }]) => value);
 
 export default function() {
 	return function(tree: Root, { data }: VFile) {
@@ -19,11 +27,7 @@ export default function() {
 				const { name, attributes: props } = node;
 				switch(name) {
 					case 'Fn': {
-						const id = props.find((x): x is MdxJsxAttribute => x.type == 'mdxJsxAttribute' && x.name == 'id')?.value;
-						if(!id)
-							throw new Error('remark-my-footnote: missing `id` prop for `Fn`');
-						if(typeof id != 'string' || !id)
-							throw new Error('remark-my-footnote: `id` for `Fn` is not a string');
+						const id = schema.parse(props);
 						if(!footnotes.has(id))
 							footnotes.set(id, {
 								index: footnotes.size + 1,
@@ -44,11 +48,7 @@ export default function() {
 						);
 					} break;
 					case 'Tn': {
-						const id = props.find((x): x is MdxJsxAttribute => x.type == 'mdxJsxAttribute' && x.name == 'id')?.value;
-						if(!id)
-							throw new Error('remark-my-footnote: missing `id` prop for `Tn`');
-						if(typeof id != 'string' || !id)
-							throw new Error('remark-my-footnote: `id` for `Tn` is not a string');
+						const id = schema.parse(props);
 						if(!transnotes.has(id))
 							transnotes.set(id, {
 								index: transnotes.size + 1,
@@ -69,11 +69,7 @@ export default function() {
 						);
 					} break;
 					case 'Ref': {
-						const id = props.find((x): x is MdxJsxAttribute => x.type == 'mdxJsxAttribute' && x.name == 'id')?.value;
-						if(!id)
-							throw new Error('remark-my-footnote: missing `id` prop for `Ref`');
-						if(typeof id != 'string' || !id)
-							throw new Error('remark-my-footnote: `id` for `Ref` is not a string');
+						const id = schema.parse(props);
 						if(!references.has(id))
 							references.set(id, {
 								index: references.size + 1,
