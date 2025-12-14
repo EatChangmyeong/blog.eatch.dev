@@ -23,7 +23,7 @@ export const getStaticPaths = (async () => {
 }) satisfies GetStaticPaths;
 
 export const GET = (async ({ params: { year, slug, fname } }) => {
-	const file = await readFile(resolve('src/posts', `${year!}-${slug!}`, 'attach', fname!));
+	const file = await readFile(resolve('src/posts', slug!, 'attach', fname!));
 	return file
 		? new Response(new Uint8Array(file))
 		: new Response(null, { status: 404 });
