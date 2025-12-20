@@ -1,0 +1,1027 @@
+---
+title: '흥미 위주로 알아보는 일반 재귀 함수'
+published: 2022-04-22
+edited: 2025-10-01
+tags:
+- 'TIL'
+- '계산이론'
+- '인터랙티브'
+interactive: true
+---
+
+import { Image } from 'astro:assets';
+import Interactive from '@components/post/Interactive.astro';
+import AOut from '@components/post/a/AOut.astro';
+import AWp from '@components/post/a/AWp.astro';
+import Remark from '@components/post/Remark.astro';
+import Term from '@components/post/Term.astro';
+import Fn from '@components/post/fn/Fn.astro';
+import GenAI from '@components/GenAI.astro';
+
+import GrfRunner from './GrfRunner.tsx';
+
+import one_eternity_later from './one-eternity-later.webp';
+
+**컴퓨터과학에서 이론적으로 다루는 계산 모형이 튜링 기계 말고 다른 것도 있다는 것을 알고 계셨나요?**
+
+처음 이 글을 작성했을 때는 어쩌다가 일반 재귀 함수라는 개념을 마주치게 되었는지 구질구질하게 모두 적었었는데, 핵심만 요약하자면 어쩌다가 위키백과에서 <AWp art="Model of computation" /> 항목을 읽게 되었고 제가 몰랐던 수많은 계산 모형을 마주치게 되었다는 것이라고 하겠습니다. 아마 튜링 기계 말고도 <AWp lang="ko" art="람다 대수">람다 계산</AWp>을 들어보신 분들이 계실 텐데, 튜링 완전하지 않은 것을 포함하면 위키백과에 등재된 계산 모형이 최소 **18개**나 되리라고 예상하셨던 분은 없을 것이라고 생각합니다. (저도 깜짝 놀랐습니다.)
+
+이 글에서는 지금까지 제시되었던 수많은 계산 모형 중 <strong><Term term="general recursive functions">일반 재귀 함수</Term></strong>를 다룹니다. 한국어 위키백과에는 <AWp lang="ko" art="μ-재귀 함수"><Term term="μ-recursive functions">μ-재귀 함수</Term></AWp>라는 제목으로 등재되어 있고 재작성 이전에도 이 용어를 사용했지만, 이번에는 영문 용어를 그대로 번역해 사용합니다. 제가 확실히 이해하고 있는 개념이 아니기 때문에 잘못된 내용이 있을 수 있습니다.
+
+참고로 해당 위키백과 항목에 등재되어 있는 계산 모형을 모두 적으면 다음과 같습니다. 특히 제가 어느 정도 알고 있는 것은 부연 설명을 적고, 튜링 완전하다고 확실히 확인한 것은 **굵게** 강조했습니다.
+
+* 순차형 모형
+	* <AWp lang="ko" art="유한 상태 기계"><Term term="finite-state machines">유한 상태 기계</Term></AWp>
+		* 어떤 계가 가질 수 있는 유한 개의 상태와 그 상태 사이의 전이로 계의 동작을 나타냅니다. 형식언어론에서의 <AWp lang="ko" art="정규 언어" />와 동등한 표현력을 가집니다.
+	* <strong><AWp art="Tag system"><Term term="Post tag machines">포스트 태그 기계</Term></AWp></strong> ($$m$$ > 1일 경우 튜링 완전)
+	* <AWp lang="ko" art="푸시다운 자동 기계"><Term term="pushdown automata">푸시다운 오토마타</Term></AWp>
+		* 유한 상태 기계와 비슷하지만 추가로 스택을 사용할 수 있습니다(스택에 밀어넣는다고 해서 푸시다운이라고 합니다). 비결정적 푸시다운 오토마타는 형식언어론에서의 <AWp lang="ko" art="문맥 자유 언어">문맥 무관 언어</AWp>와 동등한 표현력을 가집니다.
+	* <strong><AWp lang="ko" art="레지스터 머신"><Term term="register machines">레지스터 기계</Term></AWp></strong>
+	* <strong><AWp lang="ko" art="튜링 기계"><Term term="Turing machines">튜링 기계</Term></AWp></strong>
+		* 굳이 설명이 필요하지 않을 것 같습니다.
+	* <AWp art="decision tree model"><Term term="decision tree model">결정 트리 모형</Term></AWp>
+		* n지 선택의 연속으로 생각할 수 있는 알고리즘을 <AWp lang="ko" art="결정 트리" />로 표현할 수 있습니다. 알고리즘의 시간 복잡도 분석에도 사용할 수 있으며, 대표적으로 비교에 기반한 정렬이 $$O(n \log n)$$ 미만의 시간 복잡도를 가질 수 없다는 증명에도 활용됩니다.
+* 함수형 모형
+	* <AWp lang="ko" art="추상 재작성 시스템"><Term term="abstract rewriting system">추상 재작성 시스템</Term></AWp>
+	* <strong><AWp art="combinatory logic"><Term term="combinatory logic">조합자 논리</Term></AWp></strong>
+		* 정해진 수의 인자를 제한된 방법으로 조작하는 정해진 <Term term="combinator">조합자</Term>만을 조합해 연산을 표현합니다. 제한된 버전의 람다 계산으로 생각할 수 있으며, $$Kxy = x$$와 $$Sxyz = xz(yz)$$의 두 조합자만으로 튜링 완전함이 알려져 있습니다.
+	* <strong><AWp lang="ko" art="μ-재귀 함수"><Term term="general recursive functions">일반 재귀 함수</Term></AWp></strong>
+		* 이 글의 주제입니다.
+	* <strong><AWp lang="ko" art="람다 대수"><Term term="lambda calculus">람다 계산</Term></AWp></strong>
+		* 인자를 직접 조작할 수 없고 다른 함수에 전달만 할 수 있는 순수 단항 함수만을 조합해 연산을 표현합니다. 함수형 프로그래밍의 기초가 되는 모형으로, <AOut href="https://helloworld.kurly.com/blog/lambda-calculus-1/">컬리 기술 블로그</AOut>에서 한국어로 다룬 바가 있습니다.
+* 동시성 모형
+	* <AWp lang="ko" art="행위자 모델"><Term term="actor model">행위자 모형</Term></AWp>
+	* <strong><AWp lang="ko" art="세포 자동자"><Term term="cellular automata">세포 자동자</Term></AWp></strong>
+		* 격자 위의 '세포'들이 인접한 세포들과 영향을 주고받아 상태를 전이시킵니다. 잘 알려진 세포 자동자 중 튜링 완전한 것으로는 <AWp lang="ko" art="라이프 게임"><Term term="Conway's Game of Life">콘웨이의 생명게임</Term></AWp>, <AWp lang="ko" art="와이어월드"><Term term="Wireworld">와이어월드</Term></AWp>, 특정한 초기 상태에서 시작하는 <AWp art="Rule 110" /> 등이 있습니다.
+	* <strong><AWp art="Interaction nets" /></strong>
+		* 하나 이상의 포트가 있는 여러 종류의 노드와 노드 사이를 잇는 회로로 연산을 표현합니다. 두 노드가 <Term term="principal port">주 포트</Term>로 연결되어 있으면 정해진 규칙에 따라 회로가 변형되며, 모형의 특성상 병렬 처리가 쉽습니다. 조합자 논리와 비슷하게 세 종류의 노드만으로 튜링 완전함이 알려져 있습니다.
+	* <AWp art="Kahn process networks" />
+	* <strong><AWp lang="ko" art="논리 회로"><Term term="logic gates">논리 회로</Term></AWp></strong>
+	* <AWp art="Petri net">Petri nets</AWp>
+	* <strong><AWp lang="ko" art="프로세스 계산"><Term term="process calculi">프로세스 계산</Term></AWp></strong>
+		* 동시성을 띠는 계를 람다 계산과 비슷한 방식으로 형식화하는 여러 가지 모형을 가리키는 개념입니다.
+
+## 원시 재귀 함수 \{#primitive-recursive-functions\}
+
+일반 재귀 함수를 통째로 이해하기 전에 더 작은 개념인 <strong><AWp lang="ko" art="원시 재귀 함수"><Term term="primitive recursive functions">원시 재귀 함수</Term></AWp></strong>를 먼저 다루어 보겠습니다. 이 계산 모형에서는 세 종류의 대상을 다룹니다.
+
+* **0 이상의 정수**로 값을 나타냅니다. 이 글에서는 그냥 '자연수'라고 하겠습니다.<Fn id="natural-number" />
+* 세 가지 **기본 함수**로 기초적인 연산을 나타냅니다.
+	* 모든 함수는 순수함수이며, 자연수를 입력받아 자연수를 출력합니다.
+	* 함수마다 입력으로 받는 자연수의 개수는 정해져 있습니다. 자연수 $$n$$에 대해 매개변수가 $$n$$개인 함수를 <Term term="n-ary">$$n$$변수</Term>함수라고 합니다.
+* 여러 함수를 조합하는 **연산자**로 복잡한 연산을 나타냅니다.
+
+다음에 해당하는 함수만을 **원시 재귀 함수**라고 합니다. 대문자는 함수, 소문자는 자연수를 나타냅니다.
+
+* 기본 함수
+	* **상수 함수** $$C^k_n$$
+		* 다변수 버전의 상수함수입니다. $$k$$개의 매개변수를 받고 항상 $$n$$을 함숫값으로 가집니다.
+			$$
+			C^k_n(x_1, \cdots, x_k) = n
+			$$
+	* **다음 수 함수** $$S$$
+		* 매개변수에 1을 더하는 1변수함수입니다.
+			$$
+			S(x) = x + 1
+			$$
+	* **사영 함수**/**항등 함수** $$P^k_i$$ ($$1 \leq i \leq k$$)
+		* 다변수 버전의 항등함수입니다. $$k$$개의 매개변수를 받고 그 중 $$i$$번째 매개변수를 함숫값으로 가집니다.
+			$$
+			P^k_i(x_1, \cdots, x_k) = x_i
+			$$
+* 기본 함수를 다음 연산자를 사용해 유한 번 조합한 것
+	* **합성 연산자** $$\circ$$
+		* 다변수 버전의 함수 합성입니다. $$r$$변수함수 $$R$$과 $$r$$개의 $$l$$변수함수 $$L_1, \cdots, L_r$$에 대해 $$l$$변수함수 $$R \circ (L_1, \cdots, L_r)$$은 다음과 같이 계산합니다.
+			$$
+			(R \circ (L_1, \cdots, L_r))(x_1, \cdots, x_l) = R(L_1(x_1, \cdots, x_l), \cdots, L_r(x_1, \cdots, x_l))
+			$$
+		* $$r = 1$$일 때는 오른쪽 피연산자의 괄호를 생략하기도 합니다.
+	* **원시 재귀 연산자** $$\rho$$ (로, rho)
+		* <Term term="bounded">제한적인</Term> 반복을 수행하는 연산자입니다. $$k$$변수함수 $$B$$와 $$(k + 2)$$변수함수 $$R$$에 대해 $$(k + 1)$$변수함수 $$\rho(B, R)$$는 다음과 같이 계산합니다.
+			$$
+			(\rho(B, R))(0, x_1, \cdots, x_k) = B(x_1, \cdots, x_k)
+			$$
+			$$
+			(\rho(B, R))(i + 1, x_1, \cdots, x_k) = R(i, (\rho(B, R))(i, x_1, \cdots, x_k), x_1, \cdots, x_k)
+			$$
+
+세 가지 기본 함수는 설명하지 않고 넘어가도 될 것이라고 생각합니다. 두 가지 연산자는 바로 이해하기 쉽지 않을 수 있으니 부연 설명을 해보겠습니다.
+
+### 합성 연산자 \{#composition\}
+
+> 다변수 버전의 함수 합성입니다. $$r$$변수함수 $$R$$과 $$r$$개의 $$l$$변수함수 $$L_1, \cdots, L_r$$에 대해 $$l$$변수함수 $$R \circ (L_1, \cdots, L_r)$$은 다음과 같이 계산합니다.
+>
+> $$
+> (R \circ (L_1, \cdots, L_r))(x_1, \cdots, x_l) = R(L_1(x_1, \cdots, x_l), \cdots, L_r(x_1, \cdots, x_l))
+> $$
+
+학교에서 함수를 배울 때 아마 함수의 합성($$(f \circ g)(x) = f(g(x))$$)을 같이 배울 것입니다. (설마 그동안 교육과정에서 빠지지는 않았겠죠?) '여러 가지 작업을 순차적으로 한다'는 것을 표현하는 것은 정말 중요하기 때문에 원시 재귀 함수에서도 합성 연산자를 포함하고 있습니다.
+
+$$\circ$$의 양쪽 피연산자가 1변수함수일 때는 보통의 함수 합성이 됩니다.
+
+$$
+(L \circ R)(x) = L(R(x))
+$$
+
+오른쪽 피연산자를 다변수함수로 일반화하는 것까지도 역시 문제가 없습니다.
+
+$$
+(L \circ R)(x_1, \cdots, x_r) = L(R(x_1, \cdots, x_r))
+$$
+
+그런데 왼쪽 피연산자를 확장하려고 하면 문제가 발생합니다. $$L$$은 $$l$$변수함수인데, 위의 식을 그대로 두면 $$L$$에 전달할 인자가 하나밖에 없게 됩니다.
+
+$$
+(L \circ R)(x_1, \cdots, x_r) = L(R(x_1, \cdots, x_r), ???)
+$$
+
+그렇다고 해서 $$R$$을 모든 인자에 똑같이 복제하면 모든 매개변수의 값이 똑같아지기 때문에 다변수함수를 쓰는 이유가 없어집니다.
+
+$$
+(L \circ R)(x_1, \cdots, x_r) = L(R(x_1, \cdots, x_r), \cdots, R(x_1, \cdots, x_r))
+$$
+
+그 대신 원시 재귀 함수 모형에서는 **오른쪽 피연산자로 오는 함수 개수를 왼쪽 함수의 항수에 맞추는** 해결책을 사용합니다. 이렇게 하면 인자의 개수도 일치하고 각 매개변수에 서로 다른 인자를 전달할 수도 있습니다.
+
+$$
+(L \circ (R_1, \cdots, R_l))(x_1, \cdots, x_r) = L(R_1(x_1, \cdots, x_r), \cdots, R_l(x_1, \cdots, x_r))
+$$
+
+그렇게 쓸모가 있는 것은 아니지만, 왼쪽 피연산자로 **0변수함수**가 오는 것도 가능합니다. 기존 문헌에서는 이 경우를 어떻게 표기하는지 모르겠는데, 이 글에서는 합성한 함수의 항수를 알 수 있도록 오른쪽 피연산자의 괄호 안에 $$r$$을 표기합니다.
+
+$$
+(L \circ (r))(x_1, \cdots, x_r) = L()
+$$
+
+이론은 충분히 다뤘으니 합성 연산자를 사용해 간단한 함수를 만드는 예시를 살펴보겠습니다.
+
+* 2를 더하는 함수: $$S \circ S$$
+	* $$(S \circ S)(5) = S(S(5)) = S(6) = 7$$
+* 3을 더하는 함수: $$S \circ S \circ S$$
+	* $$(S \circ S \circ S)(5) = S(S(S(5))) = S(S(6)) = S(7) = 8$$
+* 함숫값이 1인 2변수 상수 함수: $$S \circ C^2_0 \circ (2)$$
+	* $$(S \circ C^0_0 \circ (2))(5, 10) = S(C^0_0()) = S(0) = 1$$
+	* 위와 같은 원리로 $$C^1_0 \circ P^k_1$$, $$S$$, $$\circ$$만을 사용해 임의의 $$C^k_n$$을 만들 수 있기 때문에 일부 자료에서는 기본 함수에서 $$C^k_n$$을 빼고 $$C^1_0$$만 포함하는 경우도 있다고 합니다.
+* 두 매개변수의 자리 바꾸기: $$F \circ (P^2_2, P^2_1)$$
+	* $$(F \circ (P^2_2, P^2_1))(3, 4) = F(P^2_2(3, 4), P^2_1(3, 4)) = F(4, 3)$$
+* 빈 매개변수 자리에 기본값 넣기: $$F \circ (P^1_1, C^1_k)$$
+	* $$(F \circ (P^1_1, C^1_2))(7) = F(P^1_1(7), C^1_2(7)) = F(7, 2)$$
+
+물론 지금 할 수 있는 것은 원하는 자연수 만들기, 정해진 값만큼 더하기, 자리 바꾸기뿐이기 때문에 이 이상 할 수 있는 것이 별로 없습니다. 그 대신 다음으로 알아볼 연산자는 합성보다 훨씬 강력합니다.
+
+### 원시 재귀 연산자 \{#primitive-recursion\}
+
+> <Term term="bounded">제한적인</Term> 반복을 수행하는 연산자입니다. $$k$$변수함수 $$B$$와 $$(k + 2)$$변수함수 $$R$$에 대해 $$(k + 1)$$변수함수 $$\rho(B, R)$$는 다음과 같이 계산합니다.
+>
+> $$
+> (\rho(B, R))(0, x_1, \cdots, x_k) = B(x_1, \cdots, x_k)
+> $$
+> $$
+> (\rho(B, R))(i + 1, x_1, \cdots, x_k) = R(i, (\rho(B, R))(i, x_1, \cdots, x_k), x_1, \cdots, x_k)
+> $$
+
+원하는 값($$x$$)에 원하는 함수($$R$$)를 매개변수로 주어지는 횟수($$i$$)만큼 반복하고 싶다면 연산자를 어떻게 정의하는 것이 좋을까요? 아마 이런 정의가 가장 먼저 떠오르지 않을까 싶습니다. 아직 진짜 $$\rho$$가 아니기 때문에 아래 첨자를 붙였습니다.
+
+$$
+(\rho_1(R))(i, x) = R^i(x)
+$$
+
+그런데 위와 같은 방식으로 정의하면 가능한 모든 $$i$$에 대해 규칙이 하나씩, 즉 무한개 있는 꼴이니 예쁘지 않습니다. 다행히 다음 방법을 사용해 규칙을 2개로 줄일 수 있습니다.
+
+$$
+(\rho_2(R))(0, x) = x
+$$
+$$
+(\rho_2(R))(i + 1, x) = R((\rho_2(R))(i, x))
+$$
+
+첫 매개변수에 아무 자연수를 대입하면 첫 번째 정의와 같은 결과가 나온다는 것을 알 수 있습니다. 사실은 이것만으로 이미 **진짜 $$\rho$$와 똑같은 표현력**을 가짐이 알려져 있지만, 사용의 편의성을 위해 몇 가지 기능을 추가해 보겠습니다.
+
+우선 $$i = 0$$일 때의 베이스 케이스를 $$x$$ 자체가 아니라 $$x$$에 베이스 케이스 함수($$B$$)를 적용한 값이 되도록 일반화할 수 있습니다.
+
+$$
+(\rho_3(B, R))(0, x) = \underline{B(x)}
+$$
+$$
+(\rho_3(B, R))(i + 1, x) = R((\rho_3(B, R))(i, x))
+$$
+
+이제 매개변수 $$x$$가 항상 함수에 인자로 전달되기 때문에 매개변수의 개수를 원하는 만큼 늘릴 수 있습니다.
+
+$$
+(\rho_4(B, R))(0, \underline{x_1, \cdots, x_k}) = B(\underline{x_1, \cdots, x_k})
+$$
+$$
+(\rho_4(B, R))(i + 1, \underline{x_1, \cdots, x_k}) = R((\rho_4(B, R))(i, \underline{x_1, \cdots, x_k}))
+$$
+
+마지막으로 $$R$$ 함수를 보다 쉽게 작성할 수 있도록 $$i$$와 $$x_1, \cdots, x_k$$를 $$R$$에도 전달하도록 수정할 수 있습니다.
+
+$$
+(\rho_5(B, R))(0, x_1, \cdots, x_k) = B(x_1, \cdots, x_k)
+$$
+$$
+(\rho_5(B, R))(i + 1, x_1, \cdots, x_k) = R(\underline{i}, (\rho_5(B, R))(i, x_1, \cdots, x_k), \underline{x_1, \cdots, x_k})
+$$
+
+바로 이 $$\rho_5$$가 <strong>원시 재귀 연산자 $$\rho$$</strong>입니다. 지금까지의 설명을 요약하자면 $$\rho$$는 일종의 `for`문으로 생각할 수 있습니다. JavaScript로 표현하면 다음과 같습니다.
+
+```js
+const rho = (B, R) => (n, ...args) => {
+	let acc = B(...args);
+	for(let i = 0; i < n; i++)
+		acc = R(i, acc, ...args);
+	return acc;
+};
+```
+
+참고로 설명에서 사용한 함수 이름 $$B$$와 $$R$$은 각각 Base의 B, Recursive의 R입니다.
+
+### 원시 재귀 함수의 예시 \{#primitive-recursive-examples\}
+
+원시 재귀 연산자를 사용하는 가장 간단한 예시로는 **덧셈**을 들 수 있겠습니다. 보통 페아노 공리계를 사용하는 산술 체계에서는 덧셈을 다음과 같이 정의합니다.
+
+$$
+0 + x = x
+$$
+$$
+S(x) + y = S(x + y)
+$$
+
+이 정의를 그대로 $$\rho_2$$로 옮길 수 있습니다.
+
+$$
+\mathrm{add} = \rho_2(S)
+$$
+
+$$\rho$$로 옮기면 다음과 같습니다.
+
+$$
+\mathrm{add} = \rho(P^1_1, S \circ P^3_2)
+$$
+
+이 식이 실제로 성립하는지 2 + 7을 넣어서 확인해 보겠습니다.
+
+$$
+\begin{align}
+\mathrm{add}(2, 7)
+	&= (\rho(P^1_1, S \circ P^3_2))(2, 7) \\
+	&= (S \circ P^3_2)(1, (\rho(P^1_1, S \circ P^3_2))(1, 7), 7) \\
+	&= S(P^3_2(1, (\rho(P^1_1, S \circ P^3_2))(1, 7), 7)) \\
+	&= S((\rho(P^1_1, S \circ P^3_2))(1, 7)) \\
+	&= S((S \circ P^3_2)(0, (\rho(P^1_1, S \circ P^3_2))(0, 7), 7)) \\
+	&= S(S(P^3_2(0, (\rho(P^1_1, S \circ P^3_2))(0, 7), 7))) \\
+	&= S(S((\rho(P^1_1, S \circ P^3_2))(0, 7))) \\
+	&= S(S(P^1_1(7))) \\
+	&= S(S(7)) \\
+	&= S(8) \\
+	&= 9
+\end{align}
+$$
+
+정말 원하는 값이 나왔네요!
+
+곱셈도 비슷하게 정의할 수 있습니다.
+
+$$
+\mathrm{mul} = \rho(C^1_0, \mathrm{add} \circ (P^3_3, P^3_2))
+$$
+
+이대로 거듭제곱도 정의할 수 있지만, 방향을 조금 돌려 봅시다. 재귀 연산자를 사용할 때 간과하기 쉬운 점은 재귀를 **분기**로도 사용할 수 있다는 점입니다. 예를 들어서 Haskell에서 자료구조가 비어 있는지 확인하는 함수인 <AOut href="https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:null">`null`</AOut>은 다음과 같이 정의되어 있습니다. (<AOut href="https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:foldr">`foldr`</AOut>이 원시 재귀 연산자 역할을 합니다.)
+
+```hs
+null :: Foldable t => t a -> Bool
+null = foldr (\_ _ -> False) True
+```
+
+베이스 케이스는 `True`이고, 재귀 함수는 인자를 무시하고 `False`를 반환하는 함수입니다. 즉, 원소가 없을 때는 `\_ _ -> False`를 단 한 번도 적용하지 않기 때문에 `True`, 원소가 있을 때는 `\_ _ -> False`가 적용되어 있기 때문에 그 아래에 뭐가 몇 층으로 있든 상관없이 `False`가 됩니다.
+
+이 원리를 똑같이 응용해서 원시 재귀 함수로도 주어진 인자가 0인지 확인할 수 있습니다.
+
+$$
+\mathrm{zero} = \rho(C^0_1, C^2_0)
+$$
+
+아니면 다음과 같이 일반적인 분기도 구현할 수 있습니다. 0은 거짓, 나머지는 참으로 판정합니다.
+
+$$
+\mathrm{if} = \rho(P^2_2, P^4_3)
+$$
+
+예를 들어서 $$\mathrm{if}(7, 3, 5) = 3$$, $$\mathrm{if}(0, 3, 5) = 5$$입니다.
+
+위와 같이 함수를 조합해서 사칙연산, 나머지, 거듭제곱, 비교, 제곱근, 소수 판정(!)과 $$n$$번째 소수(!!) 등의 연산을 구현할 수 있다고 합니다. 원시 재귀 함수로 자연수 이외의 대상을 조작하고 싶다면 원하는 대상에 <AWp art="Gödel numbering">괴델 수를 부여해</AWp> 그 수를 통해 간접적으로 조작하는 등의 방법을 사용할 수 있습니다.
+
+### 굳이 왜 이렇게까지 하나요? \{#why-go-through-all-this\}
+
+글을 재작성하기 전에는 솔직히 원시 재귀 함수 모형을 보면서 '람다 계산처럼 함수에 함수 전달도 못 하는 경직된 모형'이라는 인상을 받았는데, 좀 더 조사해보고 나니 이 모형은 **수학책에 나오는 특정한 꼴의 재귀적인 함수 정의를 형식화한 것**으로도 이해할 수 있었습니다. 위에서 소개했던 덧셈의 정의를 다시 예로 들어 보겠습니다.
+
+$$
+0 + x = x
+$$
+$$
+S(x) + y = S(x + y)
+$$
+
+위에서는 아무런 설명 없이 이 두 규칙을 그대로 $$add$$로 옮겼는데, 잘 생각해보면 위의 정의와 원시 재귀 정의 사이에 연관성이 있다는 것을 알 수 있습니다.
+
+* 기본 함수 $$P$$는 좌변에 주어진 변수에 대응한다.
+	* 2번째 줄에서 재귀적으로 주어지는 $$x + y$$도 여기에 포함됩니다.
+* 연산자 $$\rho$$는 $$0$$인 경우와 $$S(x)$$인 경우로 나누어서 정의하는 것에 대응한다.
+
+이외에도 다른 식을 원시 재귀 함수로 옮긴 것들을 살펴보면 다음의 연관성을 찾아볼 수 있습니다.
+
+* 기본 함수 $$C$$는 상수에 대응한다.
+* 연산자 $$\circ$$는 함수의 중첩 호출에 대응한다.
+
+이런 원리를 이해한다면 원시 재귀의 규칙을 만족하는 수식을 기계적으로 원시 재귀 정의로 바꿀 수 있습니다. 예를 들어 이 식을 변환해 볼까요? ($$\times$$과 $$\ne$$는 $$\mathrm{mul}$$과 $$\mathrm{ne}$$로 주어져 있다고 가정합니다. 이 두 함수는 원시 재귀로 구현할 수 있습니다.)
+
+$$
+0 \; \% \; y = 0
+$$
+$$
+S(x) \; \% \; y = S(x \; \% \; y) \times (y \ne S(x \; \% \; y))
+$$
+
+1. 왼쪽 인자에 대해 분기하므로 $$\rho$$를 사용한다.
+	$$
+	\rho(\cdots, \cdots)
+	$$
+1. 왼쪽 인자가 0인 경우에는 함숫값이 $$0$$이므로 $$C$$를 사용한다.
+	* $$\rho$$의 규칙에 의해 현재 쓸 수 있는 인자는 $$y$$이므로 $$C^1_0$$입니다.
+	$$
+	\rho(C^1_0, \cdots)
+	$$
+1. 왼쪽 인자가 0이 아닌 경우에는 함숫값이 $$\times$$ 함수이므로 $$\mathrm{mul} \, \circ$$를 사용한다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (\cdots, \cdots))
+	$$
+1. $$\times$$의 왼쪽 인자는 $$S$$ 함수이므로 $$S \, \circ$$를 사용한다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (S \circ \cdots, \cdots))
+	$$
+1. $$S$$의 인자는 이전 단계의 재귀 결과 $$x \; \% \; y$$이므로 $$P$$를 사용한다.
+	* $$\rho$$의 규칙에 의해 현재 쓸 수 있는 인자는 $$x$$, $$x \; \% \; y$$, $$y$$이고, 이 중 $$x \; \% \; y$$를 사용하므로 $$P^3_2$$입니다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (S \circ P^3_2, \cdots))
+	$$
+1. $$\times$$의 오른쪽 인자는 $$\ne$$ 함수이므로 $$\mathrm{ne} \, \circ$$를 사용한다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (S \circ P^3_2, \mathrm{ne} \circ (\cdots, \cdots)))
+	$$
+1. $$\ne$$의 왼쪽 인자는 $$y$$이므로 $$P$$를 사용한다.
+	* $$\rho$$의 규칙에 의해 현재 쓸 수 있는 인자는 $$x$$, $$x \; \% \; y$$, $$y$$이고, 이 중 $$y$$를 사용하므로 $$P^3_3$$입니다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (S \circ P^3_2, \mathrm{ne} \circ (P^3_3, \cdots)))
+	$$
+1. $$\ne$$의 오른쪽 인자는 4\~5에서 이미 다뤘으므로 같은 함수를 사용한다.
+	$$
+	\rho(C^1_0, \mathrm{mul} \circ (S \circ P^3_2, \mathrm{ne} \circ (P^3_3, S \circ P^3_2)))
+	$$
+
+복잡하다고 하면 부정할 수는 없겠지만, 그래도 이게 바로 위에서 잠깐 언급했던 나머지 연산입니다! 재귀 함수 모형이 계산 모형 3대장 중 가장 먼저 나온 데는 이유가 있었네요.<Fn id="model-order" />
+
+### 원시 재귀 함수의 한계 \{#limitation-of-primitive-recursive-functions\}
+
+솔직히 저도 글 재작성 목적으로 조사를 하면서 그냥 소수 판정은 몰라도 $$n$$번째 소수를 구하는 연산까지 원시 재귀일 것이라고는 상상도 하지 못했습니다. 이렇게 상수함수, 다음 수 함수, 사영함수, `for`문과 순차 실행만으로 생각보다 다양한 연산을 표현할 수 있지만, 모든 연산을 표현하는 것까지는 아쉽게도 불가능합니다.
+
+튜링 기계를 기억하시나요? 어떤 튜링 기계든 모사할 수 있는, 즉 튜링 기계와 같은 표현력을 가지는 계산 모형을 **튜링 완전**하다고 합니다. 주어진 튜링 기계가 언젠가 정지하는지 판정하는 문제를 <strong><AWp lang="ko" art="정지 문제"><Term term="halting problem">정지 문제</Term></AWp></strong>라고 하는데, 이 문제를 일반적인 경우에서 풀 수 있는 알고리즘은 존재하지 않음<Fn id="undecidability" />이 알려져 있습니다(이런 성질을 <strong><Term term="undecidable">결정불가능</Term></strong>이라고 합니다). 단적인 예로 상태가 $$n$$개인 튜링 기계 중 정지하는 것만 추려서 가장 오래 동작하는 것을 찾는 <AWp lang="ko" art="바쁜 비버" /> 게임이 있는데, 1962년에 처음 제안된 이후 증명일 기준으로 12년 뒤인 1974년에 4상태 바쁜 비버를, **62년** 뒤인 2024년 7월이 되어서야 <AOut href="https://discuss.bbchallenge.org/t/july-2nd-2024-we-have-proved-bb-5-47-176-870/237">5상태 바쁜 비버를 찾을 수 있었습니다</AOut>.
+
+모든 튜링 기계를 모사할 수 있다면 그 연산이 언젠가는 정지하는지도 일반적으로 알 수 없어지기 때문에 튜링 완전한 계산 모형이라면 그 모형 버전의 정지 문제가 결정불가능해야 하는데, 잘 생각해보면 위에서 제시한 모든 기본 함수와 연산자는 유한한 자연수를 인자로 받고 유한 단계만큼 연산해 유한한 값을 반환하는 것을 알 수 있습니다. 즉, **원시 재귀 함수로는 모든 연산을 표현할 수 없습니다.**
+
+<Remark>
+원시 재귀 함수가 모든 경우에 값을 가진다면, 오른쪽 피연산자가 0일 때 정의되지 않는 $$\%$$는 도대체 어떻게 정의한 걸까요?
+
+위에서 구한 함수에 오른쪽 피연산자로 0을 넣고 직접 계산해 보면 결과값으로 **왼쪽 피연산자**가 나오는 것을 알 수 있습니다. 일종의 쓰레기 값이나 <AWp art="Don't-care term"><Term term="don't care">무정의</Term>항</AWp>으로 생각할 수 있으며, 나중에 사용할 나눗셈 연산도 위에서 정의한 나머지 연산을 사용하기 때문에 0으로 나누려고 하면 결과가 0이 됩니다.
+
+마지막으로 사족을 붙이자면, 의외로 Gleam, Pony, Rocq(구 Coq), Lean 등 일부 프로그래밍 언어와 여러 증명 보조기가 0으로 나누기를 0으로 정의하고 있습니다.
+</Remark>
+
+계산 가능하지만 원시 재귀가 아닌 함수가 있을까요? 멀리 가지 않아도 아래와 같은 아주 간단한 정의를 가지는 <AWp lang="ko" art="아커만 함수" />가 원시 재귀가 아님이 알려져 있습니다.
+
+$$
+\mathrm{ack}(0, n) = n + 1
+$$
+$$
+\mathrm{ack}(m + 1, 0) = \mathrm{ack}(m, 1)
+$$
+$$
+\mathrm{ack}(m + 1, n + 1) = \mathrm{ack}(m, \mathrm{ack}(m + 1, n))
+$$
+
+프로그래밍을 배우셨다면 원하는 언어로 금방 구현할 수 있을 것이라고 생각합니다. 원본의 형태와 가장 비슷하게 정의할 수 있는 Haskell로는 다음과 같이 작성할 수 있습니다.<Fn id="nk-patterns" />
+
+```hs
+ack :: Integer -> Integer -> Integer
+ack 0 n = n + 1
+ack m' 0 = ack (m' - 1) 1
+ack m' n' = ack (m' - 1) (ack m' (n' - 1))
+```
+
+원시 재귀 함수로 표현할 수 없는 함수는 **일반 재귀 함수**로 표현할 수 있습니다. 다행히 원시 재귀 함수에서 연산자를 딱 하나만 추가하면 됩니다.
+
+## 일반 재귀 함수 \{#general-recursive-functions\}
+
+새로운 연산자를 바로 소개해 드리겠습니다. 아래 새로운 연산자 이외에 기존 정의가 바뀌는 점은 없습니다.
+
+* **최소화 연산자** $$\mu$$ (뮤, mu)
+	* <Term term="unbounded">무제한</Term> 반복을 수행하는 연산자입니다. $$(k + 1)$$변수함수 $$F$$에 대해 $$k$$변수함수 $$\mu(F)$$의 값은 $$F(i, x_1, \cdots, x_k) = 0$$을 만족하는 가장 작은 $$i$$로 정의됩니다.
+
+원시 재귀 연산자를 `for`문에 비유할 수 있다면, 최소화 연산자는 `while`문에 비유할 수 있습니다. 역시 JavaScript로 표현하면 다음과 같습니다.
+
+```js
+const mu = F => (...args) => {
+	for(let i = 0;; i++)
+		if(F(i, ...args) != 0)
+			return i;
+};
+```
+
+구체적인 예시는 아니지만, 소수에 대해서만 0을 반환하는 1변수함수 $$\mathrm{nonPrime}$$이 있다면 $$\mu(\mathrm{nonPrime})()$$의 값은 2가 됩니다.
+
+위의 정의에서 꺼림칙한 점을 느낀 분들도 있을 것입니다. 만약에 주어진 $$F$$가 어떤 경우에도 0을 반환하지 않는다면 어떻게 될까요? 이때는 함숫값이 **없습니다!!!** 🥳🥳🥳
+
+🥳은 반어적인 의미의 🥳이기도 하지만, 축하할 일이기도 합니다. 일반 재귀 함수는 **튜링 완전**한 계산 모형임이 알려져 있고, 함숫값이 정의되지 않는 경우는 튜링 완전성에서 비롯한 영광의 상처라고 생각할 수도 있습니다. 이렇게 함숫값이 정의되지 않을 수도 있는 함수를 <Term term="partial function">부분함수</Term>라고 하고, 간단한 예를 들면 $$\mu(S)()$$가 있습니다.
+
+## 아커만 함수 만들기 \{#building-ackermann-function\}
+
+글을 처음 작성했을 때는 일반 재귀 함수 모형에 대한 직관이 충분하지 않아서 예시를 직접 만들지 못했는데, 그동안 경험이 쌓여 실제로 시도해볼 수 있게 되었습니다. 위에서 원시 재귀 함수가 아닌 것으로 소개한 **아커만 함수**를 일반 재귀 함수로 만들어 보겠습니다. 아커만 함수의 정의를 다시 적어 보겠습니다.
+
+$$
+\mathrm{ack}(0, n) = n + 1
+$$
+$$
+\mathrm{ack}(m + 1, 0) = \mathrm{ack}(m, 1)
+$$
+$$
+\mathrm{ack}(m + 1, n + 1) = \mathrm{ack}(m, \mathrm{ack}(m + 1, n))
+$$
+
+구현을 위해 다음과 같은 계획을 세웠습니다.
+
+1. 주어진 깊이만큼만 재귀하는 원시 재귀 아커만 함수를 만든다.
+1. 주어진 깊이가 아커만 함수를 계산하는 데 충분한지 확인하는 함수를 만든다.
+1. 최소화 연산자에 2.의 함수를 적용해 필요한 깊이를 구한다.
+1. 구한 깊이를 1.에 전달해 함숫값을 구한다.
+
+그런데 이렇게 계획을 세우고 다른 프로그래밍 언어로 개념 증명 코드까지 짰지만 정작 그걸 재귀 함수로 옮기는 것은 하지 못했습니다. 일상적으로 쓰는 재귀적으로 정의되는 함수와 달리 일반 재귀 함수에서는 **재귀하면서 마음대로 인자를 바꿀 수 없다**는 사실을 잊고 있었기 때문입니다... 설명을 위해 원시 재귀 연산자 $$\rho$$의 정의를 한 번만 더 가져와 보겠습니다.
+
+> $$k$$변수함수 $$B$$와 $$(k + 2)$$변수함수 $$R$$에 대해 $$(k + 1)$$변수함수 $$\rho(B, R)$$는 다음과 같이 계산합니다.
+>
+> $$
+> (\rho(B, R))(0, x_1, \cdots, x_k) = B(x_1, \cdots, x_k)
+> $$
+> $$
+> (\rho(B, R))(i + 1, x_1, \cdots, x_k) = R(i, (\rho(B, R))(i, x_1, \cdots, x_k), x_1, \cdots, x_k)
+> $$
+
+이 정의를 주의깊게 보면 추가로 전달되는 $$x_i$$는 재귀를 진행하는 내내 **고정**되어 있으며, 값이 바뀌는 인자는 $$R$$에 전달되는 처음 두 인자뿐입니다. 그 중에서도 첫 번째는 루프 인덱스의 역할을 하고, 두 번째는 $$B$$에서 시작해서 $$R$$을 거친 값만 사용할 수 있기 때문에 마음대로 조작할 수 없으며, 그나마 자유롭게 쓸 수 있는 두 번째 인자에 어떻게든 모든 정보를 욱여넣었다고 해도 계산이 '상향식'으로 이루어지기 때문에 '미래를 예측'해서 나중에 필요할 인자를 미리 계산하는 것 역시 불가능합니다. 이대로는 방법이 없는 걸까요?
+
+---
+
+<Image src={one_eternity_later} alt="네모바지 스폰지밥의 타임 카드. 밝은 노란색과 초록색의 배경 위에 'One Eternity Later'라는 문구가 있다." />
+
+오래 기다리셨죠...? 진짜로 구현이 가능한 계획을 세우고 무려 2달 뒤에 구현을 마쳤습니다. 저도 이렇게 오래 걸릴 줄은 몰랐습니다.
+
+1. 아커만 함수의 함숫값을 **배열**로 표현한다.
+1. 미완성된 아커만 함수 배열을 조금씩 확장하는 함수를 만든다.
+1. 아커만 함수 배열에 원하는 값이 있는지 확인하는 함수를 만든다.
+1. 최소화 연산자에 2.와 3.의 함수를 적용해 필요한 재귀 깊이를 구한다.
+1. 구한 깊이를 2.와 3.에 전달해 실제로 함숫값을 구한다.
+
+### 괴델 수 부여하기 \{#godel-numbering\}
+
+**배열**을 조작하기로 했다면 배열을 자연수로 나타낼 수 있어야 합니다. 우선 필요한 대상을 타입으로 표현해 봅시다.
+
+```hs
+-- Haskell 스타일 의사코드입니다.
+
+-- 기본 불린 타입
+data Bool
+	= False
+	| True
+
+-- 기본 자연수 타입
+data Nat;
+
+-- 값이 없을 수도 있음
+data Maybe a
+	= Nothing
+	| Just a
+
+-- 두 개의 값
+-- 하이라이터가 깨져서 부득이하게 이렇게 작성합니다. 원래 의도는 `(a, b)`입니다.
+data Pair a b = Pair a b
+
+-- 아래의 두 타입은 상호 재귀로 표현합니다.
+-- 원소가 하나 이상 있는 배열
+type NonEmpty a = Pair a (List a)
+-- 원소가 없을 수도 있는 배열
+type List a = Maybe (NonEmpty a)
+```
+
+$$\mathrm{Bool}$$은 그냥 $$|\mathrm{False}| = 0$$, $$|\mathrm{True}| = 1$$을 쓰면 됩니다. $$\mathrm{Maybe}$$의 자연수 표현도 $$|\mathrm{Nothing}| = 0$$, $$|\mathrm{Just} \; x| = |x| + 1$$로 하면 됩니다. $$\mathrm{Pair}$$는 좀 더 어렵네요. 자연수 2개를 자연수 1개로 나타내는 게 가능할까요?
+
+다행히 위키백과에서 정확히 그 역할을 하는 <strong><AWp art="Pairing function"><Term term="pairing function">짝짓기 함수</Term></AWp></strong>를 찾을 수 있었습니다. 이 글에서 사용할 칸토어 짝짓기 함수는 다음과 같은 정의를 가집니다.
+
+$$
+\pi(x, y) = \frac{1}{2}(x + y)(x + y + 1) + y
+$$
+
+$$\pi(x, y) = z$$인 $$x$$와 $$y$$의 쌍은 다음과 같이 찾을 수 있습니다.
+
+$$
+w = \left\lfloor \frac{\sqrt{8z + 1} - 1}{2} \right\rfloor
+$$
+$$
+t = \frac{w^2 + w}{2}
+$$
+$$
+y = z - t
+$$
+$$
+x = w - y
+$$
+
+위의 함수를 사용해 $$\mathrm{Pair} \; a \; b$$ 타입의 값 $$(x, y)$$ 도 $$|(x, y)| = \pi(x, y)$$로 표현할 수 있습니다. (참고로 제곱근을 버림한 값을 구하는 함수도 원시 재귀입니다.)
+
+$$\mathrm{List}$$와 $$\mathrm{NonEmpty}$$는 $$\mathrm{Maybe}$$와 $$\mathrm{Pair}$$만 사용해 정의했으므로 두 타입의 자연수 표현을 그대로 가져와 쓸 수 있습니다. 예를 들어 $$\mathrm{List} \; \mathrm{Nat}$$ 타입의 $$[2, 4]$$ = $$\mathrm{Just}(2, \mathrm{Just}(4, \mathrm{Nothing}))$$는 $$1 + \pi(2, 1 + \pi(4, 0))$$ = $$103$$이 됩니다.
+
+### 아커만 함수 배열 \{#the-ackermann-array\}
+
+아커만 함수를 2차원 배열로 표현해 봅시다. 아커만 함수는 1번째 인자 $$m$$에 더 민감하게 반응하므로 $$m$$을 바깥 차원으로 두어서 $$\mathrm{ack}(m, n) = \mathrm{ack}[m][n]$$으로 정의하는 편이 더 편리할 것입니다. 아커만 함수 배열을 조작할 때는 이전 원소의 값이 계산에 필요한 경우가 많기 때문에 $$\mathrm{List} \; (\mathrm{List} \; \mathrm{Nat})$$ 대신 값이 하나라도 있음이 보장되는 $$\mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat})$$ 타입을 사용하겠습니다.
+
+배열의 초깃값은 $$[[1]]$$ = $$((1, \mathrm{Nothing}), \mathrm{Nothing})$$이며($$m = n = 0$$인 경우만 기록되어 있음), 이 값의 자연수 표현은 $$1$$입니다.
+
+### 첫째 줄 확장하기 \{#extending-the-first-row\}
+
+$$
+\mathrm{ackExtendFirstRow} : \mathrm{NonEmpty} \; \mathrm{Nat} \rightarrow \mathrm{NonEmpty} \; \mathrm{Nat}
+$$
+
+아커만 함수 배열의 첫째 줄은 $$\mathrm{ack}[0][n] = n + 1$$인 경우에 해당합니다. 배열의 끝에 (현재 배열의 길이 + 1)을 계속 삽입하는 로직은 쉽게 구현할 수 있지만, 맨 앞이 아니라 맨 뒤에 삽입하기 때문에 다소 비효율적입니다.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ackExtendFirstRow}$$의 실제 구현</summary>
+
+구현이 정말 복잡하기 때문에 실제로 관심을 두고 꼼꼼하게 읽으실 분은 거의 없을 것이라고 생각해 참고 상자 안에만 작성합니다.
+
+$$
+\mathrm{zero} : \mathrm{Nat} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{zero} = \rho(C^0_1, C^2_0)
+$$
+
+$$
+\mathrm{nonzero} : \mathrm{Nat} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{nonzero} = \rho(C^0_0, C^2_1)
+$$
+
+$$
+\mathrm{not} : \mathrm{Bool} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{not} = \mathrm{zero}
+$$
+
+$$
+\mathrm{add} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{add} = \rho(P^1_1, S \circ P^3_2)
+$$
+
+(여기까지는 위에서 언급했던 것과 같은 함수입니다.)
+
+$$
+\mathrm{pred} : \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{pred} = \rho(C^0_0, P^2_1)
+$$
+
+($$\mathrm{if}$$와 비슷한 트릭인데 루프 인덱스를 사용해서 감산을 표현합니다.)
+
+$$
+\mathrm{sub} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{sub} = \rho(P^1_1, \mathrm{pred} \circ P^3_2) \circ (P^2_2, P^2_1)
+$$
+
+$$
+\mathrm{diff} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{diff} = \mathrm{add} \circ (\mathrm{sub}, \mathrm{sub} \circ (P^2_2, P^2_1))
+$$
+
+$$
+\mathrm{eq} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{eq} = \mathrm{zero} \circ \mathrm{diff}
+$$
+
+$$
+\mathrm{ne} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{ne} = \mathrm{not} \circ \mathrm{eq}
+$$
+
+$$
+\mathrm{le} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Bool}
+$$
+$$
+\mathrm{le} = \mathrm{zero} \circ \mathrm{sub}
+$$
+
+$$
+\mathrm{mul} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{mul} = \rho(C^1_0, \mathrm{add} \circ (P^3_3, P^3_2))
+$$
+
+$$
+\mathrm{mod} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{mod} = \rho(C^1_0, \mathrm{mul} \circ (S \circ P^3_2, \mathrm{ne} \circ (P^3_3, S \circ P^3_2)))
+$$
+
+(이것도 위에서 언급했던 것과 같은 함수입니다.)
+
+$$
+\mathrm{sqr} : \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{sqr} = \mathrm{mul} \circ (P^1_1, P^1_1)
+$$
+
+$$
+\mathrm{div} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{div} = \rho(C^1_0, \mathrm{add} \circ (P^3_2, \mathrm{eq} \circ {P^3_3, S \circ \mathrm{mod} \circ (P^3_1, P^3_3)}))
+$$
+
+$$
+\mathrm{half} : \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{half} = \mathrm{div} \circ (P^1_1, C^1_2)
+$$
+
+$$
+\mathrm{sqrt} : \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{sqrt} = \rho(C^1_0, \mathrm{add} \circ (P^3_2, \mathrm{le} \circ (\mathrm{sqr} \circ S \circ P^3_2, P^3_3))) \circ (P^1_1, P^1_1)
+$$
+
+(제곱근 이하인 가장 큰 자연수를 찾는 함수입니다. <AWp art="General recursive function" frag="Examples">위키백과</AWp>에서는 원시 재귀가 아닌 구현을 예시로 들고 있지만, 특정 조건을 만족하는 가장 작은 수를 찾는 방식으로 구현되어 있고 반환값이 인자 이하이기 때문에 $$\mu$$를 $$\rho$$로 바꿀 수 있습니다.)
+
+$$
+\mathrm{cons} : a \rightarrow b \rightarrow \mathrm{Pair} \; a \; b
+$$
+$$
+\mathrm{cons} = \mathrm{add} \circ (\mathrm{half} \circ \mathrm{mul} \circ (\mathrm{add}, \mathrm{add} \circ (\mathrm{add}, C^2_1)), P^2_2)
+$$
+
+$$
+\mathrm{consW} : \mathrm{Pair} \; a \; b \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{consW} = \mathrm{half} \circ \mathrm{pred} \circ \mathrm{sqrt} \circ S \circ \mathrm{mul} \circ (C^1_8, P^1_1)
+$$
+
+(위에서 언급했던 $$\pi$$의 역함수를 구하는 데 필요한 $$w$$를 구하는 함수입니다.)
+
+$$
+\mathrm{cdr} : \mathrm{Pair} \; a \; b \rightarrow b
+$$
+$$
+\mathrm{cdr} = \mathrm{sub} \circ (P^1_1, \mathrm{half} \circ \mathrm{mul} \circ (P^1_1, S) \circ \mathrm{consW})
+$$
+
+$$
+\mathrm{car} : \mathrm{Pair} \; a \; b \rightarrow a
+$$
+$$
+\mathrm{car} = \mathrm{sub} \circ (\mathrm{consW}, \mathrm{cdr})
+$$
+
+$$
+\mathrm{head} : \mathrm{List} \; a \rightarrow \mathrm{Maybe} \; a
+$$
+$$
+\mathrm{head} = \rho(C^0_0, S \circ \mathrm{car} \circ P^2_1)
+$$
+
+$$
+\mathrm{tail} : \mathrm{List} \; a \rightarrow \mathrm{List} \; a
+$$
+$$
+\mathrm{tail} = \rho(C^0_0, \mathrm{cdr} \circ P^2_1)
+$$
+
+$$
+\mathrm{index} : \mathrm{Nat} \rightarrow \mathrm{List} \; a \rightarrow \mathrm{Maybe} \; a
+$$
+$$
+\mathrm{index} = \mathrm{head} \circ \rho(P^1_1, \mathrm{tail} \circ P^3_2)
+$$
+
+$$
+\mathrm{indexNonEmpty} : \mathrm{Nat} \rightarrow \mathrm{NonEmpty} \; a \rightarrow \mathrm{Maybe} \; a
+$$
+$$
+\mathrm{indexNonEmpty} = \mathrm{index} \circ (P^2_1, S \circ P^2_2)
+$$
+
+($$\mathrm{List} \; a$$는 $$\mathrm{Maybe} \; (\mathrm{NonEmpty} \; a)$$이기 때문에 1을 더하고 $$\mathrm{List}$$를 받는 함수에 위임할 수 있습니다.)
+
+$$
+\mathrm{length} : \mathrm{List} \; a \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{length} = \rho(C^1_0, \mathrm{add} \circ (P^3_2, \mathrm{nonzero} \circ \mathrm{index} \circ (P^3_1, P^3_3))) \circ (P^1_1, P^1_1)
+$$
+
+$$
+\mathrm{lengthNonEmpty} : \mathrm{NonEmpty} \; a \rightarrow \mathrm{Nat}
+$$
+$$
+\mathrm{lengthNonEmpty} = \mathrm{length} \circ S
+$$
+
+$$
+\mathrm{appendNonEmpty} : a \rightarrow \mathrm{NonEmpty} \; a \rightarrow \mathrm{NonEmpty} \; a
+$$
+$$
+\mathrm{appendNonEmpty} = \rho(\mathrm{cons} \circ (P^2_1, C^2_0), \mathrm{cons} \circ (\mathrm{pred} \circ \mathrm{indexNonEmpty} \circ (\mathrm{sub} \circ (\mathrm{lengthNonEmpty} \circ P^4_4, S \circ P^4_1), P^4_4), S \circ P^4_2)) \circ (\mathrm{lengthNonEmpty} \circ P^2_2, P^2_1, P^2_2)
+$$
+
+$$
+\mathrm{ackExtendFirstRow} = \mathrm{appendNonEmpty} \circ (S, P^1_1)
+$$
+
+열어본 걸 후회하시나요?
+</details>
+</Remark>
+
+### 새로운 줄 만들기 \{#creating-new-rows\}
+
+다음 줄부터는 바로 이전 줄의 내용을 참조합니다. 다음 줄을 새로 만드는 경우는 $$\mathrm{ack}[m + 1][0] = \mathrm{ack}[m][1]$$, 확장하는 경우는 $$\mathrm{ack}[m + 1][n + 1] = \mathrm{ack}[m][\mathrm{ack}[m + 1][n]]$$인 경우에 해당합니다.
+
+$$
+\mathrm{ackNewRow} : \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat}) \rightarrow \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat})
+$$
+
+새로운 줄의 첫 원소는 $$n = 0$$인 전자의 경우이므로, 이전 줄에 원소가 2개 이상 있는지 확인하고 2번째 원소를 그대로 가져와서 쓸 수 있습니다.
+
+위에 있는 타입 서명이 왜 $$\mathrm{NonEmpty} \; \mathrm{Nat} \rightarrow \mathrm{Maybe} \; (\mathrm{NonEmpty} \; \mathrm{Nat})$$이 아니냐면, 그렇게 구현하기 귀찮아서 배열 전체를 수정하도록 구현했기 때문입니다. 지금 다시 짜라고 하면 이렇게 구현했을 것 같은데 너무 지쳐서 건드리기 싫네요.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ackNewRow}$$의 실제 구현</summary>
+
+$$
+\mathrm{lastNonEmpty} : \mathrm{NonEmpty} \; a \rightarrow a
+$$
+$$
+\mathrm{lastNonEmpty} = \mathrm{pred} \circ \mathrm{indexNonEmpty} \circ (\mathrm{pred} \circ \mathrm{lengthNonEmpty}, P^1_1)
+$$
+
+$$
+\mathrm{ackNewRow} = \rho(P^1_1, \mathrm{appendNonEmpty} \circ (\mathrm{cons} \circ (P^3_1, C^3_0), P^3_3)) \circ (\mathrm{indexNonEmpty} \circ (C^1_1, \mathrm{lastNonEmpty}), P^1_1)
+$$
+</details>
+</Remark>
+
+### 나머지 줄 확장하기 \{#extending-the-other-rows\}
+
+$$
+\mathrm{ackExtendNextRow} : \mathrm{NonEmpty} \; \mathrm{Nat} \rightarrow (\mathrm{NonEmpty} \; \mathrm{Nat} \rightarrow \mathrm{NonEmpty} \; \mathrm{Nat})
+$$
+
+후자의 경우를 보면 현재 보고 있는 줄의 마지막 원소를 첨자로 삼아서 이전 줄에 접근하는 것을 알 수 있습니다. 새로운 줄을 만들 때와 비슷한 로직을 쓸 수 있습니다.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ackExtendNextRow}$$의 실제 구현</summary>
+
+$$
+\mathrm{ackExtendNextRow} = \rho(P^1_1, \mathrm{appendNonEmpty} \circ (P^3_1, P^3_3)) \circ (\mathrm{indexNonEmpty} \circ (\mathrm{lastNonEmpty} \circ P^2_2, P^2_1), P^2_2)
+$$
+</details>
+</Remark>
+
+### 값 추출하기 \{#indexing\}
+
+$$
+\mathrm{ackExtract} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat}) \rightarrow \mathrm{Maybe} \; \mathrm{Nat}
+$$
+
+이건 그냥 아커만 함수 배열에서 원하는 첨자의 값을 뽑는 함수입니다. 이 함수에서 $$\mathrm{Just}$$가 나오면 원하는 값을 구한 것이므로 그만 확장해도 됩니다.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ackExtract}$$의 실제 구현</summary>
+
+$$
+\mathrm{ackExtract} = \mathrm{index} \circ (P^3_1, \mathrm{indexNonEmpty} \circ (P^3_2, P^3_3))
+$$
+</details>
+</Remark>
+
+### 조립하기 \{#putting-it-all-together\}
+
+위에서 정의한 아커만 함수 배열을 확장하는 함수 3개를 묶어서 한 사이클을 만들 수 있습니다.
+
+$$
+\mathrm{ackIterate} : \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat}) \rightarrow \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat})
+$$
+
+위에서 언급한 초깃값 $$[[1]]$$에 위의 사이클을 주어진 횟수만큼 돌리는 함수도 만들어 봅시다.
+
+$$
+\mathrm{ackTable} : \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat}) \rightarrow \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat})
+$$
+
+이 두 함수까지 만들면 진짜 아커만 함수를 만들 준비가 다 끝난 것입니다.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ackIterate}$$와 $$\mathrm{ackTable}$$의 실제 구현</summary>
+
+$$
+\mathrm{ackMap} : \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat}) \rightarrow \mathrm{NonEmpty} \; (\mathrm{NonEmpty} \; \mathrm{Nat})
+$$
+$$
+\mathrm{ackMap} = \mathrm{cons} \circ (\mathrm{ackExtendFirstRow} \circ \mathrm{head}, \mathrm{tail}) \circ \rho(\mathrm{cons} \circ (\mathrm{pred} \circ \mathrm{indexNonEmpty} \circ (\mathrm{length} \circ \mathrm{tail}, P^1_1), C^1_0), \mathrm{cons} \circ (P^3_3, S \circ \mathrm{cons} \circ (\mathrm{ackExtendNextRow} \circ (P^3_3, P^3_1), P^3_2)) \circ \mathrm{head} \circ P^3_2, \mathrm{tail} \circ P^3_2, \mathrm{pred} \circ \mathrm{indexNonEmpty} \circ (\mathrm{sub} \circ (\mathrm{length} \circ \mathrm{tail} \circ P^3_3, S \circ P^3_1), P^3_3)) \circ (\mathrm{length} \circ \mathrm{tail}, P^1_1)
+$$
+
+(모든 줄에 $$\mathrm{ackExtendFirstRow}$$와 $$\mathrm{ackExtendNextRow}$$를 적용하는 함수입니다. 보시다시피 분량 조절에 실패했습니다.)
+
+$$
+\mathrm{ackIterate} = \mathrm{ackNewRow} \circ \mathrm{ackMap}
+$$
+
+$$
+\mathrm{ackTable} = \rho(C^0_1, \mathrm{ackIterate} \circ P^2_2)
+$$
+</details>
+</Remark>
+
+### 완성된 함수 \{#the-final-result\}
+
+$$
+\mathrm{ack} : \mathrm{Nat} \rightarrow \mathrm{Nat} \rightarrow \mathrm{Nat}
+$$
+
+아커만 함수 배열이 충분히 찰 때까지 계속 재귀하다가 원하는 원소가 생기면 멈추고 그걸 반환하는 원리입니다.
+
+솔직히 이걸 올바르게 구현한 건지는 별로 자신이 없습니다. 다른 프로그래밍 언어로 일반 재귀 연산자만 쓴 함수와 언어 기능을 최대한 활용해서 만든 함수를 만들어놓고 서로 비교하면서 짰는데 전자가 천문학적으로 느려서 기본 리스트 로직에 작은 리스트까지만 겨우 넣어서 테스트해볼 수 있었습니다. 혹시 버그가 있어도 뭐라고 하지 말아주세요.
+
+<Remark>
+<details>
+<summary>$$\mathrm{ack}$$의 실제 구현</summary>
+
+$$
+\mathrm{ack} = \mathrm{pred} \circ \mathrm{ackExtract} \circ (P^2_1, P^2_2, \mathrm{ackTable} \circ \mu(\mathrm{not} \circ \mathrm{ackExtract} \circ (P^3_2, P^3_3, \mathrm{ackTable} \circ P^3_1)))
+$$
+
+여기까지 왔으면 지금까지 정의한 모든 함수를 인라이닝해서 한 줄로 만들면 어떻게 될지가 궁금할 법도 하죠? [여기서 확인해보실 수 있습니다](/2022/general-recursive-function/ackermann.txt). 텍스트로만 230KB에 육박하는 파일이고 LaTeX로 렌더링하려고 하면 뻗어서 이렇게밖에 할 수가 없었습니다. 솔직히 너무 후회됩니다.
+</details>
+</Remark>
+
+## 클레이니 표준형 정리 \{#kleene-normal-form-theorem\}
+
+실제 구현체를 찬찬히 뜯어보면(권장드리지는 않습니다) $$\mathrm{ack}$$을 만드는 데 필요한 헬퍼 함수는 전부 원시 재귀로 구현하고 실제로 $$\mathrm{ack}$$을 만들 때 딱 한 번 $$\mu$$를 썼다는 것을 알 수 있습니다. 주어진 값으로 문제를 풀 수 있는지 판정하는 함수를 만들고, 이 판정을 만족하는 어떤 값을 일종의 '<Term term="oracle">신탁</Term>'으로 받은 뒤, 그 값으로 문제를 푸는 구조입니다.
+
+사실은 아커만 함수 이외에 다른 함수에도 이 구조를 응용할 수 있습니다. 예를 들어 다음을 만족하는 함수족 $$T_k(x, e, i_1, \cdots, i_k)$$가 원시 재귀임이 알려져 있습니다.<Fn id="t-predicate-argument-order" />
+
+* $$k$$변수함수 $$f$$를 나타내는 괴델 수 $$e$$에 대해,
+	* 구체적으로 어떻게 나타내는지는 묻지 말아 주세요. 위키백과에서는 (특히 $$k = 1$$에 대해) 튜링 기계를 표현한다고 언급하고 있습니다.
+* $$f(i_1, \cdots, i_k)$$를 실행했을 때,
+* $$x$$가 이 식을 올바르게 계산해서 최종 결과를 낸 이력을 나타내는 괴델 수일 때만 참을 반환한다.
+
+그런데 이 함수족에 대응해 올바른 $$x$$에서 계산 결과를 뽑아내는 원시 재귀 함수족 $$U_k$$ 역시 존재함이 알려져 있습니다. $$e$$와 $$x$$만 존재한다면 $$f$$를 계산할 수 있겠네요!
+
+$$e$$가 존재한다면 $$x$$는 $$\mu$$로 구할 수 있습니다. 엄밀히 말해 이 글에서 소개한 $$\mu$$는 결과가 **0**이 되는 자연수를 찾기 때문에 $$T_k$$ 앞에 $$\mathrm{not}$$을 붙여줘야 하지만, 기존 문헌에서는 생략하는 듯합니다.
+
+$$
+x = \mu(\mathrm{not} \circ T_k)(e, i_1, \cdots, i_k)
+$$
+
+주어진 함수가 계산가능하다면 실제로 $$e$$가 항상 존재한다는 것이 <strong><Term term="Kleene's normal form theorem">클레이니 표준형 정리</Term></strong>로 알려져 있습니다.
+
+> $$k$$변수함수 $$f(n_1, \cdots, n_k)$$가 계산가능할 경우 $$f$$와 다음 함수가 동치가 되도록 하는 자연수 $$e$$가 존재하고, 그 역도 성립한다.
+>
+> $$
+> U_k \circ \mu(\mathrm{not} \circ T_k) \circ (C^k_e, P^k_1, \cdots, P^k_k)
+> $$
+
+제가 구현한 아커만 함수와 똑같이 $$\mu$$에서 '신탁'을 받아 값을 구하는 구조입니다. $$T_k$$와 $$U_k$$가 원시 재귀라고 했으니 **모든 일반 재귀 함수는 $$\mu$$를 한 번만 써서 만들 수 있다**는 재미있는 사실 역시 보일 수 있습니다.
+
+## 직접 써 보자! \{#try-it-yourself\}
+
+이 글을 처음 썼을 때 "흥미 위주로 쓰기 시작한 글을 위키백과 번역글로 놔두기는 아까우니" 일반 재귀 함수를 체험할 수 있는 미니 프로그래밍 언어를 만들었던 적이 있는데, 이번에 재작성하면서 파서와 실행기를 바닥부터 직접 구현했습니다. (오류 메시지도 한국어로 나옵니다. 😉) 문법과 의미론은 아래 참고 상자에서 확인할 수 있습니다.
+
+<Remark>
+<details>
+<summary>문법 및 의미론 요약</summary>
+
+프로그램은 0개 이상의 함수 매크로 정의, 1개의 본문 함수, 0개 이상의 인자로 이루어집니다.
+
+* 함수 매크로 정의는 `이름 = 함수식;`의 형태를 띱니다. 세미콜론은 필수입니다.
+	* 다른 언어와 같이 이름은 영숫자와 밑줄(A-Z, a-z, 0-9, _)로만 이루어지고, 첫 글자로 숫자가 올 수 없습니다. 대소문자를 구분합니다.
+	* 기존에 정의된 매크로나 기본 함수를 덮어쓰거나, 자기 자신을 정의에 포함할 수 없습니다.
+* 기본 함수는 다음과 같이 쓸 수 있습니다.
+	* $$C^k_n$$ = `=n/k`
+		* 값이 `=n`이라는 의미입니다.
+	* $$S$$ = `+`
+	* $$P^k_{i + 1}$$ = `#i/k`
+		* `#i`번째 인자를 사용한다는 의미입니다. 인자 번호는 **0부터** 시작합니다.
+* 연산자는 다음과 같이 쓸 수 있습니다.
+	* $$F \circ (G_1, \cdots, G_k)$$ = `F.(G1, ..., Gk)`
+	* $$F \circ G$$ = `F.G`
+	* $$F \circ (k)$$ = `F.(k)`
+	* $$\rho(B, R)$$ = `^(B, R)`
+		* `R`을 거듭제곱(`^`)한다는 뜻입니다.
+	* $$\mu(F)$$ = `?(F)`
+		* 이건 기호 선택이 적절한지 솔직히 잘 모르겠습니다.
+* 본문 함수와 인자는 `함수식(인자, ..., 인자)`의 형태를 띱니다.
+* 성능상의 이유로 JavaScript 엔진을 빌려서 연산하는 일부 간단한 함수를 미리 정의해 두었습니다. 아래의 빌트인 함수에서 확인할 수 있습니다.
+* 성능상의 이유로 <Term term="lazy evaluation">지연 평가</Term>를 사용하며, 중간 결과가 정의되지 않더라도 그 값을 사용하지 않으면 정의된 결과가 나올 수도 있습니다.
+</details>
+
+<details>
+<summary>형식 문법</summary>
+
+어휘 분석에 사용하는 말단 기호는 다음과 같습니다(소문자로 표기합니다). 정규식이라는 의미로 `/`으로 감쌌습니다. 말단 기호 사이의 공백 문자와 `<comment>`는 구문 분석에서 무시합니다.
+
+```
+  <ident> ::= /[A-Za-z_][A-Za-z0-9_]*/
+    <nat> ::= /[0-9]+/
+<comment> ::= /\/\/[^\n]*\n?/
+```
+
+구문 분석에 사용하는 비말단 기호는 다음과 같습니다(대문자로 표기합니다). BNF 문법을 사용하고, `(...),+`는 반점으로 구분해서 1개 이상, `(...),*`는 반점으로 구분해서 0개 이상이라는 의미이며, 맨 끝에 추가로 반점을 하나 더 달아도 됩니다.
+
+```
+ <Rec> ::= <Main>
+         | <Def> <Rec>
+ <Def> ::= <ident> "=" <Fn> ";"
+  <Fn> ::= <Term>
+         | <Fn> "." <Term>
+         | <Fn> "." "(" <Fn>,+ ")"
+         | <Fn> "." "(" <nat> ")"
+<Term> ::= "=" <nat> "/" <nat>
+         | "+"
+         | "#" <nat> "/" <nat>
+         | "^" "(" <Fn> "," <Fn> ")"
+         | "?" "(" <Fn> ")"
+         | <ident>
+<Main> ::= <Fn> "(" <nat>,* ")"
+```
+</details>
+
+<details>
+<summary>빌트인 함수</summary>
+
+* 산술
+	* `add`, `sub`, `mul`, `div`, `mod`, `pow` (2변수)
+		* 작은 수에서 큰 수를 빼면 0이 됩니다.
+		* `div(x, 0)`은 0입니다.
+		* `mod(x, 0)`은 `x`입니다.
+	* `pred` (1변수): 바로 전에 오는 자연수를 계산합니다. `pred(0)`은 0입니다.
+* 비교
+	* `eq`, `ne`, `lt`, `le`, `gt`, `ge` (2변수)
+* 논리
+	* `and`, `or`, `not` (2변수)
+	* `if` (2변수)
+		* 고전 논리의 $$\rightarrow$$에 대응합니다. `if(x, y)`는 `!x || y`와 같습니다.
+	* 거짓은 0, 참은 1이며, 이외의 모든 값은 참으로 취급합니다.
+</details>
+</Remark>
+
+<Interactive>
+	<GrfRunner client:visible />
+</Interactive>
+
+<GenAI>
+<Fragment slot="indirect">
+다음 주제를 조사하는 데 Claude를 보조적으로 사용했습니다.
+
+* 튜링 완전한 세포 자동자의 종류
+* 0으로 나누기가 잘 정의되어 있는 프로그래밍 언어
+</Fragment>
+</GenAI>

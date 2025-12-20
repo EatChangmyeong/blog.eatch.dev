@@ -169,7 +169,7 @@ article blockquote {
 	border-left: 0.25rem solid #564a7e;
 	background-color: #564a7e19;
 }
-article :is(code, var:not(.-override), samp) {
+article :is(code, var:not(.-override), samp, .-code) {
 	font-family: D2Coding, monospace;
 	font-style: normal;
 	color: #24292e;
