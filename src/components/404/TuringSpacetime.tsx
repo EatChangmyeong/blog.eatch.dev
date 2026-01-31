@@ -8,11 +8,11 @@ const
 	BATCH = 256,
 	BATCH_HEIGHT_STYLE = 'h-1024',
 	STATE_STYLE_MAP = [
-		'b-[hsl(0deg_100%_50%)]',
-		'b-[hsl(72deg_100%_50%)]',
-		'b-[hsl(144deg_100%_50%)]',
-		'b-[hsl(216deg_100%_50%)]',
-		'b-[hsl(288deg_100%_50%)]',
+		'border-[hsl(0deg_100%_50%)]',
+		'border-[hsl(72deg_100%_50%)]',
+		'border-[hsl(144deg_100%_50%)]',
+		'border-[hsl(216deg_100%_50%)]',
+		'border-[hsl(288deg_100%_50%)]',
 	];
 
 function step<State extends number>(
@@ -77,11 +77,11 @@ function Diagram(props: {
 	const
 		[newTape, newState, newPos, trace, cols] = advance(props.machine, props.tape, props.state, props.pos),
 		renderedSpacetime = cols.map(([x, y, height]) => <div
-			class="absolute w-4 bg-#ab94fc"
+			class="absolute w-4 bg-eatch"
 			style={`left: ${x}rem; top: ${y}rem; height: ${height}rem;`}
 		/>),
 		renderedTrace = trace.map(([q, x], y) => <div
-			class={`box-border absolute w-4 h-4 b-solid b-2px ${q === null ? 'b-#808080' : STATE_STYLE_MAP[q]} z-3`}
+			class={`absolute size-4 border-2 ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-3`}
 			style={`left: ${x}rem; top: ${y}rem;`}
 		/>),
 		rendered = <div class={`relative w-4 ${BATCH_HEIGHT_STYLE} mx-auto`}>
@@ -112,8 +112,8 @@ export default function TuringSpacetime() {
 		tryCollapse = () => {
 			if(Math.random() < (i/8)**2) {
 				const cls = document.getElementById('turing-machine')!.classList;
-				cls.remove('mt-100vh');
-				cls.add('mt--4');
+				cls.remove('mt-[100vh]');
+				cls.add('-mt-4');
 				for(const x of document.querySelectorAll('body > :is(div:not(#turing-machine), main)'))
 					x.remove();
 				tryCollapse = () => {};

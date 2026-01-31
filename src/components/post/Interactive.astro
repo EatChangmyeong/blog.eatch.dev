@@ -8,11 +8,13 @@ const { select = false } = Astro.props;
 ---
 
 <div class:list={{
-	'-block': true,
+	'block-element': true,
+	'-mx-block': true,
+	'px-block': true,
 	'select-none': !select,
 }}>
 	<Noscript>
-		인터랙티브 콘텐츠를 확인하려면 JavaScript를 켜 주세요.
+		인터랙티브 콘텐츠를 이용하려면 JavaScript를 켜 주세요.
 	</Noscript>
 	<slot />
 </div>

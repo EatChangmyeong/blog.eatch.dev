@@ -1,43 +1,52 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import solid from '@astrojs/solid-js';
+import icons from 'unplugin-icons/vite';
 import mdx from '@astrojs/mdx';
-import unocss from 'unocss/astro';
+import rehypeMathJaxSvg from 'rehype-mathjax/svg';
 import remarkCustomHeaderId from 'remark-custom-header-id';
-import remarkMath from 'remark-math';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
 import remarkMyFootnote from './remark-my-footnote.js';
 import remarkMyReadingTime from './remark-my-reading-time.js';
-import rehypeMathJaxSvg from 'rehype-mathjax/svg';
-
+import solid from '@astrojs/solid-js';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-    site: 'https://blog.eatch.dev',
-    markdown: {
-        shikiConfig: {
-            themes: {
-                light: 'github-light',
-                dark: 'github-dark',
-            },
-        },
-        smartypants: false,
-    },
-    integrations: [
-        mdx({
-            remarkPlugins: [
-                [remarkGfm, { singleTilde: false }],
-                remarkCustomHeaderId,
-                remarkMath,
-                remarkMyFootnote,
-                remarkMyReadingTime,
-            ],
-            rehypePlugins: [
-                rehypeMathJaxSvg,
-            ],
+	site: 'https://blog.eatch.dev',
+
+	markdown: {
+		shikiConfig: {
+			themes: {
+				light: 'github-light',
+				dark: 'github-dark',
+			},
+		},
+		smartypants: false,
+	},
+
+	integrations: [
+		mdx({
+			remarkPlugins: [
+				[remarkGfm, { singleTilde: false }],
+				remarkCustomHeaderId,
+				remarkMath,
+				remarkMyFootnote,
+				remarkMyReadingTime,
+			],
+			rehypePlugins: [rehypeMathJaxSvg],
 		}),
-        unocss(),
-        solid(),
-    ],
+		solid(),
+	],
+
+	vite: {
+		plugins: [
+			icons({
+				compiler: 'astro',
+				defaultClass: 'inline-block align-middle',
+			}),
+			tailwindcss(),
+		],
+	},
 });

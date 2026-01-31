@@ -155,21 +155,15 @@ function CellTd(props: {
 	return (
 		<td
 			classList={{
-				'b-0.25rem': true,
-				'b-solid': true,
+				'border-[0.25rem]': true,
 				'p-0': true,
 				'w-13': true,
 				'h-12': true,
-				'b-#e2e2e2': true,
-				'@dark:b-#4a4a4a': true,
-				'text-#fff': props.highlight,
-				'@dark:text-#000': props.highlight,
-				'bg-#564a7e': props.highlight,
-				'@dark:bg-#d5cafe': props.highlight,
-				'text-#000': !props.highlight,
-				'@dark:text-#fff': !props.highlight,
-				'bg-#fff': !props.highlight,
-				'@dark:bg-#202020': !props.highlight,
+				'border-[light-dark(#e2e2e2,#4a4a4a)]': true,
+				'text-[light-dark(white,black)]': props.highlight,
+				'bg-eatch-dark': props.highlight,
+				'text-fg': !props.highlight,
+				'bg-bg': !props.highlight,
 			}}
 		>{props.children}</td>
 	);
@@ -186,12 +180,9 @@ function CellBlink(props: {
 				'absolute': true,
 				'left-1': true,
 				'top-1': true,
-				'w-12': true,
-				'h-12': true,
-				'text-#fff': true,
-				'@dark:text-#000': true,
-				'bg-#564a7e': true,
-				'@dark:bg-#d5cafe': true,
+				'size-12': true,
+				'text-[light-dark(white,black)]': true,
+				'bg-eatch-dark': true,
 				'invisible': props.invisible,
 			}}
 		>{props.children}</div>
@@ -765,8 +756,8 @@ export default function Editor(props_: Partial<Props>) {
 	const displayControl = (ctrl: Ctrl) => (content: ContentState): JSXElement => {
 		if(ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))
 			return <tr>
-				<td class="font-bold text-center">{ctrl.display}</td>
-				<td class="text-left">{typeof ctrl.desc == 'string'
+				<td class="p-0.5 font-bold text-center">{ctrl.display}</td>
+				<td class="p-0.5 text-left">{typeof ctrl.desc == 'string'
 					? ctrl.desc
 					: ctrl.desc(content)
 				}</td>
@@ -795,11 +786,11 @@ export default function Editor(props_: Partial<Props>) {
 			<div
 				class="
 					relative
-					m-auto outline-none w-fit max-w-100%
-					font-monospace font-bold text-center text-6 leading-12 whitespace-nowrap
+					m-auto outline-none w-fit max-w-full
+					font-code font-bold text-center text-2xl leading-12 whitespace-nowrap
 					opacity-75 focus:opacity-100
-					overflow-x-auto overflow-y-hidden
-					motion-safe:transition-opacity motion-safe:duration-200ms
+					block-element
+					motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-in-out
 				"
 				tabindex="0"
 				aria-describedby={statusId}
@@ -827,7 +818,7 @@ export default function Editor(props_: Partial<Props>) {
 					}
 				}}
 			>
-				<table class="mx-0.4rem border-collapse w-max h-14">
+				<table class="mx-[0.4rem] border-collapse w-max h-14">
 					<tbody class="pointer-events-none">
 						<tr>
 							<Index each={content.buffer}>
@@ -861,11 +852,11 @@ export default function Editor(props_: Partial<Props>) {
 					({ invisible, range: [from, to] }) =>
 						<div
 							classList={{
-								absolute: true,
+								'absolute': true,
 								'top-0': true,
 								'pointer-events-none': true,
 								'motion-safe:animate-blink': true,
-								invisible
+								'invisible': invisible,
 							}}
 							style={{
 								left: `${0.4 + 3.25*from}rem`,
@@ -877,24 +868,22 @@ export default function Editor(props_: Partial<Props>) {
 									<div
 										ref={cursorElement}
 										classList={{
-											absolute: true,
+											'absolute': true,
 											'w-1': true,
 											'h-14': true,
-											'bg-#564a7e': true,
-											'@dark:bg-#d5cafe': true,
-											invisible
+											'bg-eatch-dark': true,
+											'invisible': invisible,
 										}}
 									/>
 									<Show when={props.rtl}>
 										<div classList={{
-											absolute: true,
-											'top-0.4rem': true,
-											'right--1': content.rtl,
-											'w-0.65rem': true,
+											'absolute': true,
+											'top-[0.4rem]': true,
+											'-right-1': content.rtl,
+											'w-[0.65rem]': true,
 											'h-1': true,
-											'bg-#564a7e': true,
-											'@dark:bg-#d5cafe': true,
-											invisible
+											'bg-eatch-dark': true,
+											'invisible': invisible,
 										}} />
 									</Show>
 								</>}

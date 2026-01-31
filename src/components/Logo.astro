@@ -1,6 +1,6 @@
 ---
-import logo_light from '../assets/widestring_light.svg';
-import logo_dark from '../assets/widestring_dark.svg';
+import logo_light from '@assets/widestring_light.svg';
+import logo_dark from '@assets/widestring_dark.svg';
 
 interface Props {
 	heading?: boolean,
@@ -14,7 +14,7 @@ const { heading = false, alt } = Astro.props;
 	<img
 		class:list={heading
 			? ['h-24']
-			: ['h-10', 'mb--4', 'drop-shadow-[0_0_2px_white]', '@dark:drop-shadow-[0_0_2px_black]']
+			: ['h-10', '-mb-3', 'drop-shadow-logo']
 		}
 		src={logo_light.src} alt={alt ?? ''}
 	>

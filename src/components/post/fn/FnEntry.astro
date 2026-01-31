@@ -12,12 +12,12 @@ interface Props {
 const { type, id, label, refs, xlinkClass, Content } = Astro.props;
 ---
 
-<p class="font-size-[0.8em]" id={`${type}:${id}`}>
+<p class="text-meta" id={`${type}:${id}`}>
 	{label}
 	{
 		[...Array(refs)].map((_, i) =>
 			<>
-				{' '}<a class={`-xfn ${xlinkClass}`} href={`#x${type}:${id}:${i + 1}`} aria-label={refs > 1 ? `본문으로 돌아가기 (${i + 1})` : '본문으로 돌아가기'}>
+				{' '}<a class={xlinkClass} href={`#x${type}:${id}:${i + 1}`} aria-label={refs > 1 ? `본문으로 돌아가기 (${i + 1})` : '본문으로 돌아가기'}>
 					↑{refs > 1 &&
 						<sub>{i + 1}</sub>
 					}

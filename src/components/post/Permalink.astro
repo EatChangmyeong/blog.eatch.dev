@@ -1,6 +1,9 @@
 ---
 import RemarkSimpleBase from './RemarkSimpleBase.astro';
 import AOut from './a/AOut.astro';
+
+import Link from '~icons/majesticons/link-line';
+
 interface Props {
 	href: string,
 }
@@ -8,5 +11,5 @@ const { href } = Astro.props;
 ---
 
 <RemarkSimpleBase colorLight="#f0d0ff" colorDark="#400060">
-	<p><span class="i-majesticons-link-line" role="none" /> 이 글에는 <AOut href={href} /> 링크를 통해서도 접속할 수 있습니다.</p>
+	<p><Link /> 이 글에는 <AOut href={href} /> 링크를 통해서도 접속할 수 있습니다.</p>
 </RemarkSimpleBase>

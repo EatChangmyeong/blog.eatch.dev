@@ -24,30 +24,29 @@ const {
 	<main>
 		<header class:list={[
 			'relative',
-			'mt--4',
-			'mx--4',
+			'-mt-4',
+			'-mx-4',
 			'pt-4',
 			'px-4',
-			'w-[calc(100%_+_2rem)]',
-			'bg-white',
-			'@dark:bg-#202020',
+			'w-[calc(100%+2rem)]',
+			'bg-bg',
 			cover ? 'z-2' : 'z-0'
 		]}>
 			{cover &&
 				<>
-					<img class="absolute left-0 top-0 w-100% h-100% object-cover" src={cover} alt="" />
-					<div class="absolute inset-x-0 top-0 h-100% bg-#ffffff80 @dark:bg-#20202080 backdrop-blur-2 z-1" aria-hidden="true" />
+					<img class="absolute left-0 top-0 size-full object-cover" src={cover} alt="" />
+					<div class="absolute inset-x-0 top-0 h-full bg-bg/75 backdrop-blur-[2px] z-1" aria-hidden="true" />
 				</>
 			}
-			<div class="relative pt-32 px-[calc((100%_-_45rem)_/_2)] pb-4 z-2" role="none">
+			<div class="relative pt-32 px-[calc((100%-45rem)/2)] pb-4 z-2" role="none">
 				<a href="/">
 					<Logo alt="블로그 메인으로" />
 				</a>
 				{translation
 					? <hgroup>
-						<h1>{title}</h1>
-						<p class="my-0 text-6 opacity-75">
-							<a class="-no-color text-unset italic no-underline" href={translation.link}>
+						<h1 class="m-0 leading-tight">{title}</h1>
+						<p class="my-0 text-trans opacity-75">
+							<a class="text-[unset] italic no-underline" href={translation.link}>
 								{translation.title}
 							</a>
 							{translation.author &&
@@ -55,7 +54,7 @@ const {
 							}
 						</p>
 					</hgroup>
-					: <h1>{title}</h1>
+					: <h1 class="m-0 leading-tight">{title}</h1>
 				}
 				<PostMetadata
 					minutesRead={minutesRead}
@@ -85,7 +84,7 @@ const {
 			{
 				footnotes &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#c60] @dark:text-[#fb6] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">각주</div>
+						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-fn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">각주</div>
 						{
 							footnotes.order.map(([id, refs], i) =>
 								<FnEntry
@@ -93,7 +92,7 @@ const {
 									id={id}
 									label={`${i + 1}`}
 									refs={refs}
-									xlinkClass="text-[#c60] @dark:text-[#fb6]"
+									xlinkClass="text-fn"
 									Content={footnotes.content[id]}
 								/>
 							)
@@ -103,7 +102,7 @@ const {
 			{
 				transnotes &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#d22] @dark:text-[#f88] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">역주</div>
+						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-tn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">역주</div>
 						{
 							transnotes.order.map(([id, refs], i) =>
 								<FnEntry
@@ -111,7 +110,7 @@ const {
 									id={id}
 									label={`역${i + 1}`}
 									refs={refs}
-									xlinkClass="text-[#d22] @dark:text-[#f88]"
+									xlinkClass="text-tn"
 									Content={transnotes.content[id]}
 								/>
 							)
@@ -121,7 +120,7 @@ const {
 			{
 				references &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-1 text-[#c0c] @dark:text-[#f6f] after:content-[''] after:flex-1 after:m-auto after:h-1px after:bg-current after:opacity-75">참고 문헌</div>
+						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-ref after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">참고 문헌</div>
 						{
 							references.order.map(([id, refs]) =>
 								<FnEntry
@@ -129,7 +128,7 @@ const {
 									id={id}
 									label={`[${id}]`}
 									refs={refs}
-									xlinkClass="text-[#c0c] @dark:text-[#f6f]"
+									xlinkClass="text-ref"
 									Content={references.content[id]}
 								/>
 							)
@@ -138,4 +137,5 @@ const {
 			}
 		</article>
 	</main>
+	<slot name="after" />
 </Layout>

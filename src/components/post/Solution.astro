@@ -1,9 +1,11 @@
 ---
 import RemarkBase from './RemarkBase.astro';
+
+import Compass from '~icons/majesticons/compass-line';
 ---
 
 <RemarkBase colorLight="#e8ffd0" colorDark="#385000">
-	<Fragment slot="title"><span class="i-majesticons-compass-line" role="none" /> 해답</Fragment>
+	<Fragment slot="title"><Compass /> 해답</Fragment>
 	<details>
 		<summary>정답 확인하기</summary>
 		<slot />

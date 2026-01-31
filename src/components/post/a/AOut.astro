@@ -14,6 +14,10 @@ type Props = {
 );
 const { href } = Astro.props;
 
+import Outlink from '~icons/majesticons/external-link-line';
+import Unavailable from '~icons/majesticons/ban-line';
+import Restricted from '~icons/majesticons/lock-line';
+
 // https://url.spec.whatwg.org/#ends-in-a-number-checker
 function isIpv4(hostname: string): boolean {
 	const parts = hostname.split('.');
@@ -84,7 +88,7 @@ const
 >{
 	Astro.slots.has('default')
 		? <slot />
-		: <span class="font-monospace">{
+		: <span class="font-code">{
 			typeof highlighted == 'string'
 				? highlighted
 				: <>
@@ -94,10 +98,10 @@ const
 				</>
 		}</span>
 }{
-}<span class="i-majesticons-external-link-line v-super text-[length:smaller]" aria-label="(외부 링크)" />{
+}<Outlink class="align-super text-xs" aria-label="(외부 링크)" />{
 	Astro.props.unavailable &&
-		<span class="i-majesticons-ban-line v-super text-[length:smaller]" aria-label={`(${UNAVAILABLE_TEXT})`} />
+		<Unavailable class="align-super text-xs" aria-label={`(${UNAVAILABLE_TEXT})`} />
 }{
 	Astro.props.restricted &&
-		<span class="i-majesticons-lock-line v-super text-[length:smaller]" aria-label={restricted_text ? `(${restricted_text})` : undefined} />
+		<Restricted class="align-super text-xs" aria-label={restricted_text ? `(${restricted_text})` : undefined} />
 }</a>

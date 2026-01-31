@@ -143,18 +143,14 @@ export default function GrfRunner() {
 	}
 
 	return <>
-		<textarea
-			ref={textarea}
-			class="-code b-none p-2 w-full min-h-20 h-40 resize-y"
-		>
+		<textarea ref={textarea}>
 			{SCRIPT}
 		</textarea>
 		<div class="flex items-start gap-2 mt-2">
 			<p classList={{
 				'flex-auto': true,
 				'overflow-x-auto': true,
-				'text-#f00': isError(),
-				'@dark:text-#f88': isError(),
+				'text-error': isError(),
 			}} style={{ margin: '0' }}>
 				{message()}
 			</p>

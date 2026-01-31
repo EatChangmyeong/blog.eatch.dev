@@ -1,24 +1,30 @@
 ---
 import AOut from './a/AOut.astro';
 
-type Props = {
-	href: string,
-} & (
+type Props =
 	{
-		restricted?: boolean | string,
-		unavailable: undefined,
-	} | {
-		restricted: undefined,
-		unavailable: true,
-	}
-);
+		href?: undefined,
+		restricted?: undefined,
+		unavailable?: undefined,
+	} |
+	{
+		href: string,
+	} & (
+		{
+			restricted?: boolean | string,
+			unavailable?: undefined,
+		} | {
+			restricted: undefined,
+			unavailable: true,
+		}
+	);
 const { href } = Astro.props;
 ---
 
 <blockquote cite={href}>
 	<slot />
 	{Astro.slots.has('original') &&
-		<div class="font-size-[0.8em] opacity-75">
+		<div class="text-meta opacity-75">
 			<slot name="original" />
 		</div>
 	}
@@ -32,7 +38,7 @@ const { href } = Astro.props;
 				? <AOut {...Astro.props}>{citeRaw}</AOut>
 				: citeRaw;
 		return (author || cite) &&
-			<p class="font-size-[0.8em] text-right">
+			<p class="text-meta text-right">
 				— {author}{author && cite && ', '}{cite}
 			</p>;
 	})()}

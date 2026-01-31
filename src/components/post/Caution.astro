@@ -1,8 +1,10 @@
 ---
 import RemarkBase from './RemarkBase.astro';
+
+import Alert from '~icons/majesticons/alert-circle-line';
 ---
 
 <RemarkBase colorLight="#ffe8d0" colorDark="#503800">
-	<Fragment slot="title"><span class="i-majesticons-alert-circle-line" role="none" /> 주의</Fragment>
+	<Fragment slot="title"><Alert /> 주의</Fragment>
 	<slot />
 </RemarkBase>

@@ -2,7 +2,7 @@ import Post from '@layouts/Post.astro';
 import AOut from '@components/post/a/AOut.astro';
 import AYt from '@components/post/a/AYt.astro';
 import Blockquote from '@components/post/Blockquote.astro';
-import GenAI from '@components/GenAI.astro';
+import GenAI, { Icon } from '@components/GenAI.astro';
 
 <Post
 	title="생성형 AI 투명성 정책"
@@ -29,7 +29,7 @@ import GenAI from '@components/GenAI.astro';
 
 ## 생성형 AI의 정의 \{#definition-of-generative-ai\}
 
-'생성형 AI'의 정의를 정하는 데는 <AOut href="https://info.atcoder.jp/entry/llm-rules-en">AtCoder의 생성형 AI 규칙</AOut>과 <AOut href="https://trail-buckthorn-014.notion.site/Bluesky-AI-Imagery-Labeler-Moderator-Handbook-65ef75d92a0e4faab0ad2925fc35c85c#f145f6e1f90e4f75b139241e5588ffb0">블루스카이 AI Image Labeler (<span class="font-monospace">@aimod.social</span>)의 가이드라인</AOut>을 참고했음을 밝힙니다.
+'생성형 AI'의 정의를 정하는 데는 <AOut href="https://info.atcoder.jp/entry/llm-rules-en">AtCoder의 생성형 AI 규칙</AOut>과 <AOut unavailable href="https://trail-buckthorn-014.notion.site/Bluesky-AI-Imagery-Labeler-Moderator-Handbook-65ef75d92a0e4faab0ad2925fc35c85c#f145f6e1f90e4f75b139241e5588ffb0">블루스카이 AI Image Labeler (<span class="font-monospace">@aimod.social</span>)의 가이드라인</AOut>을 참고했음을 밝힙니다.
 
 다음을 모두 만족하는 컴퓨터 소프트웨어를 '생성형 AI'로 지칭합니다.
 
@@ -60,14 +60,14 @@ import GenAI from '@components/GenAI.astro';
 
 생성형 AI를 블로그 글 작성이나 수정에 사용한 경우, 구체적인 사용 유형에 따라 다음과 같이 분류합니다.
 
-* <span class="i-majesticons-file-duplicate-line" role="none" /> **직접 사용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 인용 표기를 하지 않고 글의 주 흐름에 해당하는 내용으로 작성한 경우
+* <Icon.Direct /> **직접 사용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 인용 표기를 하지 않고 글의 주 흐름에 해당하는 내용으로 작성한 경우
 	* 이런 식으로 글을 쓰는 것은 저도 싫기 때문에 최대한 피하는 것을 목표로 하고 있습니다.
-* <span class="i-majesticons-tooltips-2-line" role="none" /> **인용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 글에 인용한 경우
-* <span class="i-majesticons-image-line" role="none" /> **자료성 사용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 글의 주 흐름 밖에 해당하는 내용으로 작성하거나 자료로 사용한 경우
+* <Icon.Quote /> **인용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 글에 인용한 경우
+* <Icon.Material /> **자료성 사용**: 생성형 AI 출력물을 그대로, 혹은 상당한 수정 없이 글의 주 흐름 밖에 해당하는 내용으로 작성하거나 자료로 사용한 경우
 	* 주로 AI로 생성된 삽화가 이 범주에 들어갑니다. 이 경우 역시 최대한 피하는 것을 목표로 하고 있습니다.
-* <span class="i-majesticons-search-line" role="none" /> **간접 사용**: 생성형 AI 출력물에 상당한 수정을 거쳐 글에 포함하거나, 글을 작성하는 데 참고할 목적으로 생성형 AI를 이용한 경우
+* <Icon.Indirect /> **간접 사용**: 생성형 AI 출력물에 상당한 수정을 거쳐 글에 포함하거나, 글을 작성하는 데 참고할 목적으로 생성형 AI를 이용한 경우
 	* 이 블로그에서 가장 자주 볼 수 있는 유형입니다. 사실 확인을 위해 가능한 한 별도로 검색을 한 번 더 하고 스스로 이해한 내용만 스스로의 언어로 작성하는 것을 목표로 하고 있습니다.
-* <span class="i-majesticons-code-block-line" role="none" /> **구현**: 생성형 AI로 생성한 코드를 그대로, 혹은 수정을 거쳐 인터랙티브 콘텐츠의 구현에 사용한 경우
+* <Icon.Impl /> **구현**: 생성형 AI로 생성한 코드를 그대로, 혹은 수정을 거쳐 인터랙티브 콘텐츠의 구현에 사용한 경우
 
 ## 예외 조항 \{#exceptions\}
 

@@ -1,9 +1,11 @@
 ---
 import RemarkSimpleBase from './RemarkSimpleBase.astro';
+
+import Script from '~icons/majesticons/puzzle-line';
 ---
 
 <noscript>
 	<RemarkSimpleBase colorLight="#c0c0c0" colorDark="#404040">
-		<p><span class="i-majesticons-puzzle-line" role="none" /> <slot /></p>
+		<p><Script /> <slot /></p>
 	</RemarkSimpleBase>
 </noscript>

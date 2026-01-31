@@ -1,6 +1,8 @@
 ---
 import TopBar from '../components/TopBar.astro';
 
+import Bsky from '~icons/simple-icons/bluesky';
+
 const BLOG_TITLE = 'Widestring (indev)';
 
 interface Props {
@@ -37,8 +39,8 @@ const DEV = import.meta.env.DEV;
 		</TopBar>
 		<slot />
 		{footer &&
-			<footer class="mt-8 mx-auto max-w-45rem text-right text-sm opacity-75">
-				© <address class="inline not-italic"><a href="https://eatch.dev">EatChangmyeong</a> · <a class="-no-color text-#0085FF" href="https://bsky.app/profile/blog.eatch.dev"><span class="i-simple-icons-bluesky" /> Bluesky</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
+			<footer class="mt-8 mx-auto max-w-content text-right text-sm opacity-75">
+				© <address class="inline not-italic"><a href="https://eatch.dev">EatChangmyeong</a> · <a class="text-bsky" href="https://bsky.app/profile/blog.eatch.dev"><Bsky /> Bluesky</a></address> · Logo with help from <a href="https://heartade.dev">Heartade</a>
 			</footer>
 		}
 	</body>
