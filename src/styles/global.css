@@ -254,7 +254,7 @@
 	input {
 		@apply user-invalid:border-error;
 	}
-	input:not[type="button"] {
+	input:not([type="button"]) {
 		@apply w-20;
 	}
 	code, samp, var {
