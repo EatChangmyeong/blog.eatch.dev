@@ -173,7 +173,35 @@
 		@apply inline;
 	}
 	table {
-		@apply border-separate;
+		@apply
+			table-element visual-paragraph
+			border-separate border-spacing-0
+			mx-auto w-max max-w-full
+			font-features-['tnum'];
+	}
+	caption {
+		@apply px-2 py-1;
+	}
+	thead {
+		@apply sticky top-topbar z-2;
+	}
+	tfoot {
+		@apply sticky bottom-0 z-1;
+	}
+	th, td {
+		@apply border px-2 py-1 transition-decoration;
+	}
+	th {
+		@apply border-eatch bg-eatch-light;
+		tr:hover & {
+			@apply bg-[light-dark(#c0affd,#806fbd)];
+		}
+	}
+	td {
+		@apply border-fg/25;
+		tr:hover & {
+			@apply bg-fg/10;
+		}
 	}
 	textarea {
 		@apply
@@ -252,6 +280,9 @@
 	& > * {
 		@apply [--suppress-overflow:true];
 	}
+}
+@utility table-element {
+	@apply table relative z-0;
 }
 @utility visual-block {
 	@apply

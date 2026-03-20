@@ -1,7 +1,9 @@
-import type { JSXElement, Ref } from "solid-js";
-import { createSignal, Index, mergeProps, Show } from "solid-js";
-import { createStore, produce } from "solid-js/store";
+import type { JSXElement, Ref } from 'solid-js';
+import { createSignal, Index, mergeProps, Show } from 'solid-js';
+import { createStore, produce } from 'solid-js/store';
 import shuffle from 'knuth-shuffle-seeded';
+
+import Table from '~/src/components/post/Table';
 
 type Digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type EditMode = 'Ins' | 'Ovr' | 'Inc';
@@ -756,8 +758,8 @@ export default function Editor(props_: Partial<Props>) {
 	const displayControl = (ctrl: Ctrl) => (content: ContentState): JSXElement => {
 		if(ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))
 			return <tr>
-				<td class="p-0.5 font-bold text-center">{ctrl.display}</td>
-				<td class="p-0.5 text-left">{typeof ctrl.desc == 'string'
+				<td class="font-bold text-center">{ctrl.display}</td>
+				<td class="text-left">{typeof ctrl.desc == 'string'
 					? ctrl.desc
 					: ctrl.desc(content)
 				}</td>
@@ -926,16 +928,28 @@ export default function Editor(props_: Partial<Props>) {
 						category()
 							.ctrl
 							.filter(ctrl => ctrl.desc !== undefined).length != 0 &&
-							<table class="flex-none">
-								<caption class="font-bold">
-									{category().type}
-								</caption>
-								<tbody>
-									<Index each={category().ctrl}>
-										{ctrl => displayControl(ctrl())(content)}
-									</Index>
-								</tbody>
-							</table>
+							<Table
+								class="flex-none mx-0"
+								caption={[category().type, 'font-bold']}
+								cols={[
+									{
+										render(ctrl) {
+											return [ctrl.display];
+										},
+										th: true,
+										align: 'center',
+									},
+									{
+										render(ctrl) {
+											return typeof ctrl.desc == 'function'
+												? [ctrl.desc(content)]
+												: [ctrl.desc];
+										},
+									},
+								]}
+							>
+								{category().ctrl.filter(ctrl => ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))}
+							</Table>
 					}
 				</Index>
 			</div>
