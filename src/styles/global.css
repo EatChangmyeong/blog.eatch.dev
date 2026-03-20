@@ -260,6 +260,9 @@
 		font-code
 		text-code-fg bg-code-bg;
 }
+@utility solved-text {
+	@apply font-features-['ss05'0,'ss06'0,'ss08'0];
+}
 @utility hide-decoration {
 	@apply hover:decoration-transparent transition-decoration;
 }

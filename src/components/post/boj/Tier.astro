@@ -1,0 +1,29 @@
+---
+import B5 from '@assets/solved/b5.svg';
+import S2 from '@assets/solved/s2.svg';
+import S1 from '@assets/solved/s1.svg';
+import G3 from '@assets/solved/g3.svg';
+import G2 from '@assets/solved/g2.svg';
+import P5 from '@assets/solved/p5.svg';
+import D4 from '@assets/solved/d4.svg';
+import type { SvgComponent } from 'astro/types';
+const TABLE = {
+	b5: [B5, 'text-[#9d4900]', 'Bronze V'],
+	s2: [S2, 'text-[#496580]', 'Silver II'],
+	s1: [S1, 'text-[#4e6a86]', 'Silver I'],
+	g3: [G3, 'text-[#ec9a00]', 'Gold III'],
+	g2: [G2, 'text-[#f9a518]', 'Gold II'],
+	p5: [P5, 'text-[#00c78b]', 'Platinum V'],
+	d4: [D4, 'text-[#00a9f0]', 'Diamond IV'],
+} as const satisfies Record<string, [SvgComponent, string, string]>;
+interface Props {
+	tier: keyof typeof TABLE,
+	long?: boolean,
+}
+const { tier, long } = Astro.props;
+const [Icon, color, text] = TABLE[tier];
+---
+
+<Icon class="w-[1.2em] h-[1.2em]" />{long &&
+	<>{' '}<span class={`${color} solved-text`}>{text}</span></>
+}

@@ -1,0 +1,62 @@
+---
+import type { JSX } from 'astro/jsx-runtime';
+import { Code } from 'astro:components';
+import Blockquote from '../Blockquote.astro';
+
+const heading = 'text-h4 block-element my-4 font-title font-bold leading-none';
+
+type Props = {
+	examples: [string, string, JSX.Element][],
+};
+const { examples } = Astro.props;
+---
+
+<Blockquote>
+	<p class={heading}>문제</p>
+	<slot />
+	{Astro.slots.has('input') &&
+		<>
+			<p class={heading}>입력</p>
+			<slot name="input" />
+		</>
+	}
+	{Astro.slots.has('output') &&
+		<>
+			<p class={heading}>출력</p>
+			<slot name="output" />
+		</>
+	}
+	{examples.map(([input, output, Desc], i) => (
+		<>
+			<p class={heading}>예제 입력 {i + 1}</p>
+			<Code code={input} themes={{
+				light: 'github-light',
+				dark: 'github-dark',
+			}} />
+			<p class={heading}>예제 출력 {i + 1}</p>
+			<Code code={output} themes={{
+				light: 'github-light',
+				dark: 'github-dark',
+			}} />
+			{Desc && <Desc />}
+		</>
+	))}
+	{Astro.slots.has('bounds') &&
+		<>
+			<p class={heading}>제한</p>
+			<slot name="bounds" />
+		</>
+	}
+	{Astro.slots.has('note') &&
+		<>
+			<p class={heading}>노트</p>
+			<slot name="note" />
+		</>
+	}
+	{Astro.slots.has('hint') &&
+		<>
+			<p class={heading}>힌트</p>
+			<slot name="hint" />
+		</>
+	}
+</Blockquote>

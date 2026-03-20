@@ -1,0 +1,31 @@
+---
+const TABLE = {
+	ad_hoc: '애드 혹',
+	bfs: '너비 우선 탐색',
+	data_structures: '자료 구조',
+	dp: '다이나믹 프로그래밍',
+	graphs: '그래프 이론',
+	graph_traversal: '그래프 탐색',
+	greedy: '그리디 알고리즘',
+	implementation: '구현',
+	lazyprop: '느리게 갱신되는 세그먼트 트리',
+	lis: '가장 긴 증가하는 부분 수열 문제',
+	math: '수학',
+	parsing: '파싱',
+	recursion: '재귀',
+	regex: '정규 표현식',
+	segtree: '세그먼트 트리',
+	sorting: '정렬',
+	string: '문자열',
+} as const satisfies Record<string, string>;
+interface Props {
+	tag: keyof typeof TABLE,
+}
+const { tag } = Astro.props;
+---
+
+<span
+	class="inline-block border border-[light-dark(#dddfe0,#2c3640)] px-2 py-0.5 rounded-full bg-[light-dark(#f7f8f9,#1a2733)] solved-text text-[0.9em] break-all"
+>
+	<span class="font-bold">#{TABLE[tag]}</span> <span class="text-[light-dark(#8a8f95,#b8bcbf)] text-[0.9em]">{tag}</span>
+</span>
