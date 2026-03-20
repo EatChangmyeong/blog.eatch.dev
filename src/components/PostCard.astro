@@ -9,7 +9,7 @@ const { href, title, published, edited, tags, cover, minutesRead } = Astro.props
 ---
 
 <a class="text-[unset] no-underline" href={href} aria-label={title}>
-	<div class="relative w-[calc(100%-1rem)] min-h-24 mt-block mb-[calc(2*var(--spacing-block))] p-4 bg-bg shadow-discrete pop-on-hover" role="none">
+	<div class="relative w-[calc(100%-1rem)] min-h-24 mt-block-element mb-[calc(2*var(--spacing-block-element))] p-4 bg-bg shadow-discrete pop-on-hover" role="none">
 		{cover &&
 			<img class="absolute right-0 top-0 w-3/5 h-full object-cover" src={cover} alt="" />
 		}

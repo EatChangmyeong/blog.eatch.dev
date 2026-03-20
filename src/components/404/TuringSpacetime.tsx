@@ -81,7 +81,7 @@ function Diagram(props: {
 			style={`left: ${x}rem; top: ${y}rem; height: ${height}rem;`}
 		/>),
 		renderedTrace = trace.map(([q, x], y) => <div
-			class={`absolute size-4 border-2 ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-3`}
+			class={`absolute size-4 border-2 ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-2`}
 			style={`left: ${x}rem; top: ${y}rem;`}
 		/>),
 		rendered = <div class={`relative w-4 ${BATCH_HEIGHT_STYLE} mx-auto`}>

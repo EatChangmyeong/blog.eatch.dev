@@ -32,7 +32,7 @@
 	--text-heading-hash: 0.8rem;
 	--container-content: 45rem;
 	--spacing-topbar: 6rem;
-	--spacing-block: calc(3 * var(--spacing));
+	--spacing-block-element: calc(3 * var(--spacing));
 	--drop-shadow-logo: 0 0 2px light-dark(white, black);
 	--animate-blink: blink 1s step-end infinite;
 
@@ -52,20 +52,22 @@
 			scheme-light-dark
 			text-fg bg-bg
 			font-prose leading-normal break-keep
+			scroll-pt-topbar
 			motion-safe:scroll-smooth
-			[--hover:0rem] [--shadow-enabled:1];
+			[--hover:0rem] [--shadow-enabled:1]
+			[--z-topbar-bg:100] [--z-cover:101] [--z-topbar-fg:102];
 	}
 	body {
-		@apply m-4 scroll-pt-topbar;
+		@apply m-4;
 	}
 	article, nav {
-		@apply m-auto max-w-content px-block;
+		@apply m-auto max-w-content px-block-element;
 	}
 
 	.astro-code {
 		@apply
 			block-element visual-block
-			p-block
+			p-block-element
 			dark:text-(--shiki-dark)! dark:bg-(--shiki-dark-bg)!;
 		code {
 			@apply m-0 p-0;
@@ -83,7 +85,7 @@
 	h1, h2, h3, h4, h5, h6 {
 		@apply
 			block-element
-			-mx-block my-block
+			-mx-block-element my-block-element
 			font-title font-bold leading-none;
 	}
 	h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
@@ -176,7 +178,7 @@
 	textarea {
 		@apply
 			block-element visual-block
-			p-block border-none
+			p-block-element border-none
 			w-full min-h-20 h-40 resize-y
 			code-text;
 	}
@@ -194,7 +196,7 @@
 			text-current bg-transparent;
 	}
 	button {
-		@apply pop-on-hover;
+		@apply hover:not-active:bg-fg/10 transition-decoration;
 	}
 	input {
 		@apply user-invalid:border-error;
@@ -223,7 +225,7 @@
 }
 
 @utility shadow-discrete {
-	@apply shadow-[calc(var(--shadow-enabled)*(var(--spacing-block)+var(--hover)))_calc(var(--shadow-enabled)*(var(--spacing-block)+var(--hover)))_0_#ab94fc40];
+	@apply shadow-[calc(var(--shadow-enabled)*(var(--spacing-block-element)+var(--hover)))_calc(var(--shadow-enabled)*(var(--spacing-block-element)+var(--hover)))_0_#ab94fc40];
 }
 @utility code-text {
 	@apply
@@ -237,7 +239,7 @@
 	@apply decoration-transparent hover:decoration-current transition-decoration;
 }
 @utility pop-on-hover {
-	@apply hover:not-active:[--hover:calc(0.5*var(--spacing-block))] motion-safe:transform-[translateY(calc(-1*var(--hover)))];
+	@apply hover:not-active:[--hover:calc(0.5*var(--spacing-block-element))] motion-safe:transform-[translateY(calc(-1*var(--hover)))];
 }
 @utility transition-decoration {
 	@apply motion-safe:transition-colors motion-safe:duration-200 motion-safe:ease-in-out;
@@ -253,7 +255,7 @@
 }
 @utility visual-block {
 	@apply
-		mt-block mb-[calc(var(--spacing-block)+var(--shadow-enabled)*var(--spacing-block))] px-block
+		mt-block-element mb-[calc(var(--spacing-block-element)+var(--shadow-enabled)*var(--spacing-block-element))] px-block-element
 		bg-block-default shadow-discrete
 		contain-content;
 	& > * {
@@ -261,22 +263,22 @@
 	}
 }
 @utility visual-image {
-	@apply mt-block mb-[calc(2*var(--spacing-block))] mx-auto shadow-discrete;
+	@apply mt-block-element mb-[calc(var(--spacing-block-element)+var(--shadow-enabled)*var(--spacing-block-element))] mx-auto shadow-discrete;
 }
 @utility visual-list {
-	@apply -mx-block my-(--nested-list,var(--spacing-block)) pl-[calc(5*var(--spacing)+var(--spacing-block))] pr-block;
+	@apply -mx-block-element my-(--nested-list,var(--spacing-block-element)) pl-[calc(5*var(--spacing)+var(--spacing-block-element))] pr-block-element;
 	& > * {
 		@apply [--nested-list:true];
 	}
 	li > p + & {
-		@apply -mt-block;
+		@apply -mt-block-element;
 	}
 }
 @utility visual-math {
-	@apply m-[calc(2*var(--spacing-block))];
+	@apply m-[calc(2*var(--spacing-block-element))];
 }
 @utility visual-paragraph {
-	@apply my-block;
+	@apply my-block-element;
 	li > &:first-child {
 		@apply mt-0;
 	}
