@@ -18,7 +18,12 @@ export const getStaticPaths = (async () => {
 		const year = yearMapping.get(slug);
 		return year === undefined
 			? undefined
-			: { params: { year, slug, fname } };
+			: {
+				params: {
+					year: year.toString(),
+					slug, fname,
+				}
+			};
 	}).filter(item => item !== undefined);
 }) satisfies GetStaticPaths;
 

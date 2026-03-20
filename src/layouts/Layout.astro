@@ -1,4 +1,6 @@
 ---
+import { Font } from 'astro:assets';
+
 import TopBar from '../components/TopBar.astro';
 
 import Bsky from '~icons/simple-icons/bluesky';
@@ -32,6 +34,9 @@ const DEV = import.meta.env.DEV;
 			? `${title} · ${BLOG_TITLE}`
 			: BLOG_TITLE
 		}</title>
+		<Font cssVariable="--font-pretendard" preload />
+		<Font cssVariable="--font-nanumsquareround" preload />
+		<Font cssVariable="--font-d2coding" preload />
 	</head>
 	<body>
 		<TopBar>

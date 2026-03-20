@@ -1,57 +1,3 @@
-/* https://github.com/orioncactus/pretendard/blob/article/dist/web/static/pretendard.css */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css");
-
-/* https://hangeul.naver.com/font */
-@font-face {
-    font-family: 'D2Coding';
-    src:
-		local('D2Coding'),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2Coding.woff) format("woff"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2Coding.ttf) format("truetype");
-	font-weight: normal;
-	font-display: swap;
-}
-@font-face {
-    font-family: 'D2Coding';
-    src:
-		local('D2Coding Bold')
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.eot?#iefix) format("embedded-opentype"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.woff) format("woff"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumGothicCoding/D2CodingBold.ttf) format("truetype");
-	font-weight: bold;
-	font-display: swap;
-}
-@font-face {
-    font-family: '나눔스퀘어라운드';
-    src:
-		local('나눔스퀘어라운드 Regular'),
-		local('나눔스퀘어라운드OTF Regular'),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.eot?#iefix) format("embedded-opentype"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.woff2) format("woff2"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.woff) format("woff"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.ttf) format("truetype");
-		font-weight: normal;
-		font-display: swap;
-}
-@font-face {
-    font-family: '나눔스퀘어라운드';
-    src:
-		local('나눔스퀘어라운드 Bold'),
-		local('나눔스퀘어라운드OTF Bold'),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.eot?#iefix) format("embedded-opentype"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.woff2) format("woff2"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.woff) format("woff"),
-		url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.ttf) format("truetype");
-	font-weight: bold;
-	font-display: swap;
-}
-
-@font-feature-values 'Pretendard' {
-	@styleset {
-		default-styleset: 5 6 8;
-	}
-}
-
 @import "tailwindcss";
 
 @theme {
@@ -72,9 +18,9 @@
 	--color-block-default: light-dark(#c0c0c0, #404040);
 	--color-error: light-dark(#c00, #f66);
 	--color-bsky: #0085ff;
-	--font-prose: Pretendard, sans-serif;
-	--font-title: 나눔스퀘어라운드, sans-serif;
-	--font-code: D2Coding, monospace;
+	--font-prose: var(--font-pretendard), sans-serif;
+	--font-title: var(--font-nanumsquareround), sans-serif;
+	--font-code: var(--font-d2coding), monospace;
 	--text-h1: 2.5rem;
 	--text-h2: 2.5rem;
 	--text-h3: 2.1rem;
@@ -108,7 +54,6 @@
 			font-prose leading-normal break-keep
 			motion-safe:scroll-smooth
 			[--hover:0rem] [--shadow-enabled:1];
-		font-variant: styleset(default-styleset);
 	}
 	body {
 		@apply m-4 scroll-pt-topbar;

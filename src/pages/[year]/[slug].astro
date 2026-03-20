@@ -4,7 +4,7 @@ import type { GetStaticPaths } from 'astro';
 export const getStaticPaths = (async () => {
 	return (await getCollection('blog')).map(post => ({
 		params: {
-			year: post.data.published.getFullYear(),
+			year: post.data.published.getFullYear().toString(),
 			slug: post.id,
 		},
 	}));

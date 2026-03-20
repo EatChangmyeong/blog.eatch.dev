@@ -1,4 +1,5 @@
-import { defineCollection, reference, z } from 'astro:content';
+import { defineCollection, reference } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const
@@ -7,7 +8,7 @@ const
 		order: z.number().optional(),
 		edited: z.date().optional(),
 		cover: z.string().optional(),
-		permalink: z.string().url().optional(),
+		permalink: z.url().optional(),
 		tags: z.string().array().optional(),
 		parent: reference('blog').optional(),
 		translation: z.object({
@@ -15,15 +16,21 @@ const
 			author: z.string(),
 			published: z.date().optional(),
 			edited: z.date().optional(),
-			link: z.string().url(),
+			link: z.url(),
 		}).optional(),
 		interactive: z.boolean().or(z.literal('desktop')).optional(),
 	}),
 	additional = z.object({
 		published: z.date(),
 	}),
-	lenientSchema = base.merge(additional.partial()).passthrough(),
-	strictSchema = base.merge(additional).passthrough();
+	lenientSchema = z.looseObject({
+		...base.shape,
+		...additional.partial().shape,
+	}),
+	strictSchema = z.looseObject({
+		...base.shape,
+		...additional.shape,
+	});
 
 export type PostBase = z.infer<typeof lenientSchema>;
 export type Post = z.infer<typeof strictSchema>;
