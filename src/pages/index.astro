@@ -3,11 +3,11 @@ import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Logo from '../components/Logo.astro';
 import PostCard from '../components/PostCard.astro';
-import type { PostEntry } from '../registry/getPost';
-import { getPost } from '../registry/getPost';
+import type { Post } from '../content/post';
+import { getPost } from '../content/post';
 
 const
-	collection = await getCollection('blog'),
+	collection = await getCollection('post'),
 	posts = await Promise.all(
 		[...collection]
 			.sort((l, r) => {
@@ -17,7 +17,7 @@ const
 				return (r.data.order ?? 0) - (l.data.order ?? 0);
 			})
 			.map(x => getPost(x.id))
-	) as PostEntry[];
+	) as Post[];
 ---
 
 <Layout>

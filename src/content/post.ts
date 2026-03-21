@@ -1,9 +1,9 @@
 import type { MDXInstance } from 'astro';
-import { getEntry, render } from 'astro:content';
+import { getEntry, reference, render } from 'astro:content';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
-import type { PostBase } from '../content.config';
 
 import type { FootnoteOrder } from '~/remark-my-footnote';
+import { z } from 'astro/zod';
 
 const FN_MODULES = import.meta.glob('/src/posts/*/*.fn.mdx', { eager: true });
 const TN_MODULES = import.meta.glob('/src/posts/*/*.tn.mdx', { eager: true });
@@ -25,7 +25,36 @@ function importFn(query: string, type: 'fn' | 'tn' | 'ref', order: FootnoteOrder
 	return map;
 }
 
-export type PostEntry = PostBase & {
+const SchemaBase = z.object({
+	title: z.string(),
+	order: z.number().optional(),
+	edited: z.date().optional(),
+	cover: z.string().optional(),
+	permalink: z.url().optional(),
+	tags: z.string().array().optional(),
+	parent: reference('blog').optional(),
+	translation: z.object({
+		title: z.string(),
+		author: z.string(),
+		published: z.date().optional(),
+		edited: z.date().optional(),
+		link: z.url(),
+	}).optional(),
+	interactive: z.boolean().or(z.literal('desktop')).optional(),
+});
+const SchemaAdditional = z.object({
+	published: z.date(),
+});
+const SchemaPseudo = z.looseObject({
+	...SchemaBase.shape,
+	...SchemaAdditional.partial().shape,
+});
+export const Schema = z.looseObject({
+	...SchemaBase.shape,
+	...SchemaAdditional.shape,
+});
+type PseudoPost = z.infer<typeof SchemaPseudo>;
+export type Post = PseudoPost & {
 	Content: AstroComponentFactory,
 	minutesRead: number,
 	footnotes?: {
@@ -41,8 +70,8 @@ export type PostEntry = PostBase & {
 		content: Record<string, AstroComponentFactory>,
 	},
 };
-export async function getPost(query: string): Promise<PostEntry | undefined> {
-	const post = await getEntry('blog', query);
+export async function getPost(query: string): Promise<Post | undefined> {
+	const post = await getEntry('post', query);
 	if(!post)
 		return post;
 

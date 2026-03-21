@@ -1,12 +1,12 @@
 ---
 import type { ReferenceDataEntry } from 'astro:content';
 import RemarkSimpleBase from './RemarkSimpleBase.astro';
-import { getPost } from '~/src/registry/getPost';
+import { getPost } from '~/src/content/post';
 
 import ArrowCircleUpLine from '~icons/majesticons/arrow-circle-up-line';
 
 interface Props {
-	parent: ReferenceDataEntry<'blog', string>,
+	parent: ReferenceDataEntry<'post', string>,
 }
 const { parent } = Astro.props;
 

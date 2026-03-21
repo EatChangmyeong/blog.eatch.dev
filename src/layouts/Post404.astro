@@ -1,9 +1,9 @@
 ---
 import TuringSpacetime from '@components/404/TuringSpacetime.js';
-import type { PostEntry } from '../registry/getPost';
+import type { Post as PostT } from '../content/post';
 import Post from './Post.astro';
 
-interface Props extends PostEntry {}
+interface Props extends PostT {}
 ---
 
 <Post {...Astro.props}>

@@ -5,7 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { getCollection } from 'astro:content';
 
 export const getStaticPaths = (async () => {
-	const yearMapping = new Map((await getCollection('blog')).map(post => [post.id, post.data.published.getFullYear()]));
+	const yearMapping = new Map((await getCollection('post')).map(post => [post.id, post.data.published.getFullYear()]));
 	const files = await glob(
 		'*/attach/*',
 		{

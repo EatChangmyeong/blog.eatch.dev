@@ -1,8 +1,8 @@
 ---
 import PostMetadata from './PostMetadata.astro';
-import type { PostEntry } from '../registry/getPost';
+import type { Post } from '../content/post';
 
-interface Props extends PostEntry {
+interface Props extends Post {
 	href: string,
 }
 const { href, title, published, edited, tags, cover, minutesRead } = Astro.props;

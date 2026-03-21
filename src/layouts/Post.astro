@@ -7,9 +7,9 @@ import Permalink from '@components/post/Permalink.astro';
 import Noscript from '@components/post/Noscript.astro';
 import DesktopWarning from '@components/post/DesktopWarning.astro';
 import FnEntry from '@components/post/fn/FnEntry.astro';
-import type { PostEntry } from '../registry/getPost';
+import type { Post } from '../content/post';
 
-interface Props extends PostEntry {}
+interface Props extends Post {}
 const {
 	title,
 	published, edited,
