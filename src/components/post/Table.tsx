@@ -1,5 +1,5 @@
 import type { JSXElement } from 'solid-js';
-import { createEffect, createMemo, For, mapArray, Show } from 'solid-js';
+import { createMemo, For, mapArray, Show } from 'solid-js';
 
 type Align = 'left' | 'center' | 'right';
 type ClassedElement = [JSXElement] | [JSXElement, string];

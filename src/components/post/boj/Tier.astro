@@ -4,7 +4,9 @@ import S2 from '@assets/solved/s2.svg';
 import S1 from '@assets/solved/s1.svg';
 import G3 from '@assets/solved/g3.svg';
 import G2 from '@assets/solved/g2.svg';
+import G1 from '@assets/solved/g1.svg';
 import P5 from '@assets/solved/p5.svg';
+import P2 from '@assets/solved/p2.svg';
 import D4 from '@assets/solved/d4.svg';
 import type { SvgComponent } from 'astro/types';
 const TABLE = {
@@ -13,7 +15,9 @@ const TABLE = {
 	s1: [S1, 'text-[#4e6a86]', 'Silver I'],
 	g3: [G3, 'text-[#ec9a00]', 'Gold III'],
 	g2: [G2, 'text-[#f9a518]', 'Gold II'],
+	g1: [G1, 'text-[#ffb028]', 'Gold I'],
 	p5: [P5, 'text-[#00c78b]', 'Platinum V'],
+	p2: [P2, 'text-[#3ef0b1]', 'Platinum II'],
 	d4: [D4, 'text-[#00a9f0]', 'Diamond IV'],
 } as const satisfies Record<string, [SvgComponent, string, string]>;
 interface Props {
