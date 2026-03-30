@@ -1,13 +1,12 @@
 ---
 import RemarkSimpleBase from './RemarkSimpleBase.astro';
 interface Props {
-	colorLight: string,
-	colorDark: string,
+	class?: string,
 }
-const { colorLight, colorDark } = Astro.props;
+const { class: cls } = Astro.props;
 ---
 
-<RemarkSimpleBase colorLight={colorLight} colorDark={colorDark}>
+<RemarkSimpleBase class={cls}>
 	<p class="font-bold"><slot name="title" /></p>
 	<slot />
 </RemarkSimpleBase>

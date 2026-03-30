@@ -16,6 +16,6 @@ if(!resolved)
 const { title, published } = resolved;
 ---
 
-<RemarkSimpleBase colorLight="#e0e0ff" colorDark="#000050">
+<RemarkSimpleBase class="bg-[light-dark(#e0e0ff,#000050)]">
 	<p><ArrowCircleUpLine /> 이 글은 <a href={`/${published!.getFullYear()}/${parent.id}`}>{title}</a>의 보충 글입니다.</p>
 </RemarkSimpleBase>

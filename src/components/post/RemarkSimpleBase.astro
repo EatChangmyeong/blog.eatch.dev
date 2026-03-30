@@ -1,15 +1,10 @@
 ---
 interface Props {
-	colorLight: string,
-	colorDark: string,
+	class?: string,
 }
-const { colorLight, colorDark } = Astro.props;
+const { class: cls } = Astro.props;
 ---
 
-<style define:vars={{
-	'remark-color': colorLight,
-	'remark-color-dark': colorDark,
-}} />
-<div class="block-element visual-block bg-(--remark-color) dark:bg-(--remark-color-dark)" role="note">
+<div class={`block-element visual-block ${cls}`} role="note">
 	<slot />
 </div>
