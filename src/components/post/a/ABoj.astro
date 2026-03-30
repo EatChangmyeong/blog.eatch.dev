@@ -1,12 +1,26 @@
 ---
+import type { Problem } from '~/src/content/boj';
+import { getProblem } from '~/src/content/boj';
 import AOut from './AOut.astro';
+import Render from '~/src/content/Wrapper.astro';
 
 type Props = {
 	prob: number,
 };
 const { prob } = Astro.props;
+let title: Problem['title'] | undefined = undefined;
+if(!Astro.slots.has('default')) {
+	const problem = getProblem(prob);
+	if(problem === undefined)
+		throw new ReferenceError(`problem #${prob} not available`);
+	title = problem.title;
+}
 ---
 
 <AOut
 	href={`https://acmicpc.net/problem/${prob}`}
-><slot /></AOut>
+>{
+	title
+		? <>{prob}번 '<Render content={title[0]} />{title[1] && <span class="text-[0.9rem] opacity-75"> <Render content={title[1]} /></span>}'</>
+		: <slot />
+}</AOut>

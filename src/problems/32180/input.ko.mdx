@@ -1,0 +1,10 @@
+첫 번째 줄에 문제에서 제시된 입력 문법을 만족하는 문자열이 주어진다. 토큰의 개수는 "`end`"를 포함해서 최대 $$1 \; 000$$개이며, 입력의 앞뒤에 불필요한 공백이 주어지지 않는다.
+
+형식적인 입력 문법은 아래와 같다. 이때 `<input_stmt>*`는 `<input_stmt>`가 $$0$$개 이상 올 수 있다는 의미이다.
+
+```
+<input> ::= <input_stmt>* "end"
+<input_block> ::= <input_stmt> | "{" <input_stmt>* "}"
+<input_stmt> ::= ";" | <input_if>
+<input_if> ::= "if" <input_block> | "if" <input_block> "else" <input_block>
+```

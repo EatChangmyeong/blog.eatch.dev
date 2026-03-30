@@ -1,62 +1,25 @@
 ---
-import type { JSX } from 'astro/jsx-runtime';
-import { Code } from 'astro:components';
-import Blockquote from '../Blockquote.astro';
+import { getProblem } from '~/src/content/boj';
 
-const heading = 'text-h4 block-element my-4 font-title font-bold leading-none';
+import StatementSingle from './StatementSingle.astro';
 
 type Props = {
-	examples: [string, string, JSX.Element][],
+	prob: number,
+	hideTitle?: boolean,
 };
-const { examples } = Astro.props;
+const { prob, hideTitle = false } = Astro.props;
+const problem = getProblem(prob);
+if(!problem)
+	throw new ReferenceError(`problem #${prob} not available`);
+
+const stmtOrder: string[] = [problem.original];
+if(problem.korean !== undefined && problem.korean !== problem.original)
+	stmtOrder.push(problem.korean);
+for(const k of Object.keys(problem.statement))
+	if(k !== problem.original && k !== problem.korean)
+		stmtOrder.push(k);
 ---
 
-<Blockquote>
-	<p class={heading}>문제</p>
-	<slot />
-	{Astro.slots.has('input') &&
-		<>
-			<p class={heading}>입력</p>
-			<slot name="input" />
-		</>
-	}
-	{Astro.slots.has('output') &&
-		<>
-			<p class={heading}>출력</p>
-			<slot name="output" />
-		</>
-	}
-	{examples.map(([input, output, Desc], i) => (
-		<>
-			<p class={heading}>예제 입력 {i + 1}</p>
-			<Code code={input} themes={{
-				light: 'github-light',
-				dark: 'github-dark',
-			}} />
-			<p class={heading}>예제 출력 {i + 1}</p>
-			<Code code={output} themes={{
-				light: 'github-light',
-				dark: 'github-dark',
-			}} />
-			{Desc && <Desc />}
-		</>
-	))}
-	{Astro.slots.has('bounds') &&
-		<>
-			<p class={heading}>제한</p>
-			<slot name="bounds" />
-		</>
-	}
-	{Astro.slots.has('note') &&
-		<>
-			<p class={heading}>노트</p>
-			<slot name="note" />
-		</>
-	}
-	{Astro.slots.has('hint') &&
-		<>
-			<p class={heading}>힌트</p>
-			<slot name="hint" />
-		</>
-	}
-</Blockquote>
+<article class="block-element visual-block">
+	<StatementSingle problem={problem} lang={stmtOrder[0]} hideTitle={hideTitle} />
+</article>

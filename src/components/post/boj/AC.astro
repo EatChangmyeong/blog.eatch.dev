@@ -1,1 +1,5 @@
-<strong><span class="text-[#009874]">맞았습니다!!</span></strong>
+<strong><span class="text-[#009874]">{
+	Astro.slots.has('default')
+		? <slot />
+		: '맞았습니다!!'
+}</span></strong>

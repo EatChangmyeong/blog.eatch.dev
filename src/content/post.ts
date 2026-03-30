@@ -5,9 +5,9 @@ import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { FootnoteOrder } from '~/remark-my-footnote';
 import { z } from 'astro/zod';
 
-const FN_MODULES = import.meta.glob('/src/posts/*/*.fn.mdx', { eager: true });
-const TN_MODULES = import.meta.glob('/src/posts/*/*.tn.mdx', { eager: true });
-const REF_MODULES = import.meta.glob('/src/posts/*/*.ref.mdx', { eager: true });
+const FN_MODULES = import.meta.glob('/src/posts/*/*.fn.mdx', { eager: true }) as Record<string, MDXInstance<Record<never, never>> | undefined>;
+const TN_MODULES = import.meta.glob('/src/posts/*/*.tn.mdx', { eager: true }) as Record<string, MDXInstance<Record<never, never>> | undefined>;
+const REF_MODULES = import.meta.glob('/src/posts/*/*.ref.mdx', { eager: true }) as Record<string, MDXInstance<Record<never, never>> | undefined>;
 
 function importFn(query: string, type: 'fn' | 'tn' | 'ref', order: FootnoteOrder): Record<string, AstroComponentFactory> {
 	const files = type === 'fn'
@@ -17,7 +17,7 @@ function importFn(query: string, type: 'fn' | 'tn' | 'ref', order: FootnoteOrder
 		: REF_MODULES;
 	const map: Record<string, AstroComponentFactory> = {};
 	for(const [id] of order) {
-		const module = files[`/src/posts/${query}/${id}.${type}.mdx`] as MDXInstance<Record<never, never>> | undefined;
+		const module = files[`/src/posts/${query}/${id}.${type}.mdx`];
 		if(!module)
 			throw new ReferenceError(`${query}: ${type}:${id} not found`);
 		map[id] = module.Content;

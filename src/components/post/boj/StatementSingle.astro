@@ -1,0 +1,67 @@
+---
+import { Code } from 'astro:components';
+import type { Problem } from '~/src/content/boj';
+
+import Render from '~/src/content/Wrapper.astro';
+
+const h1 = 'text-h3 block-element my-4 font-title font-bold leading-none';
+const h2 = 'text-h4 block-element my-4 font-title font-bold leading-none';
+
+type Props = {
+	problem: Problem,
+	lang: string,
+	hideTitle?: boolean,
+};
+const { problem, lang, hideTitle = false } = Astro.props;
+const {
+	desc, title, clarification,
+	statement: Statement,
+	input: Input,
+	output: Output,
+	bounds: Bounds,
+	hint: Hint,
+	note: Note
+} = problem.statement[lang];
+---
+
+{!hideTitle &&
+	<p class={h1}><Render content={title} /></p>
+}
+<p class={h2}>문제</p>
+<Statement />
+{Input && <>
+	<p class={h2}>입력</p>
+	<Input />
+</>}
+{Output && <>
+	<p class={h2}>출력</p>
+	<Output />
+</>}
+{Bounds && <>
+	<p class={h2}>제한</p>
+	<Bounds />
+</>}
+{problem.dataset.map(([inf, ouf], i) => {
+	const Clarification = clarification[i];
+	return <>
+		<p class={h2}>예제 입력 {i + 1}</p>
+		<Code code={inf} themes={{
+			light: 'github-light',
+			dark: 'github-dark',
+		}} />
+		<p class={h2}>예제 출력 {i + 1}</p>
+		<Code code={ouf} themes={{
+			light: 'github-light',
+			dark: 'github-dark',
+		}} />
+		{Clarification && <Clarification />}
+	</>;
+})}
+{Hint && <>
+	<p class={h2}>힌트</p>
+	<Hint />
+</>}
+{Note && <>
+	<p class={h2}>노트</p>
+	<Note />
+</>}

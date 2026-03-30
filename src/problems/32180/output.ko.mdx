@@ -1,0 +1,11 @@
+첫 번째 줄에 입력받은 프로그램을 파싱한 결과를 문제에서 제시된 출력 문법을 만족하도록 출력한다.
+
+형식적인 출력 문법은 아래와 같다. 이는 위의 `<input_block>`에서 `<input_stmt>`만 제거한 것과 동일하다.
+
+
+```
+<output> ::= <output_stmt>* "end"
+<output_block> ::= "{" <output_stmt>* "}"
+<output_stmt> ::= ";" | <output_if>
+<output_if> ::= "if" <output_block> | "if" <output_block> "else" <output_block>
+```
