@@ -790,37 +790,40 @@ export default function Editor(props_: Partial<Props>) {
 					relative
 					m-auto outline-none w-fit max-w-full
 					font-code font-bold text-center text-2xl leading-12 whitespace-nowrap
-					opacity-75 focus:opacity-100
-					block-element
+					block-element overflow-x-auto
+					opacity-75 focus-within:opacity-100
 					motion-safe:transition-opacity motion-safe:duration-200 motion-safe:ease-in-out
+					**:transition-none
 				"
-				tabindex="0"
 				aria-describedby={statusId}
 				aria-details={controlsId}
-				on:mousedown={e => {
-					const ctrl = matchMouseDown(e);
-					if(ctrl) {
-						setContent(produce(ctrl));
-						cursorElement.scrollIntoView({ block: 'nearest' });
-					}
-				}}
-				on:mousemove={e => {
-					const ctrl = matchMouseDrag(e);
-					if(ctrl) {
-						setContent(produce(ctrl));
-						cursorElement.scrollIntoView({ block: 'nearest' });
-					}
-				}}
-				on:keydown={e => {
-					const ctrl = matchKeyboard(e);
-					if(ctrl) {
-						e.preventDefault();
-						setContent(produce(ctrl));
-						cursorElement.scrollIntoView({ block: 'nearest' });
-					}
-				}}
 			>
-				<table class="mx-[0.4rem] border-collapse w-max h-14">
+				<table
+					class="mx-[0.4rem] my-0 border-collapse min-w-max h-14"
+					tabindex="0"
+					on:mousedown={e => {
+						const ctrl = matchMouseDown(e);
+						if(ctrl) {
+							setContent(produce(ctrl));
+							cursorElement.scrollIntoView({ block: 'nearest' });
+						}
+					}}
+					on:mousemove={e => {
+						const ctrl = matchMouseDrag(e);
+						if(ctrl) {
+							setContent(produce(ctrl));
+							cursorElement.scrollIntoView({ block: 'nearest' });
+						}
+					}}
+					on:keydown={e => {
+						const ctrl = matchKeyboard(e);
+						if(ctrl) {
+							e.preventDefault();
+							setContent(produce(ctrl));
+							cursorElement.scrollIntoView({ block: 'nearest' });
+						}
+					}}
+				>
 					<tbody class="pointer-events-none">
 						<tr>
 							<Index each={content.buffer}>
