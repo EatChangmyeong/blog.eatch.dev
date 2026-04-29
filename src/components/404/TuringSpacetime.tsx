@@ -1,5 +1,5 @@
 import type { Setter } from 'solid-js';
-import { createSignal, Show } from 'solid-js';
+import { createEffect, createMemo, createSignal, For, indexArray, onMount } from 'solid-js';
 import { Set } from 'immutable';
 import type { TuringMachine } from './turing_machine.js';
 import machines from './turing_machine.js';
@@ -40,7 +40,13 @@ function advance<State extends number>(
 	tape: Set<number>,
 	state: State | null,
 	pos: number
-): [Set<number>, State | null, number, [State | null, number][], [number, number, number][]] {
+): {
+	tape: Set<number>,
+	state: State | null,
+	pos: number,
+	trace: [State | null, number][],
+	cols: [number, number, number][],
+} {
 	const
 		colsAll: [number, number, number][] = [...tape].map(x => [x, 0, 0]),
 		colsActive: Map<number, [number, number, number]> = new Map(colsAll.map(x => [x[0], x])),
@@ -64,7 +70,10 @@ function advance<State extends number>(
 			} else
 				colsActive.delete(oldPos);
 	}
-	return [tape, state, pos, trace, colsAll.filter(col => col[2] != 0)];
+	return {
+		tape, state, pos, trace,
+		cols: colsAll.filter(col => col[2] != 0),
+	};
 }
 
 function Diagram(props: {
@@ -74,35 +83,51 @@ function Diagram(props: {
 	pos: number,
 	callback: (set: Setter<boolean> | null) => void,
 }) {
-	const
-		[newTape, newState, newPos, trace, cols] = advance(props.machine, props.tape, props.state, props.pos),
-		renderedSpacetime = cols.map(([x, y, height]) => <div
-			class="absolute w-4 bg-eatch"
-			style={`left: ${x}rem; top: ${y}rem; height: ${height}rem;`}
-		/>),
-		renderedTrace = trace.map(([q, x], y) => <div
-			class={`absolute size-4 border-2 ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-2`}
-			style={`left: ${x}rem; top: ${y}rem;`}
-		/>),
-		rendered = <div class={`relative w-4 ${BATCH_HEIGHT_STYLE} mx-auto`}>
-			{renderedSpacetime}
-			{renderedTrace}
-		</div>;
-	if(newState === null) {
-		props.callback(null);
-		return rendered;
-	}
+	const advanced = createMemo(() => advance(props.machine, props.tape, props.state, props.pos));
 	const [shouldContinue, setShouldContinue] = createSignal(false);
-	props.callback(setShouldContinue);
+
+	onMount(() => props.callback(setShouldContinue));
+	createEffect(() => {
+		if(advanced().state === null) {
+			props.callback(null);
+			setShouldContinue(false);
+		} else
+			props.callback(setShouldContinue);
+	});
+
 	return <>
-		{rendered}
-		<Show when={shouldContinue()}>
+		<div class={`relative w-4 ${BATCH_HEIGHT_STYLE} mx-auto`}>
+			<For each={advanced().cols}>
+				{([x, y, h]) =>
+					<div
+						class="absolute w-4 bg-eatch"
+						style={{
+							left: `${x}rem`,
+							top: `${y}rem`,
+							height: `${h}rem`,
+						}}
+					/>
+				}
+			</For>
+			<For each={advanced().trace}>
+				{([q, x], y) =>
+					<div
+						class={`absolute size-4 border-2 ${q === null ? 'border-#808080' : STATE_STYLE_MAP[q]} z-2`}
+						style={{
+							left: `${x}rem`,
+							top: `${y()}rem`,
+						}}
+					/>
+				}
+			</For>
+		</div>
+		{shouldContinue() &&
 			<Diagram
 				machine={props.machine}
-				tape={newTape} state={newState} pos={newPos}
+				tape={advanced().tape} state={advanced().state} pos={advanced().pos}
 				callback={props.callback}
 			/>
-		</Show>
+		}
 	</>;
 }
 
@@ -121,28 +146,29 @@ export default function TuringSpacetime() {
 				i++;
 		};
 	const
-		[setter, setSetter] = createSignal<null | Setter<boolean>>(null),
-		index = Math.floor(machines.length*Math.random()),
-		machine = machines[index],
+		[continueCallback, setContinueCallback] = createSignal<null | Setter<boolean>>(null),
+		machine = machines[Math.floor(machines.length*Math.random())],
 		observer = new IntersectionObserver(
 			arr => {
 				if(arr.some(x => x.isIntersecting)) {
-					setter()?.(true);
+					continueCallback()?.(true);
 					tryCollapse();
 				}
 			},
 			{ threshold: [0, 1] }
 		);
-	window.scrollTo({
+
+	onMount(() => window.scrollTo({
 		top: 0,
 		left: 0,
 		behavior: 'instant',
-	});
+	}));
+
 	return <>
 		<Diagram
 			machine={machine}
 			tape={Set()} state={0} pos={0}
-			callback={set => setSetter(() => set ?? null)}
+			callback={callback => setContinueCallback(() => callback)}
 		/>
 		<div
 			ref={div => observer.observe(div)}

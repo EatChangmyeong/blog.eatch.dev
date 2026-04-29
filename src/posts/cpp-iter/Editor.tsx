@@ -1,5 +1,5 @@
 import type { JSXElement, Ref } from 'solid-js';
-import { createSignal, Index, mergeProps, Show } from 'solid-js';
+import { createMemo, createSignal, Index, mergeProps, Show, untrack } from 'solid-js';
 import { createStore, produce } from 'solid-js/store';
 import shuffle from 'knuth-shuffle-seeded';
 
@@ -56,6 +56,16 @@ type IndexerBase = { type: 'begin' | 'end' | 'sbegin' | 'send' | 'anchor', offse
 type IndexerAbsolute = { type: 'absolute', offset: number };
 type IndexerCursor = { type: 'cursor', offset: number, fallback: IndexerBase };
 type Indexer = IndexerBase | IndexerCursor | IndexerAbsolute;
+type RawProps = {
+	staticOutput: boolean,
+	staticRandomAccess: boolean,
+	staticOvertype: boolean,
+	staticRtl: boolean,
+	staticRange: boolean,
+	staticRangeOps: boolean,
+	staticEqualRange: boolean,
+	staticControls: boolean,
+};
 type Props = {
 	output: boolean,
 	randomAccess: boolean,
@@ -190,21 +200,18 @@ function CellBlink(props: {
 		>{props.children}</div>
 	);
 }
-export default function Editor(props_: Partial<Props>) {
+export default function Editor(props_: Partial<RawProps>) {
 	const
-		props = mergeProps(
-			{
-				output: false,
-				randomAccess: false,
-				overtype: false,
-				rtl: false,
-				range: false,
-				rangeOps: false,
-				equalRange: false,
-				controls: true,
-			} satisfies Props,
-			props_
-		),
+		props: Props = {
+			output: props_.staticOutput ?? false,
+			randomAccess: props_.staticRandomAccess ?? false,
+			overtype: props_.staticOvertype ?? false,
+			rtl: props_.staticRtl ?? false,
+			range: props_.staticRange ?? false,
+			rangeOps: props_.staticRangeOps ?? false,
+			equalRange: props_.staticEqualRange ?? false,
+			controls: props_.staticControls ?? true,
+		},
 		shouldSort = props.range && props.rangeOps && props.equalRange && !props.output,
 		statusId = `-editor-status-${editorCount + 1}`,
 		controlsId = `-editor-controls-${editorCount + 1}`,
@@ -261,7 +268,7 @@ export default function Editor(props_: Partial<Props>) {
 		mouseToIndex = props.randomAccess
 			? (e: MouseEvent): IndexerAbsolute => {
 				const
-					len = content.buffer.length,
+					len = untrack(() => content.buffer.length),
 					remPerCell = 3.25,
 					remPadding = 0.25,
 					pxPerRem = (e.target as HTMLElement).scrollWidth/(remPerCell*len + remPadding);
@@ -755,16 +762,6 @@ export default function Editor(props_: Partial<Props>) {
 									: ctrl_.repeat(key);
 					}
 	}
-	const displayControl = (ctrl: Ctrl) => (content: ContentState): JSXElement => {
-		if(ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))
-			return <tr>
-				<td class="font-bold text-center">{ctrl.display}</td>
-				<td class="text-left">{typeof ctrl.desc == 'string'
-					? ctrl.desc
-					: ctrl.desc(content)
-				}</td>
-			</tr>;
-	};
 
 	function statusMessage() {
 		const
@@ -867,9 +864,8 @@ export default function Editor(props_: Partial<Props>) {
 								left: `${0.4 + 3.25*from}rem`,
 							}}
 						>
-							<Show
-								when={from != to}
-								fallback={<>
+							{from == to
+								? <>
 									<div
 										ref={cursorElement}
 										classList={{
@@ -880,7 +876,7 @@ export default function Editor(props_: Partial<Props>) {
 											'invisible': invisible,
 										}}
 									/>
-									<Show when={props.rtl}>
+									{props.rtl &&
 										<div classList={{
 											'absolute': true,
 											'top-[0.4rem]': true,
@@ -890,17 +886,16 @@ export default function Editor(props_: Partial<Props>) {
 											'bg-eatch-dark': true,
 											'invisible': invisible,
 										}} />
-									</Show>
-								</>}
-							>
-								<CellBlink ref={cursorElement} invisible={invisible}>
+									}
+								</>
+								: <CellBlink ref={cursorElement} invisible={invisible}>
 									{content.buffer[from]}
 								</CellBlink>
-							</Show>
+							}
 						</div>
 				}</Show>
 			</div>
-			<div class="flex flex-row flex-wrap justify-between items-center">
+			<div class="flex flex-wrap justify-between items-center">
 				<p class="flex-none">
 					<label>
 						길이 <input
@@ -925,35 +920,31 @@ export default function Editor(props_: Partial<Props>) {
 		</div>
 		<details open={props.controls}>
 			<summary>조작</summary>
-			<div id={controlsId} class="flex flex-row flex-wrap justify-center items-start gap-2 overflow-x-auto">
+			<div id={controlsId} class="flex flex-wrap justify-center items-start gap-2 overflow-x-auto">
 				<Index each={controls}>
-					{category =>
-						category()
+					{category => <>
+						{category()
 							.ctrl
-							.filter(ctrl => ctrl.desc !== undefined).length != 0 &&
+							.filter(ctrl => ctrl.desc !== undefined)
+							.length != 0 &&
 							<Table
 								class="flex-none mx-0"
-								caption={[category().type, 'font-bold']}
+								caption={<span class="font-bold">{category().type}</span>}
 								cols={[
 									{
-										render(ctrl) {
-											return [ctrl.display];
-										},
+										render: ctrl => ctrl.display,
 										th: true,
 										align: 'center',
 									},
-									{
-										render(ctrl) {
-											return typeof ctrl.desc == 'function'
-												? [ctrl.desc(content)]
-												: [ctrl.desc];
-										},
-									},
+									ctrl => typeof ctrl.desc == 'function'
+										? ctrl.desc(content)
+										: ctrl.desc,
 								]}
 							>
 								{category().ctrl.filter(ctrl => ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))}
 							</Table>
-					}
+						}
+					</>}
 				</Index>
 			</div>
 		</details>

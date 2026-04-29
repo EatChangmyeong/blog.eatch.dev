@@ -84,7 +84,7 @@ const {
 			{
 				footnotes &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-fn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">각주</div>
+						<div class="flex gap-2 opacity-80 tracking-[0.25rem] text-fn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">각주</div>
 						{
 							footnotes.order.map(([id, refs], i) =>
 								<FnEntry
@@ -102,7 +102,7 @@ const {
 			{
 				transnotes &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-tn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">역주</div>
+						<div class="flex gap-2 opacity-80 tracking-[0.25rem] text-tn after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">역주</div>
 						{
 							transnotes.order.map(([id, refs], i) =>
 								<FnEntry
@@ -120,7 +120,7 @@ const {
 			{
 				references &&
 					<>
-						<div class="flex flex-row gap-2 opacity-80 tracking-[0.25rem] text-ref after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">참고 문헌</div>
+						<div class="flex gap-2 opacity-80 tracking-[0.25rem] text-ref after:flex-1 after:m-auto after:h-px after:bg-current after:opacity-75">참고 문헌</div>
 						{
 							references.order.map(([id, refs]) =>
 								<FnEntry

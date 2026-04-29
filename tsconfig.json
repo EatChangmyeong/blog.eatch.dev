@@ -8,22 +8,21 @@
     "dist"
   ],
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "~/*": [
-        "*"
+        "./*"
       ],
       "@assets/*": [
-        "src/assets/*"
+        "./src/assets/*"
       ],
       "@components/*": [
-        "src/components/*"
+        "./src/components/*"
       ],
       "@layouts/*": [
-        "src/layouts/*"
+        "./src/layouts/*"
       ],
       "@styles/*": [
-        "src/styles/*"
+        "./src/styles/*"
       ]
     },
     "jsx": "preserve",

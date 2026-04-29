@@ -1,19 +1,18 @@
 import type { JSXElement } from 'solid-js';
-import { createMemo, For, mapArray, Show } from 'solid-js';
+import { children, createEffect, createMemo, For, mapArray } from 'solid-js';
 
 type Align = 'left' | 'center' | 'right';
-type ClassedElement = [JSXElement] | [JSXElement, string];
 type ColObject<T> = {
 	th?: boolean,
 	sort?: (lhs: T, rhs: T) => number,
-	thead?: (xs: T[]) => ClassedElement,
-	render: (x: T) => ClassedElement,
-	tfoot?: (xs: T[]) => ClassedElement,
+	thead?: (xs: T[]) => JSXElement,
+	render: (x: T) => JSXElement,
+	tfoot?: (xs: T[]) => JSXElement,
 	align?: Align,
 };
-type Col<T> = ((x: T) => ClassedElement) | ColObject<T>;
+type Col<T> = ((x: T) => JSXElement) | ColObject<T>;
 type Props<T> = {
-	caption?: ClassedElement,
+	caption?: JSXElement,
 	class?: string,
 	cols: Col<T>[],
 	children: T[],
@@ -36,12 +35,12 @@ function Cell(props: {
 			return 'text-right';
 		}
 	})
-	return <Show
-		when={props.th}
-		fallback={<td class={cls()}>{props.children}</td>}
-	>
-		<th class={`${cls()} ${props.class}`}>{props.children}</th>
-	</Show>
+	return <>
+		{props.th
+			? <th class={`${cls()} ${props.class}`}>{props.children}</th>
+			: <td class={cls()}>{props.children}</td>
+		}
+	</>;
 }
 
 export default function Table<T>(props: Props<T>) {
@@ -55,79 +54,55 @@ export default function Table<T>(props: Props<T>) {
 	const sorted = createMemo(() => props.children);
 	const thead = mapArray(
 		cols,
-		col => (): [JSXElement, string | undefined] | undefined => {
-			const [children, cls] = typeof col?.thead == 'function'
-				? col.thead(sorted())
-				: [];
-			return children === undefined && cls === undefined
-				? undefined
-				: [children, cls];
-		}
+		col => children(() => col.thead?.(sorted()))
 	);
 	const tfoot = mapArray(
 		cols,
-		col => (): [JSXElement, string | undefined] | undefined => {
-			const [children, cls] = typeof col?.tfoot == 'function'
-				? col.tfoot(sorted())
-				: [];
-			return children === undefined && cls === undefined
-				? undefined
-				: [children, cls];
-		}
+		col => children(() => col.tfoot?.(sorted()))
 	);
+	// 이 두 줄을 인라인으로 돌리면 하이드레이션이 깨짐. 왜?
+	const theadVisible = createMemo(() => thead().some(th => th() !== undefined));
+	const tfootVisible = createMemo(() => tfoot().some(th => th() !== undefined));
 
 	return <table class={props.class}>
-		<Show when={props.caption}>
-			{caption => {
-				const [children, cls] = caption();
-				return <caption class={cls}>
-					{children}
-				</caption>;
-			}}
-		</Show>
-		<Show when={thead().some(x => x() !== undefined)}>
+		{props.caption &&
+			<caption>
+				{props.caption}
+			</caption>
+		}
+		{theadVisible() &&
 			<thead>
 				<tr>
 					<For each={thead()}>
-						{th => {
-							const [children, cls] = th() ?? [];
-							return <th class={cls}>{children}</th>;
-						}}
+						{th => <th>{th()}</th>}
 					</For>
 				</tr>
 			</thead>
-		</Show>
+		}
 		<tbody>
 			<For each={sorted()}>
 				{x =>
 					<tr>
 						<For each={cols()}>
-							{col => {
-								const [children, cls] = col.render(x);
-								return <Cell
-									th={col.th}
-									class={cls}
-									align={col.align}
-								>
-									{children}
-								</Cell>;
-							}}
+							{col => <Cell
+								th={col.th}
+								align={col.align}
+							>
+								{col.render(x)}
+							</Cell>}
 						</For>
 					</tr>
 				}
 			</For>
 		</tbody>
-		<Show when={tfoot().some(x => x() !== undefined)}>
+		{tfootVisible() &&
 			<tfoot>
 				<tr>
 					<For each={tfoot()}>
-						{th => {
-							const [children, cls] = th() ?? [];
-							return <th class={cls}>{children}</th>;
-						}}
+						{th => <th>{th()}</th>}
 					</For>
 				</tr>
 			</tfoot>
-		</Show>
+		}
 	</table>;
 }

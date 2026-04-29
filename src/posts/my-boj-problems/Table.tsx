@@ -20,44 +20,36 @@ export function DFA(props: {
 	return <Table
 		cols={[
 			{
-				thead() {
-					return ['상태 번호'];
-				},
+				thead: () => <>상태 번호</>,
 				th: true,
-				render(x) {
-					return [<Number>{x.id}</Number>];
-				},
+				render: x => <Number>{x.id}</Number>,
 				align: 'right',
 			},
 			{
-				thead() {
-					return [<code>0</code>];
-				},
-				render(x) {
-					return x['0']
-						? [<>→ <Number>{x['0']}</Number></>]
-						: ['❌'];
-				},
+				thead: () => <code>0</code>,
+				render: x => <>
+					{x['0']
+						? <>→ <Number>{x['0']}</Number></>
+						: '❌'
+					}
+				</>,
 				align: 'center',
 			},
 			{
-				thead() {
-					return [<code>1</code>];
-				},
-				render(x) {
-					return x['1']
-						? [<>→ <Number>{x['1']}</Number></>]
-						: ['❌'];
-				},
+				thead: () => <code>1</code>,
+				render: x => <>
+					{x['1']
+						? <>→ <Number>{x['1']}</Number></>
+						: '❌'
+					}
+				</>,
 				align: 'center',
 			},
 			{
-				thead() {
-					return ['수용 상태?'];
-				},
-				render(x) {
-					return [x.accept && '✅'];
-				},
+				thead: () => <>수용 상태?</>,
+				render: x => <>
+					{x.accept && '✅'}
+				</>,
 				align: 'center',
 			},
 		]}
