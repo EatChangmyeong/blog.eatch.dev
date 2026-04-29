@@ -19,6 +19,7 @@ if(!Astro.slots.has('default')) {
 
 <AOut
 	href={`https://acmicpc.net/problem/${prob}`}
+	unavailable
 >{
 	title
 		? <>{prob}번 '<Render content={title[0]} />{title[1] && <span class="text-[0.9rem] opacity-75"> <Render content={title[1]} /></span>}'</>

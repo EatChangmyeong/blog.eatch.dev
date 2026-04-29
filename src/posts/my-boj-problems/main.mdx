@@ -1,7 +1,7 @@
 ---
 title: '백준 온라인 저지에 잇창명이 출제한 문제 모음'
 published: 2024-02-28
-edited: 2026-03-30
+edited: 2026-04-30
 tags:
 - '문제해결'
 - '알고리즘'
@@ -32,17 +32,23 @@ import x1829849604579606873 from './1829849604579606873.x.png';
 
 그동안 중앙대학교 알고리즘 학회 ChAOS에 소속되어 백준 온라인 저지에 대회 문제를 출제해보는 귀중한 기회를 몇 번 가졌었는데, 생각해보니 대회 공식 에디토리얼 이외에 블로그에 문제에 대한 이야기를 한 적이 없었네요. 마침 생각난 김에 그동안 출제했던 문제의 출제 의도를 하나씩 풀어보려고 합니다. (정해 코드는 없습니다!)
 
-글 작성 이후에도 <AOut href="https://www.acmicpc.net/user/dlaud5379">`dlaud5379`</AOut> 명의로 다른 문제를 출제할 때마다 업데이트할 예정입니다.
+~~글 작성 이후에도 <AOut href="https://www.acmicpc.net/user/dlaud5379" unavailable>`dlaud5379`</AOut> 명의로 다른 문제를 출제할 때마다 업데이트할 예정입니다.~~
+
+<Caution>
+백준 온라인 저지는 2026년 4월 28일부로 서비스를 종료했으며, 5월 29일 18시부터 읽기 전용 아카이브로 다시 접속 가능할 예정입니다. 해당 날짜 이전까지는 이 글에서 지문을 확인해 주시기 바랍니다. CPC 2024와 CPC 2026의 에디토리얼은 정상적으로 확인 가능합니다.
+
+여건이 된다면 다른 온라인 저지로 해당 문제를 옮길 의향이 있지만, 4월 30일 현재 정답 코드를 제출해볼 수 있는 서비스는 아직 없습니다.
+</Caution>
 
 ## CPC 2020 \{#cpc2020\}
 
-<AOut href="https://www.acmicpc.net/category/detail/2345">2020 중앙대학교 프로그래밍 경진대회</AOut>에 한 문제를 출제하고, 두 문제에 삽화를 제공했습니다.
+<AOut href="https://www.acmicpc.net/category/detail/2345" unavailable>2020 중앙대학교 프로그래밍 경진대회</AOut>에 한 문제를 출제하고, 두 문제에 삽화를 제공했습니다.
 
 ### <ABoj prob={20210} /> (F번) \{#cpc2020f\}
 
 <Statement prob={20210} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="g3" />이며, 알고리즘 분류는 <SolvedTag tag="implementation" /> <SolvedTag tag="string" /> <SolvedTag tag="sorting" />입니다. 출제 이후 거의 4년이 지난 지금(2024년 2월 8일) 구글에 `백준 20210`으로 검색해 봤더니 생각보다 이 문제에 대한 블로그 글이 많네요. 풀어주셔서 감사합니다 🙇
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="g3" />이며, 알고리즘 분류는 <SolvedTag tag="implementation" /> <SolvedTag tag="string" /> <SolvedTag tag="sorting" />이었습니다. 출제 이후 거의 4년이 지난 지금(2024년 2월 8일) 구글에 `백준 20210`으로 검색해 봤더니 생각보다 이 문제에 대한 블로그 글이 많네요. 풀어주셔서 감사합니다 🙇
 
 지문에서 짐작할 수 있듯이 표준 라이브러리에서 제공하는 정렬 함수에 비교 함수를 만들어 호출하면 되는 정직한 문제입니다. 물론 그 비교 함수 구현이 좀 복잡하긴 합니다. 비교 함수의 조건을 간단하게 요약하면 이렇습니다.
 
@@ -55,7 +61,7 @@ import x1829849604579606873 from './1829849604579606873.x.png';
 	* 십진법으로 읽은 값으로 비교하고,
 	* 같은 값이라면 불필요한 0이 적을수록 작다.
 
-<AOut href="https://www.acmicpc.net/source/23980193" restricted="20210번 문제를 해결한 사람만 열람 가능합니다.">제가 의도한 C++14 풀이</AOut>에서 비교 함수의 전체적인 구조는 이렇습니다. 입력 문자열의 길이 n에 대해 비교 함수의 시간 복잡도는 $$O(n)$$입니다.
+<AOut href="https://www.acmicpc.net/source/23980193" unavailable>제가 의도한 C++14 풀이</AOut>에서 비교 함수의 전체적인 구조는 이렇습니다. 입력 문자열의 길이 n에 대해 비교 함수의 시간 복잡도는 $$O(n)$$입니다.
 
 ```
 // C++ 스타일 의사코드입니다.
@@ -102,7 +108,7 @@ bool 비교함수(const string &좌변, const string &우변) {
 
 ## CHAC 2022 \{#chac2022\}
 
-<AOut href="https://www.acmicpc.net/category/detail/3016">ChAOS Hello2022 Algorithm Contest</AOut>에 두 문제를 출제하고, 세 문제에 삽화를 제공했습니다.
+<AOut href="https://www.acmicpc.net/category/detail/3016" unavailable>ChAOS Hello2022 Algorithm Contest</AOut>에 두 문제를 출제하고, 세 문제에 삽화를 제공했습니다.
 
 CPC 2020에 문제를 출제할 때 지문에 '잇창명'을 넣지 않은 게 후회되어서 이번에 출제하는 두 문제에는 모두 '잇창명'을 넣었습니다.
 
@@ -110,7 +116,7 @@ CPC 2020에 문제를 출제할 때 지문에 '잇창명'을 넣지 않은 게 �
 
 <Statement prob={24390} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="s2" />이며, 알고리즘 분류는 <SolvedTag tag="graphs" /> <SolvedTag tag="greedy" /> <SolvedTag tag="graph_traversal" /> <SolvedTag tag="bfs" />입니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="s2" />이며, 알고리즘 분류는 <SolvedTag tag="graphs" /> <SolvedTag tag="greedy" /> <SolvedTag tag="graph_traversal" /> <SolvedTag tag="bfs" />이었습니다.
 
 처음 출제했을 때는 <SolvedTag tag="greedy" />과 <SolvedTag tag="bfs" />만을 정해로 생각했는데, 문제 검수 중에 <SolvedTag tag="dp" />으로 풀 수 있다는 것을 알게 되어 결과적으로는 **정해가 사실상 3개**인 문제가 되었습니다. 개인적으로 좋은 문제가 되었다고 생각해 꽤 만족스럽네요.
 
@@ -120,7 +126,7 @@ CPC 2020에 문제를 출제할 때 지문에 '잇창명'을 넣지 않은 게 �
 
 #### 그리디 알고리즘 \{#chac2022d-greedy\}
 
-<AOut href="https://www.acmicpc.net/source/38169595" restricted="24390번 문제를 해결한 사람만 열람 가능합니다.">제가 처음 의도했던 C11 풀이이기도 합니다</AOut>. 당시 <AOut href="https://gather.town/">Gather</AOut>에서 공개했던 에디토리얼에 그리디 알고리즘에 대한 증명을 실었었는데, 대중에 공개된 링크를 못 찾겠네요. 이 블로그에는 좀 더 엄밀하게 다듬은 증명을 싣겠습니다.
+<AOut href="https://www.acmicpc.net/source/38169595" unavailable>제가 처음 의도했던 C11 풀이이기도 합니다</AOut>. 당시 <AOut href="https://gather.town/">Gather</AOut>에서 공개했던 에디토리얼에 그리디 알고리즘에 대한 증명을 실었었는데, 대중에 공개된 링크를 못 찾겠네요. 이 블로그에는 좀 더 엄밀하게 다듬은 증명을 싣겠습니다.
 
 30초 버튼의 특수한 성질을 무시하고 문제를 풀면 30초 버튼을 정확히 0번 혹은 1번 누를 수 있습니다(30초 다음 단위가 60초이므로).
 
@@ -141,7 +147,7 @@ CPC 2020에 문제를 출제할 때 지문에 '잇창명'을 넣지 않은 게 �
 
 <Statement prob={24394} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="g2" />이며, 알고리즘 분류는 <SolvedTag tag="math" />입니다. 원래 $$O(T)$$를 의도한 문제라서 난이도 의견에 "$$O(TN)$$이 [출제자의] 의도"라는 말을 보고 깜짝 놀랐습니다. (solved.ac 가이드라인인 '가장 쉽게 풀었을 때' 기준으로는 $$O(TN)$$이 맞긴 합니다.)
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="g2" />이며, 알고리즘 분류는 <SolvedTag tag="math" />이었습니다. 원래 $$O(T)$$를 의도한 문제라서 난이도 의견에 "$$O(TN)$$이 [출제자의] 의도"라는 말을 보고 깜짝 놀랐습니다. (solved.ac 가이드라인인 '가장 쉽게 풀었을 때' 기준으로는 $$O(TN)$$이 맞긴 합니다.)
 
 #### 소재와의 연관성 \{#chac2022g-motivation\}
 
@@ -201,7 +207,7 @@ CPC 2020에 문제를 출제할 때 지문에 '잇창명'을 넣지 않은 게 �
 
 이제 띠끼리 겹치지 않는다는 사실을 알았으니 점수의 작은 단위를 신경쓰지 않고 **큰 단위를 먼저 구할 수 있고**, 그 다음에 작은 단위를 구할 수 있습니다. 가능한 큰 단위는 최대 하나뿐이므로 테스트 케이스당 $$O(1)$$에 답을 구할 수 있습니다.
 
-<AOut href="https://www.acmicpc.net/source/38169965" restricted="24394번 문제를 해결한 사람만 열람 가능합니다.">제가 의도한 C11 풀이</AOut>를 보면 사칙연산만을 사용해 큰 단위와 작은 단위를 하나씩 구하고, 점수가 띠 안에 들어가는지 확인하는 로직 한 번으로 테스트 케이스가 끝나는 것을 볼 수 있습니다. 사실 식만 보면 이 코드가 왜 잘 돌아가는지 이해하기 어려울 수 있는데, 아래에 증명을 실어 보겠습니다. 정해 코드를 상수만 수정해서 <ABoj prob={35455} />의 밸리데이터로 사용하기로 했을 때 대회 디스코드에서 정당성을 증명해서 올린 적이 있는데, 이 내용을 좀 더 다듬은 것입니다.
+<AOut href="https://www.acmicpc.net/source/38169965" unavailable>제가 의도한 C11 풀이</AOut>를 보면 사칙연산만을 사용해 큰 단위와 작은 단위를 하나씩 구하고, 점수가 띠 안에 들어가는지 확인하는 로직 한 번으로 테스트 케이스가 끝나는 것을 볼 수 있습니다. 사실 식만 보면 이 코드가 왜 잘 돌아가는지 이해하기 어려울 수 있는데, 아래에 증명을 실어 보겠습니다. 정해 코드를 상수만 수정해서 <ABoj prob={35455} />의 밸리데이터로 사용하기로 했을 때 대회 디스코드에서 정당성을 증명해서 올린 적이 있는데, 이 내용을 좀 더 다듬은 것입니다.
 
 <Dive>
 <details>
@@ -292,7 +298,7 @@ $$
 
 ## CPC 2024 \{#cpc2024\}
 
-<AOut href="https://www.acmicpc.net/category/1054">2024 중앙대학교 프로그래밍 경진대회</AOut>에 세 문제(교내 출제 1문제, 오픈 콘테스트 전용 2문제)를 출제하고, 여섯 문제에 삽화를 제공했습니다.
+<AOut href="https://www.acmicpc.net/category/1054" unavailable>2024 중앙대학교 프로그래밍 경진대회</AOut>에 세 문제(교내 출제 1문제, 오픈 콘테스트 전용 2문제)를 출제하고, 여섯 문제에 삽화를 제공했습니다.
 
 <AOut href="https://upload.acmicpc.net/81489c05-5756-44b7-9205-22ada52e1d81/">공식 에디토리얼</AOut>이 공개되어 있습니다.
 
@@ -300,7 +306,7 @@ $$
 
 <Statement prob={32175} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="s1" />이며, 알고리즘 분류는 <SolvedTag tag="dp" />입니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="s1" />이며, 알고리즘 분류는 <SolvedTag tag="dp" />이었습니다.
 
 생각해보면 <SolvedTag tag="dp" />이 정해인 문제 중 점화식이 입력 데이터에 따라 동적으로 바뀌는 문제를 거의 못 본 것 같아서 기획한 문제입니다. 실제로 그런 문제가 많은데 제가 기억을 못 하는 것에 가깝지만 일단 출제 자체는 기획 의도에 맞게 잘 되긴 했습니다.
 
@@ -328,7 +334,7 @@ $$
 
 <Statement prob={32180} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="p5" />이며, 알고리즘 분류는 <SolvedTag tag="parsing" /> <SolvedTag tag="recursion" /> <SolvedTag tag="string" />입니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="p5" />이며, 알고리즘 분류는 <SolvedTag tag="string" /> <SolvedTag tag="parsing" /> <SolvedTag tag="recursion" />였습니다.
 
 **이 문제만큼 난이도 예측에 실패한 적이 없을 것 같습니다.** <ABoj prob={4949} />이나 <ABoj prob={2504} /> 등의 단순 심화 버전으로 기획하고 실버 중상위권 정도의 난이도를 예상했는데, 막상 뚜껑을 열어보니 플래티넘 턱걸이를 하는 문제가 나왔습니다. 추가로 문제 자체가 검수하기 어려운 형태이고 지문도 엄밀하게 작성해야 하다 보니 '다시는 이런 문제 내지 말아야지' 하는 다짐을 유발하기도 했습니다.
 
@@ -403,7 +409,7 @@ $$
 </blockquote>
 </Caution>
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="d4" />이며, 알고리즘 분류는 <SolvedTag tag="data_structures" /> <SolvedTag tag="string" /> <SolvedTag tag="segtree" /> <SolvedTag tag="lazyprop" /> <SolvedTag tag="regex" />입니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="d4" />이며, 알고리즘 분류는 <SolvedTag tag="data_structures" /> <SolvedTag tag="string" /> <SolvedTag tag="segtree" /> <SolvedTag tag="lazyprop" /> <SolvedTag tag="regex" />이었습니다.
 
 이 문제를 구상하는 데 여러 문제의 영향을 받았습니다.
 
@@ -519,7 +525,7 @@ NFA보다 할 수 있는 것이 적어 보이지만, 놀랍게도 DFA와 NFA 모
 
 ## CPC 2026 \{#cpc2026\}
 
-<AOut href="https://www.acmicpc.net/category/detail/4694">2026 중앙대학교 프로그래밍 경진대회</AOut>에 두 문제를 출제하고, 세 문제에 삽화를 제공했습니다.
+<AOut href="https://www.acmicpc.net/category/detail/4694" unavailable>2026 중앙대학교 프로그래밍 경진대회</AOut>에 두 문제를 출제하고, 세 문제에 삽화를 제공했습니다.
 
 <AOut href="https://upload.acmicpc.net/e84bc5f4-d952-444b-a89a-21bca7b32e1b/">공식 에디토리얼</AOut>이 공개되어 있습니다.
 
@@ -529,7 +535,7 @@ NFA보다 할 수 있는 것이 적어 보이지만, 놀랍게도 DFA와 NFA 모
 
 <Statement prob={35462} />
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="g1" />이며, 알고리즘 분류는 <SolvedTag tag="implementation" /> <SolvedTag tag="graphs" /> <SolvedTag tag="dag" /> <SolvedTag tag="grid_graph" /> <SolvedTag tag="topological_sorting" />입니다. 문제가 공개된 지 얼마 지나지 않아 난이도와 알고리즘 분류가 변경될 수 있습니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="g1" />이며, 알고리즘 분류는 <SolvedTag tag="implementation" /> <SolvedTag tag="graphs" /> <SolvedTag tag="dag" /> <SolvedTag tag="topological_sorting" />이었습니다.
 
 당연히 <AOut href="https://play.google.com/store/apps/details?id=com.ecffri.arrows">오만 곳에서 광고를 하고 있는 이 게임</AOut>이 소재입니다(실제로 플레이해본 적은 없습니다). 광고를 처음 봤을 때부터 '이거 위상 정렬로 풀 수 있는 거 아닌가?' 하는 생각을 항상 했고, 이 문제도 위상 정렬로 풀 수 있습니다. 각 화살표마다 정점을 하나씩 만들고, $$i$$번 화살표의 이동 경로에 $$j$$번 화살표가 있을 경우 $$i$$에서 $$j$$로 가는 유향 간선을 추가하면 됩니다. 자기 자신과의 충돌은 특수하게 확인해야 합니다.
 
@@ -543,7 +549,7 @@ NFA보다 할 수 있는 것이 적어 보이지만, 놀랍게도 DFA와 NFA 모
 '워'가 하이퍼링크에서 빠진 것은 버그가 아니라 기능입니다.
 </Caution>
 
-2026년 3월 30일 현재 이 문제의 난이도는 <SolvedTier long tier="p2" />이며, 알고리즘 분류는 <SolvedTag tag="math" /> <SolvedTag tag="dp" /> <SolvedTag tag="bitmask" /> <SolvedTag tag="dp_bitfield" /> <SolvedTag tag="exponentiation_by_squaring" /> <SolvedTag tag="lis" />입니다. 문제가 공개된 지 얼마 지나지 않아 난이도와 알고리즘 분류가 변경될 수 있습니다.
+서비스 종료 이전 이 문제의 난이도는 <SolvedTier long tier="p3" />이며, 알고리즘 분류는 <SolvedTag tag="math" /> <SolvedTag tag="dp" /> <SolvedTag tag="bitmask" /> <SolvedTag tag="dp_bitfield" /> <SolvedTag tag="exponentiation_by_squaring" /> <SolvedTag tag="lis" />였습니다.
 
 <ABoj prob={30799} />을 푸는 중 쓸데없이 복잡한 잘못된 풀이를 하나 떠올렸는데, 그 풀이가 정해인 문제가 있으면 재밌겠다는 생각이 들어 만든 문제입니다. 사실 CPC 2026에 출제진으로 참여하기로 한 이유 중 절반 정도가 이 문제라고 생각합니다.
 
