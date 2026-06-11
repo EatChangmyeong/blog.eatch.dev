@@ -47,10 +47,5 @@
 		"mdast-util-mdx-jsx": "^3.2.0",
 		"vfile": "^6.0.3"
 	},
-	"pnpm": {
-		"patchedDependencies": {
-			"psl": "patches/psl.patch"
-		}
-	},
-	"packageManager": "pnpm@10.32.0"
+	"packageManager": "pnpm@11.5.3"
 }
