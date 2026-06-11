@@ -1,15 +1,15 @@
 import { defineConfig, fontProviders } from 'astro/config';
 
-import icons from 'unplugin-icons/vite';
 import mdx from '@astrojs/mdx';
+import solid from '@astrojs/solid-js';
+import { unified } from '@astrojs/markdown-remark';
+import tailwindcss from '@tailwindcss/vite';
+import icons from 'unplugin-icons/vite';
 import rehypeMathJaxSvg from 'rehype-mathjax/svg';
 import remarkCustomHeaderId from 'remark-custom-header-id';
-import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkMyFootnote from './remark-my-footnote.js';
 import remarkMyReadingTime from './remark-my-reading-time.js';
-import solid from '@astrojs/solid-js';
-import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
@@ -22,7 +22,16 @@ export default defineConfig({
 				dark: 'github-dark',
 			},
 		},
-		smartypants: false,
+		processor: unified({
+			smartypants: false,
+			remarkPlugins: [
+				remarkCustomHeaderId,
+				remarkMath,
+				remarkMyFootnote,
+				remarkMyReadingTime,
+			],
+			rehypePlugins: [rehypeMathJaxSvg],
+		}),
 	},
 
 	fonts: [
@@ -82,16 +91,7 @@ export default defineConfig({
 	],
 
 	integrations: [
-		mdx({
-			remarkPlugins: [
-				[remarkGfm, { singleTilde: false }],
-				remarkCustomHeaderId,
-				remarkMath,
-				remarkMyFootnote,
-				remarkMyReadingTime,
-			],
-			rehypePlugins: [rehypeMathJaxSvg],
-		}),
+		mdx(),
 		solid(),
 	],
 
