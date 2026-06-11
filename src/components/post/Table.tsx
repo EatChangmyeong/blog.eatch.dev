@@ -1,5 +1,5 @@
 import type { JSXElement } from 'solid-js';
-import { children, createEffect, createMemo, For, mapArray } from 'solid-js';
+import { children, createEffect, createMemo, For, mapArray, Show } from 'solid-js';
 
 type Align = 'left' | 'center' | 'right';
 type ColObject<T> = {
@@ -35,12 +35,11 @@ function Cell(props: {
 			return 'text-right';
 		}
 	})
-	return <>
-		{props.th
-			? <th class={`${cls()} ${props.class}`}>{props.children}</th>
-			: <td class={cls()}>{props.children}</td>
-		}
-	</>;
+	return <Show when={props.th}
+		fallback={<td class={cls()}>{props.children}</td>}
+	>
+		<th class={`${cls()} ${props.class}`}>{props.children}</th>
+	</Show>;
 }
 
 export default function Table<T>(props: Props<T>) {
@@ -65,12 +64,14 @@ export default function Table<T>(props: Props<T>) {
 	const tfootVisible = createMemo(() => tfoot().some(th => th() !== undefined));
 
 	return <table class={props.class}>
-		{props.caption &&
-			<caption>
-				{props.caption}
-			</caption>
-		}
-		{theadVisible() &&
+		<Show when={props.caption}>
+			{caption =>
+				<caption>
+					{props.caption}
+				</caption>
+			}
+		</Show>
+		<Show when={theadVisible()}>
 			<thead>
 				<tr>
 					<For each={thead()}>
@@ -78,7 +79,7 @@ export default function Table<T>(props: Props<T>) {
 					</For>
 				</tr>
 			</thead>
-		}
+		</Show>
 		<tbody>
 			<For each={sorted()}>
 				{x =>
@@ -95,7 +96,7 @@ export default function Table<T>(props: Props<T>) {
 				}
 			</For>
 		</tbody>
-		{tfootVisible() &&
+		<Show when={tfootVisible()}>
 			<tfoot>
 				<tr>
 					<For each={tfoot()}>
@@ -103,6 +104,6 @@ export default function Table<T>(props: Props<T>) {
 					</For>
 				</tr>
 			</tfoot>
-		}
+		</Show>
 	</table>;
 }

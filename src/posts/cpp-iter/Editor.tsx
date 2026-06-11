@@ -864,34 +864,34 @@ export default function Editor(props_: Partial<RawProps>) {
 								left: `${0.4 + 3.25*from}rem`,
 							}}
 						>
-							{from == to
-								? <>
-									<div
-										ref={cursorElement}
-										classList={{
-											'absolute': true,
-											'w-1': true,
-											'h-14': true,
-											'bg-eatch-dark': true,
-											'invisible': invisible,
-										}}
-									/>
-									{props.rtl &&
-										<div classList={{
-											'absolute': true,
-											'top-[0.4rem]': true,
-											'-right-1': content.rtl,
-											'w-[0.65rem]': true,
-											'h-1': true,
-											'bg-eatch-dark': true,
-											'invisible': invisible,
-										}} />
-									}
-								</>
-								: <CellBlink ref={cursorElement} invisible={invisible}>
-									{content.buffer[from]}
-								</CellBlink>
-							}
+							<Show when={from == to}
+								fallback={
+									<CellBlink ref={cursorElement} invisible={invisible}>
+										{content.buffer[from]}
+									</CellBlink>
+								}
+							>
+								<div
+									ref={cursorElement}
+									classList={{
+										'absolute': true,
+										'w-1': true,
+										'h-14': true,
+										'bg-eatch-dark': true,
+										'invisible': invisible,
+									}}
+								/>
+								<Show when={props.rtl}>
+									<div classList={{
+										'absolute': true,
+										'top-[0.4rem]': true,
+										'-right-1': content.rtl,
+										'w-[0.65rem]': true,
+										'h-1': true,
+										'bg-eatch-dark': true,
+										'invisible': invisible,
+									}} />								</Show>
+							</Show>
 						</div>
 				}</Show>
 			</div>
@@ -922,29 +922,29 @@ export default function Editor(props_: Partial<RawProps>) {
 			<summary>조작</summary>
 			<div id={controlsId} class="flex flex-wrap justify-center items-start gap-2 overflow-x-auto">
 				<Index each={controls}>
-					{category => <>
-						{category()
+					{category => <Show when={
+						category()
 							.ctrl
 							.filter(ctrl => ctrl.desc !== undefined)
-							.length != 0 &&
-							<Table
-								class="flex-none mx-0"
-								caption={<span class="font-bold">{category().type}</span>}
-								cols={[
-									{
-										render: ctrl => ctrl.display,
-										th: true,
-										align: 'center',
-									},
-									ctrl => typeof ctrl.desc == 'function'
-										? ctrl.desc(content)
-										: ctrl.desc,
-								]}
-							>
-								{category().ctrl.filter(ctrl => ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))}
-							</Table>
-						}
-					</>}
+							.length != 0
+					}>
+						<Table
+							class="flex-none mx-0"
+							caption={<span class="font-bold">{category().type}</span>}
+							cols={[
+								{
+									render: ctrl => ctrl.display,
+									th: true,
+									align: 'center',
+								},
+								ctrl => typeof ctrl.desc == 'function'
+									? ctrl.desc(content)
+									: ctrl.desc,
+							]}
+						>
+							{category().ctrl.filter(ctrl => ctrl.display && (mouseToIndex || ctrl.type != 'mouse'))}
+						</Table>
+					</Show>}
 				</Index>
 			</div>
 		</details>

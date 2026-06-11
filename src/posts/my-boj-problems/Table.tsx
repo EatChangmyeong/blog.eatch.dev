@@ -1,4 +1,5 @@
 import type { JSXElement } from 'solid-js';
+import { Show } from 'solid-js';
 import Table from '~/src/components/post/Table';
 
 function Number(props: {
@@ -27,22 +28,16 @@ export function DFA(props: {
 			},
 			{
 				thead: () => <code>0</code>,
-				render: x => <>
-					{x['0']
-						? <>→ <Number>{x['0']}</Number></>
-						: '❌'
-					}
-				</>,
+				render: x => <Show when={x['0']} fallback="❌">
+					{x => <>→ <Number>{x()}</Number></>}
+				</Show>,
 				align: 'center',
 			},
 			{
 				thead: () => <code>1</code>,
-				render: x => <>
-					{x['1']
-						? <>→ <Number>{x['1']}</Number></>
-						: '❌'
-					}
-				</>,
+				render: x => <Show when={x['1']} fallback="❌">
+					{x => <>→ <Number>{x()}</Number></>}
+				</Show>,
 				align: 'center',
 			},
 			{

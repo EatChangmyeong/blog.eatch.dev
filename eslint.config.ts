@@ -7,6 +7,9 @@ export default defineConfig([
 	{
 		files: ['**/*.{ts,tsx}'],
 		...solid,
+		rules: {
+			'solid/prefer-show': 'warn',
+		},
 		languageOptions: {
 			globals: {
 				...globals.browser,

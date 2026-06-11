@@ -1,5 +1,5 @@
 import type { Setter } from 'solid-js';
-import { createEffect, createMemo, createSignal, For, indexArray, onMount } from 'solid-js';
+import { createEffect, createMemo, createSignal, For, indexArray, onMount, Show } from 'solid-js';
 import { Set } from 'immutable';
 import type { TuringMachine } from './turing_machine.js';
 import machines from './turing_machine.js';
@@ -121,13 +121,13 @@ function Diagram(props: {
 				}
 			</For>
 		</div>
-		{shouldContinue() &&
+		<Show when={shouldContinue()}>
 			<Diagram
 				machine={props.machine}
 				tape={advanced().tape} state={advanced().state} pos={advanced().pos}
 				callback={props.callback}
 			/>
-		}
+		</Show>
 	</>;
 }
 
