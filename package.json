@@ -23,6 +23,7 @@
 		"mdast-util-to-string": "^4.0.0",
 		"nanoid": "^5.1.11",
 		"psl": "^1.15.0",
+		"pure-rand": "^8.4.0",
 		"reading-time": "^1.5.0",
 		"rehype-mathjax": "^7.1.0",
 		"remark-custom-header-id": "^1.0.0",

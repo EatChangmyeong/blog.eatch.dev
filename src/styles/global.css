@@ -224,7 +224,10 @@
 			text-current bg-transparent;
 	}
 	button {
-		@apply hover:not-active:bg-fg/10 transition-decoration;
+		@apply
+			hover:not-active:not-disabled:bg-fg/10
+			disabled:opacity-50
+			transition-decoration;
 	}
 	input {
 		@apply user-invalid:border-error;
